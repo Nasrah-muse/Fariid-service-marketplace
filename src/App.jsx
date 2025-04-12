@@ -6,6 +6,8 @@ import ServicesPage from "./pages/ServicesPage"
 import CategoriesPage from "./pages/CategoriesPage"
 import AboutPage from "./pages/AboutPage"
 import ContactPage from "./pages/ContactPage"
+import SignInPage from "./pages/SignInPage"
+import SignUpPage from "./pages/SignUpPage"
 
  
 function App() {
@@ -22,6 +24,8 @@ function App() {
      <Route path="/categories" element={<CategoriesPage/>}/>
      <Route path="/contact" element={<ContactPage/>}/>
      <Route path="/about" element={<AboutPage/>}/>
+     <Route path="/signin" element={<SignInPage/>}/>
+     <Route path="/signup" element={<SignUpPage/>}/>
      </Routes>
 
       </main>
