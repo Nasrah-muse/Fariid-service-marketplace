@@ -2,8 +2,14 @@
  import {  NavLink } from "react-router"
 
  import logo from '../assets/logo.png'
+import { CiMenuBurger } from "react-icons/ci";
+import { IoClose } from "react-icons/io5";
+import { useState } from "react";
  
 const Header = () => {
+
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   return (
     <header className="bg-white shadow">
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -103,6 +109,115 @@ const Header = () => {
               </NavLink>
             </div>
           </nav>
+
+               {/* Mobile menu*/}
+               <div className="sm:hidden flex items-center">
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="inline-flex items-center justify-center p-2 rounded-md text-indigo-900 hover:text-orange-500 focus:outline-none"
+              aria-expanded={isMobileMenuOpen}
+            >
+               {isMobileMenuOpen ? (
+                <IoClose className="block w-6 h-6 " />
+              ) : (
+                <CiMenuBurger className="block w-6 h-6" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile menu */}
+        <div className={`sm:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
+          <div className="pt-2 pb-3 space-y-1 bg-white shadow-lg">
+            <NavLink
+              to="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={({ isActive }) => 
+                `block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+                  isActive 
+                    ? 'border-orange-500 text-orange-500 bg-orange-50' 
+                    : 'border-transparent text-indigo-900 hover:text-orange-500 hover:bg-orange-50'
+                }`
+              }
+            >
+              Home
+            </NavLink>
+            
+            <NavLink
+              to="/services"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={({ isActive }) => 
+                `block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+                  isActive 
+                    ? 'border-orange-500 text-orange-500 bg-orange-50' 
+                    : 'border-transparent text-indigo-900 hover:text-orange-500 hover:bg-orange-50'
+                }`
+              }
+            >
+              Services
+            </NavLink>
+            
+            <NavLink
+              to="/categories"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={({ isActive }) => 
+                `block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+                  isActive 
+                    ? 'border-orange-500 text-orange-500 bg-orange-50' 
+                    : 'border-transparent text-indigo-900 hover:text-orange-500 hover:bg-orange-50'
+                }`
+              }
+            >
+              Categories
+            </NavLink>
+            
+            <NavLink
+              to="/contact"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={({ isActive }) => 
+                `block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+                  isActive 
+                    ? 'border-orange-500 text-orange-500 bg-orange-50' 
+                    : 'border-transparent text-indigo-900 hover:text-orange-500 hover:bg-orange-50'
+                }`
+              }
+            >
+              Contact
+            </NavLink>
+            
+            <NavLink
+              to="/about"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={({ isActive }) => 
+                `block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
+                  isActive 
+                    ? 'border-orange-500 text-orange-500 bg-orange-50' 
+                    : 'border-transparent text-indigo-900 hover:text-orange-500 hover:bg-orange-50'
+                }`
+              }
+            >
+              About
+            </NavLink>
+            
+            <div className="pt-2 px-3 space-y-2">
+              <NavLink
+                to="/signin"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center px-4 py-2 text-md font-medium rounded-md transition-colors
+                text-indigo-900 border-2 border-indigo-900 hover:bg-indigo-900 hover:text-white"
+              >
+                Sign In
+              </NavLink>
+              <NavLink
+                to="/signup"
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="block w-full text-center px-4 py-2 text-md font-medium rounded-md transition-colors
+                text-white bg-orange-600 hover:bg-orange-700"
+              >
+                Sign Up
+              </NavLink>
+            </div>
+          </div>
         </div>
       </div>
     </header>
