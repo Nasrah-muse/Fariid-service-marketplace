@@ -99,7 +99,10 @@ const Header = () => {
                <div className="sm:hidden flex items-center">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="inline-flex items-center justify-center p-2 rounded-md text-indigo-900 hover:text-orange-500 focus:outline-none"
+              className={`inline-flex items-center justify-center p-2 rounded-md hover:text-orange-500  ${
+                theme === 'dark' ? "text-sky-200 " : "text-indigo-900"
+              } focus:outline-none`}
+              
               aria-expanded={isMobileMenuOpen}
             >
                {isMobileMenuOpen ? (
