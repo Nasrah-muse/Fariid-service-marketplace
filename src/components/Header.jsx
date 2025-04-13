@@ -5,13 +5,17 @@
 import { CiMenuBurger } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
 import { useState } from "react";
+import ThemeToggle from "./ThemeToggle";
+import { useTheme } from "../contexts/ThemeContext";
  
 const Header = () => {
+
+  const {theme} = useTheme()
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow">
+    <header className={`shadow-md ${theme === 'dark'? 'bg-indigo-900': 'bg-white'} `}>
   <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
           {/* Logo */}
@@ -91,6 +95,8 @@ const Header = () => {
             >
               About
             </NavLink>
+
+            <ThemeToggle/>
 
             <div className="flex space-x-4 ml-4">
               <NavLink
