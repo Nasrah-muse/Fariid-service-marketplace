@@ -1,7 +1,6 @@
-import { FiMoon, FiSave, FiSun } from 'react-icons/fi';
+import { FiMoon, FiSun } from 'react-icons/fi';
 import { useTheme } from '../contexts/ThemeContext.jsx';
-import { CiSun } from 'react-icons/ci';
-
+ 
 export default function ThemeToggle({ className = '' }) {
   const { theme, toggleTheme } = useTheme();
   
