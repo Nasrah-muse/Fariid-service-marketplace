@@ -79,8 +79,9 @@ const Header = () => {
             <div className="flex space-x-4 ml-4">
               <NavLink
                 to="/signin"
-                className="px-4 py-2 text-md font-medium rounded-md transition-colors
-                text-indigo-900 border-2 border-indigo-900 hover:bg-indigo-900 hover:text-white"
+                className={`px-4 py-2 text-md font-medium rounded-md transition-colors cursor-pointer
+                  ${theme === 'dark'? 'border-2 border-sky-200 text-sky-200 hover:bg-sky-200 hover:text-indigo-900':
+                "text-indigo-900 border-2 border-indigo-900 hover:bg-indigo-900 hover:text-white" }`}
               >
                 Sign In
               </NavLink>
