@@ -1,7 +1,7 @@
  
  import {  NavLink } from "react-router"
-
- import logo from '../assets/logo.png'
+import logoDark from '../assets/dark-logo.png'
+import logoLight from '../assets/light-logo.png'
 import { CiMenuBurger } from "react-icons/ci";
 import { IoClose } from "react-icons/io5";
 import { useState } from "react";
@@ -22,7 +22,7 @@ const Header = () => {
           <div className="flex-shrink-0">
             <NavLink to="/" className="flex items-center">
               <img 
-                src={logo} 
+                src={theme === 'dark' ? logoDark : logoLight} 
                 alt="Fariid Logo" 
                 className="h-40 w-auto hover:opacity-90 transition-opacity" 
               />

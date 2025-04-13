@@ -1,13 +1,17 @@
  import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa'
-import logo from '../assets/logo.png'
-const Footer = () => {
+ import logoDark from '../assets/dark-logo.png'
+ import logoLight from '../assets/light-logo.png'
+import { useTheme } from '../contexts/ThemeContext'
+ const Footer = () => {
+
+  const {theme} = useTheme()
   return (
     <footer className="bg-white md:bg-indigo-50 py-8 px-4">
        <div className="max-w-6xl mx-auto">
          {/* Logo and text */}
          <div className="flex flex-col items-center mb-8">
           <img 
-            src={logo} 
+            src={theme === 'dark' ? logoDark : logoLight} 
             alt="Farild Logo" 
             className="h-30  object-contain"
           />
