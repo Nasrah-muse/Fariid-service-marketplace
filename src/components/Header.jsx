@@ -11,6 +11,14 @@ import { useTheme } from "../contexts/ThemeContext";
 const Header = () => {
 
   const {theme} = useTheme()
+  const getNavLinkClass = (isActive) => 
+    `px-3 py-2 rounded-md text-md font-bold transition-colors ${
+      isActive
+        ? 'text-orange-500 bg-orange-50 dark:bg-opacity-20 dark:bg-orange-500 dark:text-sky-200'
+        : theme === 'dark'
+          ? 'text-sky-200 hover:text-orange-500 hover:bg-opacity-10 hover:bg-orange-300'
+          : 'text-indigo-900 hover:text-sky-200 hover:bg-orange-50'
+    }`
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -33,65 +41,35 @@ const Header = () => {
           <nav className="hidden sm:ml-6 sm:flex items-center space-x-8">
             <NavLink
               to="/"
-              className={({ isActive }) => 
-                `px-3 py-2 rounded-md text-md  font-bold transition-colors ${
-                  isActive 
-                    ? 'text-orange-500 bg-orange-50 ' 
-                    : ' text-indigo-900 hover:text-sky-200 hover:bg-orange-50'
-                }`
-              }
+              className={({ isActive }) => getNavLinkClass(isActive) }
             >
               Home
             </NavLink>
 
             <NavLink
               to="/services"
-              className={({ isActive }) => 
-                `px-3 py-2 rounded-md text-md  font-bold transition-colors ${
-                  isActive 
-                    ? 'text-orange-500 bg-orange-50 ' 
-                    : ' text-indigo-900 hover:text-sky-200 hover:bg-orange-50'
-                }`
-              }
+              className={({ isActive }) => getNavLinkClass(isActive)}
             >
               Services
             </NavLink>
 
             <NavLink
               to="/categories"
-              className={({ isActive }) => 
-                `px-3 py-2 rounded-md text-md  font-bold transition-colors ${
-                  isActive 
-                    ? 'text-orange-500 bg-orange-50 ' 
-                    : ' text-indigo-900 hover:text-sky-200 hover:bg-orange-50'
-                }`
-              }
+              className={({ isActive }) => getNavLinkClass(isActive)}
             >
               Categories
             </NavLink>
 
             <NavLink
               to="/contact"
-              className={({ isActive }) => 
-                `px-3 py-2 rounded-md text-md  font-bold transition-colors ${
-                  isActive 
-                    ? 'text-orange-500 bg-orange-50 ' 
-                    : ' text-indigo-900 hover:text-sky-200 hover:bg-orange-50'
-                }`
-              }
+              className={({ isActive }) => getNavLinkClass(isActive)}
             >
               Contact
             </NavLink>
 
             <NavLink
               to="/about"
-              className={({ isActive }) => 
-                `px-3 py-2 rounded-md text-md  font-bold transition-colors ${
-                  isActive 
-                    ? 'text-orange-500 bg-orange-50 ' 
-                    : ' text-indigo-900 hover:text-sky-200 hover:bg-orange-50'
-                }`
-              }
+              className={({ isActive }) => getNavLinkClass(isActive)}
             >
               About
             </NavLink>
