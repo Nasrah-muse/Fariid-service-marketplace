@@ -1,17 +1,21 @@
  import { FaFacebook, FaInstagram, FaLinkedin, FaTwitter } from 'react-icons/fa'
-import logo from '../assets/logo.png'
-const Footer = () => {
+ import logoDark from '../assets/dark-logo.png'
+ import logoLight from '../assets/light-logo.png'
+import { useTheme } from '../contexts/ThemeContext'
+ const Footer = () => {
+
+  const {theme} = useTheme()
   return (
-    <footer className="bg-white md:bg-indigo-50 py-8 px-4">
+    <footer className={ `${theme === 'dark'? "bg-indigo-900" : "bg-indigo-50"} py-8 px-4`}>
        <div className="max-w-6xl mx-auto">
          {/* Logo and text */}
          <div className="flex flex-col items-center mb-8">
           <img 
-            src={logo} 
+            src={theme === 'dark' ? logoDark : logoLight} 
             alt="Farild Logo" 
             className="h-30  object-contain"
           />
-          <p className="text-center text-indigo-900 max-w-md">
+          <p className={`text-center ${theme === 'dark'? 'text-sky-200' : ' text-indigo-900'} max-w-md`}>
             Fariid connects customers with trusted service providers in Galkayo, making it easy to find, book, and pay for reliable services—all in one place.
           </p>
           
@@ -38,35 +42,35 @@ const Footer = () => {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
           {/* Quick Links */}
           <div className="text-center sm:text-left">
-            <h3 className="text-lg font-bold mb-4 text-indigo-900 ">Quick Links</h3>
+            <h3 className={`text-lg font-bold mb-4 ${theme === 'dark'? 'text-sky-200': ' text-indigo-900'} `}>Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="/" className="text-indigo-900 hover:text-orange-500">Home</a></li>
-              <li><a href="/services" className="text-indigo-900 hover:text-orange-500">Services</a></li>
-              <li><a href="/employers" className="text-indigo-900 hover:text-orange-500">Employers</a></li>
-              <li><a href="/about" className="text-indigo-900 hover:text-orange-500">About us</a></li>
-              <li><a href="/testimonials" className="text-indigo-900 hover:text-orange-500">Testimonials</a></li>
+              <li><a href="/" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Home</a></li>
+              <li><a href="/services" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Services</a></li>
+              <li><a href="/employers" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Employers</a></li>
+              <li><a href="/about" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>About us</a></li>
+              <li><a href="/testimonials" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Testimonials</a></li>
             </ul>
           </div>
 
           {/* Resources */}
           <div className="text-center sm:text-left">
-            <h3 className="text-lg font-bold mb-4 text-indigo-900">Resources</h3>
+            <h3 className={`text-lg font-bold mb-4 ${theme === 'dark'? 'text-sky-200': ' text-indigo-900'}`}>Resources</h3>
             <ul className="space-y-2">
-              <li><a href="/faq" className="  text-indigo-900 hover:text-orange-500">FAQ</a></li>
-              <li><a href="/pricing" className="text-indigo-900 hover:text-orange-500">Pricing</a></li>
-              <li><a href="/payment" className="text-indigo-900 hover:text-orange-500">Payment method</a></li>
-              <li><a href="/careers" className="text-indigo-900 hover:text-orange-500">Careers</a></li>
-              <li><a href="/contact" className="text-indigo-900 hover:text-orange-500">Contact Us</a></li>
+              <li><a href="/faq" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>FAQ</a></li>
+              <li><a href="/pricing" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Pricing</a></li>
+              <li><a href="/payment" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Payment method</a></li>
+              <li><a href="/careers" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Careers</a></li>
+              <li><a href="/contact" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Contact Us</a></li>
             </ul>
           </div>
 
           {/* Legal */}
           <div className="text-center sm:text-left">
-            <h3 className="text-lg font-bold mb-4 text-indigo-900">Legal</h3>
+            <h3 className={`text-lg font-bold mb-4 ${theme === 'dark'? 'text-sky-200': ' text-indigo-900'}`}>Legal</h3>
             <ul className="space-y-2">
-              <li><a href="/terms" className="text-indigo-900 hover:text-orange-500">Terms of service</a></li>
-              <li><a href="/privacy" className="text-indigo-900 hover:text-orange-500">Privacy policy</a></li>
-              <li><a href="/copyright" className="text-indigo-900 hover:text-orange-500">Copy Right Policy</a></li>
+              <li><a href="/terms" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Terms of service</a></li>
+              <li><a href="/privacy" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Privacy policy</a></li>
+              <li><a href="/copyright" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Copy Right Policy</a></li>
             </ul>
           </div>
         </div>

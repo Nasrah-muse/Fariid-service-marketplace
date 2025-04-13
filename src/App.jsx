@@ -8,12 +8,14 @@ import AboutPage from "./pages/AboutPage"
 import ContactPage from "./pages/ContactPage"
 import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
+import { ThemeProvider } from "./contexts/ThemeContext"
 
  
 function App() {
  
   return (
     <div>
+      <ThemeProvider>
       {/* Header */}
       <Header/>
       <main>
@@ -31,6 +33,7 @@ function App() {
       </main>
       {/* Footer */}
       <Footer/>
+      </ThemeProvider>
     </div>
  
   )
