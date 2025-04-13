@@ -74,9 +74,10 @@ const Header = () => {
               About
             </NavLink>
 
-            <ThemeToggle/>
 
             <div className="flex space-x-4 ml-4">
+            <ThemeToggle/>
+
               <NavLink
                 to="/signin"
                 className={`px-4 py-2 text-md font-medium rounded-md transition-colors cursor-pointer
@@ -96,7 +97,8 @@ const Header = () => {
           </nav>
 
                {/* Mobile menu*/}
-               <div className="sm:hidden flex items-center">
+               <div className="sm:hidden flex items-center gap-4">
+               <ThemeToggle className="ml-2" />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className={`inline-flex items-center justify-center p-2 rounded-md hover:text-orange-500  ${
@@ -115,7 +117,7 @@ const Header = () => {
         </div>
 
         {/* Mobile menu */}
-        <div className={`sm:hidden ${isMobileMenuOpen ? 'block' : 'hidden'}`}>
+        <div className={`sm:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} `}>
           <div className="pt-2 pb-3 space-y-1 bg-white shadow-lg">
             <NavLink
               to="/"
