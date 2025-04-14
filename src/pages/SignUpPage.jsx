@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { useNavigate } from "react-router";
+import { signUp } from "../lib/auth";
 
  
 const SignUpPage = () => {
@@ -17,6 +18,50 @@ const SignUpPage = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null);
+    
+     if (!role) {
+      setError("Please select a role");
+      return;
+    }
+
+    // check password
+    if (password !== confirmPassword) {
+      setError("Passwords don't match");
+      return;
+    }
+
+    // password al least 8 characters
+     const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setError("Password must be at least 8 characters with letters and numbers");
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await signUp(email, password, username, role);
+      setSuccess(true);
+       setTimeout(() => navigate('/signin'), 2000);
+    } catch (err) {
+      setError(err.message || "Sign up failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  if(success){
+    return (
+      <div className={`mb-4 p-3 rounded-md ${
+        theme === 'dark' ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-700'
+      }`}>
+        Account created successfully! Redirecting to sign in...
+      </div>
+    )
+  }
+
 
   return (
     <div className={`min-h-screen flex items-center justify-center p-4 ${theme === 'dark' 
@@ -27,7 +72,16 @@ const SignUpPage = () => {
   <h2 className={`text-2xl font-bold mb-6 text-center ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
           Create an account
         </h2>
-        <form   className="space-y-4">
+        {/*  error message */}
+        {error && (
+          <div className={`mb-4 p-3 rounded-md ${
+            theme === 'dark' ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-700'
+          }`}>
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}  className="space-y-4">
           <div>
             <label htmlFor="username" className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-sky-200' : 'text-gray-700'}`}>
               Username
