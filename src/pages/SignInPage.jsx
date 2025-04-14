@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useTheme } from "../contexts/ThemeContext";
+import { useAuth } from "../contexts/AuthContext";
+import { signIn } from "../lib/auth";
 
  
 const SignInPage = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
+
+  const userInfo = useAuth()
+console.log(userInfo)
 
   const [email, setEmail] = useState('')
   const [username, setUsername] = useState('')
@@ -13,6 +18,26 @@ const SignInPage = () => {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [success, setSuccess] = useState(false);
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true)
+    setError(null);
+    
+    try {
+      await signIn(email, password);
+       // go to home
+      navigate('/')
+    } catch (err) {
+      setError(err.message || "Login failed. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+
   return (
     <div className={`min-h-screen flex items-center justify-center p-4 ${theme === 'dark' ? 'bg-indigo-200 text-sky-200': 'bg-gray-200 text-indigo-900'}`}>
 
@@ -22,7 +47,16 @@ const SignInPage = () => {
   <h2 className={`text-2xl font-bold mb-6 text-center ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
           Welcome Back!
         </h2>
-        <form   className="space-y-4">
+        {/*  error msg */}
+        {error && (
+          <div className={`mb-4 p-3 rounded-md ${
+            theme === 'dark' ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-700'
+          }`}>
+            {error}
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit}  className="space-y-4">
           <div>
             <label htmlFor="email" className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-sky-200' : 'text-gray-700'}`}>
               Email
