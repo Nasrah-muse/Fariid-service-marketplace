@@ -291,6 +291,9 @@ const Header = () => {
             >
               About
             </NavLink>
+
+            {!isLoggedIn && (
+           <div className={`border-t ${theme === 'dark' ? 'border-indigo-700' : 'border-gray-200'} pt-3 px-3 space-y-2`}>
             
             <div className="pt-2 px-3 space-y-2">
               <NavLink
@@ -309,7 +312,10 @@ const Header = () => {
               >
                 Sign Up
               </NavLink>
+            
             </div>
+            </div>
+            )}
           </div>
         </div>
       </div>
