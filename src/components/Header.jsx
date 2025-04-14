@@ -21,6 +21,10 @@ const Header = () => {
     }`
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
+  const avatar_url = null;
+
 
   return (
     <header className={`shadow-md ${theme === 'dark'? 'bg-indigo-900': 'bg-white'} `}>
