@@ -1,9 +1,12 @@
 import { useState } from "react";
 import { useTheme } from "../contexts/ThemeContext";
+import { useNavigate } from "react-router";
 
  
 const SignUpPage = () => {
   const { theme } = useTheme();
+  const navigate = useNavigate();
+
   
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
@@ -134,6 +137,16 @@ const SignUpPage = () => {
             {isLoading ? 'Creating account...' : 'Create Account'}
           </button>
         </form>
+        <div className={`mt-4 text-center text-sm ${theme === 'dark' ? 'text-indigo-300' : 'text-indigo-900'}`}>
+          Already have an account?{' '}
+          <button 
+            onClick={() => navigate('/signin')} 
+            className={`font-medium ${theme === 'dark' ? 'text-orange-400 hover:text-orange-300' : 'text-indigo-600 hover:text-indigo-500'}`}
+          >
+            Sign in
+          </button>
+        </div>
+
 </div>
 
     </div>
