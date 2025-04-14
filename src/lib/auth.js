@@ -42,6 +42,26 @@ export async function signUp(email, password, username = "", role = "") {
 }
 
 
+//  signin
 
+export async function signIn(email, password) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  });
 
+  if (error) throw error;
+
+  // chek user profile exists
+  if (data?.user) {
+    try {
+      await getUserProfile(data.user.id);
+    } catch (profileError) {
+      console.error("Profile error:", profileError);
+      throw profileError;
+    }
+  }
+
+  return data;
+}
 
