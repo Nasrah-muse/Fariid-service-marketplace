@@ -213,7 +213,7 @@ const Header = () => {
           }}
           className={`block w-full text-center px-4 py-2 text-md font-medium rounded-md transition-colors ${
             theme === 'dark'
-              ? 'text-sky-200 border border-sky-200 hover:bg-indigo-700'
+              ? 'text-indigo-900 border border-sky-200 hover:bg-indigo-700 hover:text-sky-200'
               : 'text-orange-600 border border-orange-600 hover:bg-orange-50'
           }`}
         >
