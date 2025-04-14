@@ -9,12 +9,14 @@ import ContactPage from "./pages/ContactPage"
 import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
 import { ThemeProvider } from "./contexts/ThemeContext"
+import { AuthProvider } from "./contexts/AuthContext"
 
  
 function App() {
  
   return (
     <div>
+      <AuthProvider>
       <ThemeProvider>
       {/* Header */}
       <Header/>
@@ -34,6 +36,7 @@ function App() {
       {/* Footer */}
       <Footer/>
       </ThemeProvider>
+      </AuthProvider>
     </div>
  
   )
