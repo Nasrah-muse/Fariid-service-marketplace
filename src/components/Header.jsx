@@ -176,6 +176,52 @@ const Header = () => {
         {/* Mobile menu */}
         <div className={`sm:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} `}>
           <div className="pt-2 pb-3 space-y-1 bg-white shadow-lg">
+          {isLoggedIn && (
+      <div className={`border-t ${theme === 'dark' ? 'border-indigo-700' : 'border-gray-200'} pt-3 px-3`}>
+         <div className="flex items-center mb-3">
+          <div className="flex-shrink-0 mr-3">
+            {avatar_url ? (
+              <img className="w-10 h-10 rounded-full" src={avatar_url} alt="Profile" />
+            ) : (
+              <div className={`p-2 rounded-full ${theme === 'dark' ? 'bg-sky-200 text-indigo-900' : 'bg-gray-200 text-orange-500'}`}>
+                <FaUser className="text-xl" />
+              </div>
+            )}
+          </div>
+          <div className={`text-md font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+            {/* username */}
+           </div>
+        </div>
+
+        {/* Go to Dashboard button */}
+        <NavLink
+          to="/dashboard"
+          onClick={() => setIsMobileMenuOpen(false)}
+          className={`block w-full text-center px-4 py-2 text-md font-medium rounded-md transition-colors mb-2 ${
+            theme === 'dark' 
+              ? 'bg-sky-200 text-indigo-900 hover:bg-sky-300' 
+              : 'bg-orange-600 text-white hover:bg-orange-700'
+          }`}
+        >
+          Go to Dashboard
+        </NavLink>
+
+        {/* Logout button */}
+        <button
+          onClick={() => {
+             setIsMobileMenuOpen(false);
+          }}
+          className={`block w-full text-center px-4 py-2 text-md font-medium rounded-md transition-colors ${
+            theme === 'dark'
+              ? 'text-sky-200 border border-sky-200 hover:bg-indigo-700'
+              : 'text-orange-600 border border-orange-600 hover:bg-orange-50'
+          }`}
+        >
+          Logout
+        </button>
+      </div>
+    )}
+
             <NavLink
               to="/"
               onClick={() => setIsMobileMenuOpen(false)}
