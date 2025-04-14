@@ -7,6 +7,7 @@ import { IoClose } from "react-icons/io5";
 import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useTheme } from "../contexts/ThemeContext";
+import { FaUser } from "react-icons/fa";
  
 const Header = () => {
 
@@ -78,10 +79,60 @@ const Header = () => {
               About
             </NavLink>
 
-
             <div className="flex space-x-4 ml-4">
             <ThemeToggle/>
+            {isLoggedIn ? (
+                 <div className="relative">
+                  <button
+                    onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                    className={`flex items-center justify-center h-10 w-10 rounded-full ${
+                      theme === 'dark' ? 'bg-sky-200' : 'bg-gray-200'
+                    } focus:outline-none`}
+                  >
+                    <FaUser className={theme === 'dark' ? 'text-indigo-900' : 'text-orange-500'} />
+                  </button>
+                    {isDropdownOpen && (
+                    <div 
+                      className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg z-10 ${
+                        theme === 'dark' ? 'bg-indigo-800' : 'bg-white'
+                      }`}
+                      onMouseLeave={() => setIsDropdownOpen(false)}
+                    >
+                      <NavLink 
+                        to="/dashboard"
+                        className={`block px-4 py-2 text-sm  ${
+                          theme === 'dark' ? 'text-sky-200 hover:bg-indigo-500' : 'text-indigo-900 hover:bg-gray-100'
+                        }`}
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        Dashboard
+                      </NavLink>
+                      <NavLink 
+                        to="/profile"
+                        className={`block px-4 py-2 text-sm ${
+                          theme === 'dark' ? 'text-sky-200 hover:bg-indigo-500' : 'text-indigo-900 hover:bg-gray-100'
+                        }`}
+                        onClick={() => setIsDropdownOpen(false)}
+                      >
+                        Profile
+                      </NavLink>
+                      <button
+                        onClick={() => {
+                           setIsDropdownOpen(false);
+                        }}
+                        className={`block w-full text-left px-4 py-2 text-sm ${
+                          theme === 'dark' ? 'text-sky-200 hover:bg-indigo-500' : 'text-indigo-900 hover:bg-gray-100'
+                        }`}
+                      >
+                        Logout
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ) : (
 
+                <>
+               
               <NavLink
                 to="/signin"
                 className={`px-4 py-2 text-md font-medium rounded-md transition-colors cursor-pointer
@@ -97,6 +148,8 @@ const Header = () => {
               >
                 Sign Up
               </NavLink>
+              </>
+               )}
             </div>
           </nav>
 
