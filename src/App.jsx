@@ -10,7 +10,7 @@ import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
 import { ThemeProvider } from "./contexts/ThemeContext"
 import { AuthProvider } from "./contexts/AuthContext"
-
+import UnAuthenticatedRoute from "./components/UnAuthenticatedRoute"
  
 function App() {
  
@@ -28,8 +28,17 @@ function App() {
      <Route path="/categories" element={<CategoriesPage/>}/>
      <Route path="/contact" element={<ContactPage/>}/>
      <Route path="/about" element={<AboutPage/>}/>
-     <Route path="/signin" element={<SignInPage/>}/>
-     <Route path="/signup" element={<SignUpPage/>}/>
+     <Route path="/signin" element={
+       <UnAuthenticatedRoute>
+      <SignInPage/>
+      </UnAuthenticatedRoute>
+      }/>
+     <Route path="/signup" element={
+        <UnAuthenticatedRoute>
+        <SignUpPage/>
+        </UnAuthenticatedRoute>
+      
+      }/>
      </Routes>
 
       </main>
