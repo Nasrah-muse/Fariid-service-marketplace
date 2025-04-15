@@ -92,7 +92,7 @@ console.log("User profile", profile)
                 <div className="hidden lg:block">
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className="focus:outline-none"
+                    className="focus:outline-none cursor-pointer"
                   >
                     {avatar_url ? (
                       <img className="w-10 h-10 rounded-full" src={avatar_url} alt="Profile" />
@@ -168,7 +168,7 @@ console.log("User profile", profile)
                <ThemeToggle className="ml-2" />
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className={`inline-flex items-center justify-center p-2 rounded-md hover:text-orange-500  ${
+              className={`inline-flex items-center justify-center p-2 rounded-md hover:text-orange-500 cursor-pointer ${
                 theme === 'dark' ? "text-sky-200 " : "text-indigo-900"
               } focus:outline-none`}
               
