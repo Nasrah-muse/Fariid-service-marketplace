@@ -11,6 +11,9 @@ import SignUpPage from "./pages/SignUpPage"
 import { ThemeProvider } from "./contexts/ThemeContext"
 import { AuthProvider } from "./contexts/AuthContext"
 import UnAuthenticatedRoute from "./components/UnAuthenticatedRoute"
+import ProtectedRoute from "./components/ProtectedRoute"
+import ProfilePage from "./pages/ProfilePage"
+import Dashboard from "./pages/Dashboard"
  
 function App() {
  
@@ -40,6 +43,20 @@ function App() {
       
       }/>
      </Routes>
+
+     {/* Protected routes */}
+     <Route path="/profile" element={
+        <ProtectedRoute>
+        <ProfilePage/>
+        </ProtectedRoute>
+      
+      }/>
+     <Route path="/dashboard" element={
+        <ProtectedRoute>
+        <Dashboard/>
+        </ProtectedRoute>
+      
+      }/>
 
       </main>
       {/* Footer */}
