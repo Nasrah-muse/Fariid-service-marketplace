@@ -42,9 +42,7 @@ function App() {
         </UnAuthenticatedRoute>
       
       }/>
-     </Routes>
-
-     {/* Protected routes */}
+           {/* Protected routes */}
      <Route path="/profile" element={
         <ProtectedRoute>
         <ProfilePage/>
@@ -57,6 +55,9 @@ function App() {
         </ProtectedRoute>
       
       }/>
+     </Routes>
+
+
 
       </main>
       {/* Footer */}
