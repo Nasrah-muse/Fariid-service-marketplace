@@ -57,9 +57,9 @@ export async function signIn(email, password) {
   if (data?.user) {
     try {
       await getUserProfile(data.user.id);
-    } catch (profileError) {
-      console.error("Profile error:", profileError);
-      throw profileError;
+    } catch (err) {
+      console.error("Profile error:", err.message);
+      throw err;
     }
   }
 
