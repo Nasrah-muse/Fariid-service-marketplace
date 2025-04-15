@@ -12,7 +12,7 @@ export async function signUp(email, password, username = "", role = "") {
     password,
     options: {
       data: {
-        username: username || email.split("@")[0],
+        username,
         role
       }
     }
@@ -30,7 +30,7 @@ export async function signUp(email, password, username = "", role = "") {
         .insert({
           id: data.user.id,
           email,
-          username: username || email.split("@")[0],
+          username,
           role,
           avatar_url: null
         });
