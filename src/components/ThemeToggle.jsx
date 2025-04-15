@@ -7,7 +7,7 @@ export default function ThemeToggle({ className = '' }) {
   return (
     <button
       onClick={toggleTheme}
-      className={`p-2 rounded-full transition-all ${className} ${
+      className={`p-2 rounded-full transition-all cursor-pointer ${className} ${
         theme === 'dark' 
           ? 'bg-gray-400 text-white hover:bg-gray-600' 
           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
