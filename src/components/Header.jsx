@@ -24,7 +24,11 @@ const Header = () => {
 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
+  const {  isLoggedIn, profile, logout} = useAuth()
+
+console.log("User profile", profile)
+
   const avatar_url = null;
 
 
@@ -84,14 +88,21 @@ const Header = () => {
             <ThemeToggle/>
             {isLoggedIn ? (
                  <div className="relative">
+                
+                <div className="hidden lg:block">
                   <button
                     onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                    className={`flex items-center justify-center h-10 w-10 rounded-full ${
-                      theme === 'dark' ? 'bg-sky-200' : 'bg-gray-200'
-                    } focus:outline-none`}
+                    className="focus:outline-none"
                   >
-                    <FaUser className={theme === 'dark' ? 'text-indigo-900' : 'text-orange-500'} />
+                    {avatar_url ? (
+                      <img className="w-10 h-10 rounded-full" src={avatar_url} alt="Profile" />
+                    ) : (
+                      <div className={`p-2 rounded-full ${theme === 'dark' ? 'bg-sky-200 text-indigo-900' : 'bg-gray-200 text-orange-500'}`}>
+                        <FaUser className="text-xl" />
+                      </div>
+                    )}
                   </button>
+                </div>
                     {isDropdownOpen && (
                     <div 
                       className={`absolute right-0 mt-2 w-48 rounded-md shadow-lg z-10 ${
@@ -118,9 +129,7 @@ const Header = () => {
                         Profile
                       </NavLink>
                       <button
-                        onClick={() => {
-                           setIsDropdownOpen(false);
-                        }}
+                         onClick={()=> logout()}
                         className={`block w-full text-left px-4 py-2 text-sm ${
                           theme === 'dark' ? 'text-sky-200 hover:bg-indigo-500' : 'text-indigo-900 hover:bg-gray-100'
                         }`}
@@ -189,8 +198,8 @@ const Header = () => {
               </div>
             )}
           </div>
-          <div className={`text-md font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
-            {/* username */}
+          <div className={`text-md font-bold ${theme === 'dark' ? 'text-sky-600' : 'text-indigo-900'}`}>
+           <div>{profile?.username}</div>
            </div>
         </div>
 
@@ -209,9 +218,7 @@ const Header = () => {
 
         {/* Logout button */}
         <button
-          onClick={() => {
-             setIsMobileMenuOpen(false);
-          }}
+         onClick={()=> logout()}
           className={`block w-full text-center px-4 py-2 text-md font-medium rounded-md transition-colors ${
             theme === 'dark'
               ? 'text-indigo-900 border border-sky-200 hover:bg-indigo-700 hover:text-sky-200'

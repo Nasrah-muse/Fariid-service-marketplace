@@ -42,6 +42,40 @@ export async function signUp(email, password, username = "", role = "") {
   return data;
 }
 
+// Get Profile
+export async function getUserProfile(userId) {
+  const { data, error } = await supabase
+    .from("users")
+    .select("*")
+    .eq("id", userId)
+    .single();
+
+  if (error && error.code === "PGRST116") {
+    const { data: userData } = await supabase.auth.getUser();
+    const email = userData?.user?.email;
+    const username = userData?.user?.username || email?.split('@')[0] || `user_${Date.now()}`;
+
+
+    const { data: newProfile, error: insertError } = await supabase
+  .from("users")
+  .insert({
+    id: userId,
+    username,
+    role: "customer",
+    avatar_url: null,
+  })
+  .select()
+  .single();
+
+
+    if (insertError) throw insertError;
+    return newProfile;
+  }
+
+  if (error) throw error;
+
+  return data;
+}
 
 //  signin
 
@@ -64,5 +98,19 @@ export async function signIn(email, password) {
   }
 
   return data;
+}
+
+export function onAuthChange(callback) {
+  const { data } = supabase.auth.onAuthStateChange((event, session) => {
+    callback(session?.user || null, event);
+  });
+
+  return () => data.subscription.unsubscribe();
+}
+
+
+// Sign Out
+export async function signOut() {
+  await supabase.auth.signOut();
 }
 
