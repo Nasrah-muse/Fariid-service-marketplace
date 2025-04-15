@@ -8,6 +8,7 @@ import { useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 import { useTheme } from "../contexts/ThemeContext";
 import { FaUser } from "react-icons/fa";
+import { useAuth } from "../contexts/AuthContext";
  
 const Header = () => {
 

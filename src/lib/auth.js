@@ -4,6 +4,7 @@ export async function signUp(email, password, username = "", role = "") {
    if (!role) {
     throw new Error("Please select a role (customer or provider)");
   }
+  if (!username) throw new Error("Please provide a username");
 
   // Signup
   let { data, error } = await supabase.auth.signUp({
