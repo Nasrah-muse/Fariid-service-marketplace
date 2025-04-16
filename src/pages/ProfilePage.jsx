@@ -2,17 +2,20 @@
 import { FiArrowLeft,   FiCamera, FiEye, FiEyeOff, FiLock, FiMail,  FiUser } from "react-icons/fi";
 import { useTheme } from "../contexts/ThemeContext";
 import { useAuth } from "../contexts/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router";
 import toast from "react-hot-toast";
+import supabase from "../lib/supabase";
+import { getUserProfile } from "../lib/auth";
+
 
 const ProfilePage = () => {
     const { theme } = useTheme();
-    const { user, profile, logout } = useAuth();
+    const { user } = useAuth();
     const [loading, setLoading] = useState(false);
-    const [username, setUsername] = useState(profile?.username || '');
+    const [username, setUsername] = useState( '');
     const [avatar, setAvatar] = useState(null);
-    const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url || '');
+    const [avatarUrl, setAvatarUrl] = useState('');
     
   const [showPasswordForm, setShowPasswordForm] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -23,6 +26,29 @@ const ProfilePage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
+  useEffect(()=>{
+    if(user){
+      fetchUserProfile()
+    }
+
+  },[user]) 
+
+  const fetchUserProfile = async ()=>{
+    try{
+      setLoading(true)
+      const {username, avatar_url} = await getUserProfile(user.id)
+      if(username){
+        setUsername(username)
+        setAvatarUrl(avatar_url)
+      }
+  
+    }catch(error){
+      console.error("Error from getting user profile", error)
+    }finally{
+      setLoading(false)
+  
+    }
+  }
   const handleAvatarChange = (e) => {
     if (e.target.files?.[0]) {
       const file = e.target.files[0];
@@ -35,7 +61,64 @@ const ProfilePage = () => {
       setAvatarUrl(previewUrl)
     }
   };
-  return (
+
+  const handleProfileSubmit = async (e) => {
+    e.preventDefault();
+  
+    try {
+      setLoading(true);
+  
+      let updates = {
+        username,
+       }
+       console.log("updates:", updates)
+
+  
+      if (avatar) {
+        const fileExt = avatar.name.split('.').pop();
+        const fileName = `${user.id}-${Math.random().toString(36).substring(2)}`
+        const filePath = `avatars/${fileName}.${fileExt}`
+  
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(filePath, avatar)
+  
+        if (uploadError) throw uploadError
+  
+         const { data: publicData } = supabase.storage
+          .from('avatars')
+          .getPublicUrl(filePath)
+  
+          console.log("Public URL:", publicData.publicUrl)
+
+        updates = {
+          ...updates,
+          avatar_url: publicData.publicUrl,
+        }
+  
+        setAvatarUrl(publicData.publicUrl)
+      }
+  
+       const { error: updateError } = await supabase
+        .from('users')
+        .update(updates)
+        .eq('id', user.id)
+        .select('username, avatar_url')
+        console.log("User ID:", user.id)
+
+   
+      if (updateError) throw updateError;
+  
+      toast.success("Profile updated successfully")
+    } catch (error) {
+      console.error(error)
+      toast.error("Failed to update profile")
+    } finally {
+      setLoading(false)
+    }
+  }
+  
+   return (
     <div className={`min-h-screen  bg-gray-300 py-12 px-4 sm:px-6 lg:px-8`}>
               <div className="max-w-3xl mx-auto">
               <div className={`${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'} shadow-xl rounded-lg overflow-hidden`}>
@@ -71,7 +154,7 @@ const ProfilePage = () => {
             </div>
           </div>
           {/* Profile Form */}
-          <form  className="p-6 space-y-6">
+          <form onSubmit={handleProfileSubmit}  className="p-6 space-y-6">
             <div className="space-y-6">
               <div>
                 <label className={`block text-sm font-medium ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-700'}`}>
