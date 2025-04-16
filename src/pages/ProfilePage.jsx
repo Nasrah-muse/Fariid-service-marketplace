@@ -1,9 +1,10 @@
 
-import { FiArrowLeft, FiArrowRight, FiCamera, FiEye, FiEyeOff, FiLock, FiMail, FiSkipBack, FiUser } from "react-icons/fi";
+import { FiArrowLeft,   FiCamera, FiEye, FiEyeOff, FiLock, FiMail,  FiUser } from "react-icons/fi";
 import { useTheme } from "../contexts/ThemeContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useState } from "react";
 import { NavLink } from "react-router";
+import toast from "react-hot-toast";
 
 const ProfilePage = () => {
     const { theme } = useTheme();
@@ -22,6 +23,18 @@ const ProfilePage = () => {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
 
+  const handleAvatarChange = (e) => {
+    if (e.target.files?.[0]) {
+      const file = e.target.files[0];
+      if (file.size > 2 * 1024 * 1024) {
+       toast.error("File size must be less than 2MB", { position: 'top-center' });
+        return;
+      }
+      setAvatar(file);
+      const previewUrl = URL.createObjectURL(file)
+      setAvatarUrl(previewUrl)
+    }
+  };
   return (
     <div className={`min-h-screen  bg-gray-300 py-12 px-4 sm:px-6 lg:px-8`}>
               <div className="max-w-3xl mx-auto">
@@ -48,6 +61,7 @@ const ProfilePage = () => {
                   id="avatar-upload"
                   className="hidden"
                   accept="image/*"
+                  onChange={handleAvatarChange}
                  />
               </div>
               <h2 className={`mt-4 text-2xl font-bold ${theme === 'dark' ? 'text-sky-200 ' : 'text-indigo-900'}`}>

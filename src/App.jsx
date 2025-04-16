@@ -14,13 +14,16 @@ import UnAuthenticatedRoute from "./components/UnAuthenticatedRoute"
 import ProtectedRoute from "./components/ProtectedRoute"
 import ProfilePage from "./pages/ProfilePage"
 import Dashboard from "./pages/Dashboard"
+import  { Toaster } from 'react-hot-toast';
+
  
 function App() {
  
   return (
-    <div>
-      <AuthProvider>
+    <AuthProvider>
       <ThemeProvider>
+    <div>
+     
       {/* Header */}
       <Header/>
       <main>
@@ -62,9 +65,12 @@ function App() {
       </main>
       {/* Footer */}
       <Footer/>
-      </ThemeProvider>
-      </AuthProvider>
+    
     </div>
+          <Toaster />
+          </ThemeProvider>
+          </AuthProvider>
+
  
   )
 }
