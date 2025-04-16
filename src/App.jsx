@@ -10,14 +10,20 @@ import SignInPage from "./pages/SignInPage"
 import SignUpPage from "./pages/SignUpPage"
 import { ThemeProvider } from "./contexts/ThemeContext"
 import { AuthProvider } from "./contexts/AuthContext"
+import UnAuthenticatedRoute from "./components/UnAuthenticatedRoute"
+import ProtectedRoute from "./components/ProtectedRoute"
+import ProfilePage from "./pages/ProfilePage"
+import Dashboard from "./pages/Dashboard"
+import  { Toaster } from 'react-hot-toast';
 
  
 function App() {
  
   return (
-    <div>
-      <AuthProvider>
+    <AuthProvider>
       <ThemeProvider>
+    <div>
+     
       {/* Header */}
       <Header/>
       <main>
@@ -28,16 +34,43 @@ function App() {
      <Route path="/categories" element={<CategoriesPage/>}/>
      <Route path="/contact" element={<ContactPage/>}/>
      <Route path="/about" element={<AboutPage/>}/>
-     <Route path="/signin" element={<SignInPage/>}/>
-     <Route path="/signup" element={<SignUpPage/>}/>
+     <Route path="/signin" element={
+       <UnAuthenticatedRoute>
+      <SignInPage/>
+      </UnAuthenticatedRoute>
+      }/>
+     <Route path="/signup" element={
+        <UnAuthenticatedRoute>
+        <SignUpPage/>
+        </UnAuthenticatedRoute>
+      
+      }/>
+           {/* Protected routes */}
+     <Route path="/profile" element={
+        <ProtectedRoute>
+        <ProfilePage/>
+        </ProtectedRoute>
+      
+      }/>
+     <Route path="/dashboard" element={
+        <ProtectedRoute>
+        <Dashboard/>
+        </ProtectedRoute>
+      
+      }/>
      </Routes>
+
+
 
       </main>
       {/* Footer */}
       <Footer/>
-      </ThemeProvider>
-      </AuthProvider>
+    
     </div>
+          <Toaster />
+          </ThemeProvider>
+          </AuthProvider>
+
  
   )
 }
