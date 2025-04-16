@@ -29,7 +29,7 @@ const Header = () => {
 
 console.log("User profile", profile)
 
-  const avatar_url = null;
+  const avatar_url =  profile?.avatar_url
 
 
   return (
