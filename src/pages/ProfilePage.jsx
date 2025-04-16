@@ -118,6 +118,36 @@ const ProfilePage = () => {
     }
   }
   
+  //  handle password 
+  const handlePasswordSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (newPassword !== confirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
+  
+    try {
+      setLoading(true);
+  
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+  
+      if (error) throw error;
+  
+      toast.success('Password updated successfully!');
+      setShowPasswordForm(false);
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      toast.error(error.message || 'Failed to update password');
+    } finally {
+      setLoading(false);
+    }
+  }
+  
    return (
     <div className={`min-h-screen  bg-gray-300 py-12 px-4 sm:px-6 lg:px-8`}>
               <div className="max-w-3xl mx-auto">
@@ -232,7 +262,7 @@ const ProfilePage = () => {
 
           {/* chnage password form */}
           {showPasswordForm && (
-            <form className="px-6 pb-6 space-y-6">
+            <form onSubmit={handlePasswordSubmit} className="px-6 pb-6 space-y-6">
               <div className="space-y-6">
                 <div>
                   <label className={`block text-sm font-medium ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-700'}`}>
