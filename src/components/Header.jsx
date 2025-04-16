@@ -190,6 +190,11 @@ console.log("User profile", profile)
       <div className={`border-t ${theme === 'dark' ? 'border-indigo-700' : 'border-gray-200'} pt-3 px-3`}>
          <div className="flex items-center mb-3">
           <div className="flex-shrink-0 mr-3">
+          <NavLink
+            to="/profile"
+            onClick={() => setIsMobileMenuOpen(false)}
+            className="flex items-center"
+          >
             {avatar_url ? (
               <img className="w-10 h-10 rounded-full" src={avatar_url} alt="Profile" />
             ) : (
@@ -197,8 +202,9 @@ console.log("User profile", profile)
                 <FaUser className="text-xl" />
               </div>
             )}
+           </NavLink>
           </div>
-          <div className={`text-md font-bold ${theme === 'dark' ? 'text-sky-600' : 'text-indigo-900'}`}>
+          <div className={`text-xl font-bold ${theme === 'dark' ? 'text-sky-600' : 'text-indigo-900'}`}>
            <div>{profile?.username}</div>
            </div>
         </div>
