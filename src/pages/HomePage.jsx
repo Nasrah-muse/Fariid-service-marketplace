@@ -162,16 +162,20 @@ const HomePage = () => {
                       : 'bg-orange-600'
                     : theme === 'dark'
                     ? 'bg-gray-500'
-                    : 'bg-indigo-500'
+                    : 'bg-indigo-00'
                 }`}
                />
             ))}
           </div>
-
-
-
 </div>
 </div>
+<div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-sky-200' : 'bg-gray-50'}`}>
+      <div className="max-w-4xl mx-auto">
+        <h2 className={`text-3xl font-bold text-center mb-12 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+         <span className='text-orange-500'> Frequently</span> Asked Questions
+        </h2>
+        </div>
+        </div>
 </>
    )
 }
