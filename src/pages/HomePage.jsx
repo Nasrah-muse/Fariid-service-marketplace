@@ -14,7 +14,31 @@ const HomePage = () => {
   const { theme } = useTheme()
 
    const [currentBgIndex, setCurrentBgIndex] = useState(0);
+   const [currentTestimonial, setCurrentTestimonial] = useState(1)
+   const [animate, setAnimate] = useState(false)
+ 
    const backgrounds = [bg1, bg2, bg3, bg4, bg5];
+
+   const testimonials = [
+    {
+      quote: "This platform has been a game-changer for my business as an electrician. It connects me with clients who need my services, allowing me to focus on delivering quality work. Highly reliable and well-organized!",
+      author: "Khalid Ali",
+      role: "XYZ Manager",
+      image: author1
+    },
+    {
+      quote: "I was impressed by how quickly I found a skilled plumber through this platform. The service provider was punctual, efficient and handled the job with great professional. A seamless experience from start to finish!",
+      author: "Ayaan Macalin",
+      role: "House Wife",
+      image: author2
+    },
+    {
+      quote: "As a small business owner, finding reliable service providers was always challenging. This platform has simplified the process and connected me with trustworthy professionals every time.",
+      author: "Hodan Jama",
+      role: "Small Business owner",
+      image: author3
+    }
+  ]
 
    useEffect(() => {
     const interval = setInterval(() => {
