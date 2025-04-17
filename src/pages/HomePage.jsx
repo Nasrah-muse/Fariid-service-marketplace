@@ -29,6 +29,16 @@ const HomePage = () => {
       transition: 'background-image 1s ease-in-out'
     }}
 >
+<div className={`relative max-w-4xl mx-auto z-10 text-white`}>
+        <h1 className="text-4xl font-bold mb-4 text-sky-200">
+          Find Trusted <span className='text-orange-600'> Service Providers</span> in Galkayo!
+        </h1>
+        <p className="text-xl mb-8">
+          Easily connect with professional service providers for home repairs, tutoring, beauty services, and more. Safe, fast, and hassle-free!
+        </p>
+       
+      </div>
+
 
     </div>
   )
