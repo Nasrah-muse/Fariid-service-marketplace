@@ -9,6 +9,7 @@ import bg5 from '../assets/bg5.jpg'
 import author1 from '../assets/author1.jpg'
 import author2 from '../assets/author2.jpg'
 import author3 from '../assets/author3.jpg'
+import { FaChevronDown } from 'react-icons/fa';
 
 const HomePage = () => {
   const { theme } = useTheme()
@@ -84,6 +85,9 @@ const HomePage = () => {
       setCurrentTestimonial(index)
       setAnimate(false)
     }, 300)
+  }
+  const toggleFAQ = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
   }
 
 
@@ -194,6 +198,32 @@ const HomePage = () => {
         <h2 className={`text-3xl font-bold text-center mb-12 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
          <span className='text-orange-500'> Frequently</span> Asked Questions
         </h2>
+        <div className="space-y-4">
+          {faqs.map((faq, index) => (
+            <div 
+              key={index}
+              className={`border rounded-lg overflow-hidden transition-all duration-300 ${theme === 'dark' ? 'border-gray-700' : 'border-indigo-800'}`}
+            >
+              <button
+                className={`w-full text-left p-6 flex justify-between items-center focus:outline-none ${theme === 'dark' ? 'hover:bg-orange-300' : 'hover:bg-sky-200'}`}
+                onClick={() => toggleFAQ(index)}
+              >
+                <h3 className={`text-lg font-medium ${theme === 'dark' ? 'text-indigo-700 ' : 'text-indigo-900'}`}>
+                  {faq.question}
+                </h3>
+                <FaChevronDown
+                  className={`text-lg transition-transform duration-300 ${activeIndex === index ? 'rotate-180' : ''} ${theme === 'dark' ? 'text-indigo-900' : 'text-gray-500'}`}
+                />
+              </button>
+              
+              <div 
+                className={`px-6 pb-6 pt-0 transition-all duration-300 ${activeIndex === index ? 'block' : 'hidden'} ${theme === 'dark' ? 'text-indigo-400' : 'text-sky-500'}`}
+              >
+                <p>{faq.answer}</p>
+              </div>
+            </div>
+          ))}
+        </div>
         </div>
         </div>
 </>
