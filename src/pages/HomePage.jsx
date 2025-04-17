@@ -46,6 +46,27 @@ const HomePage = () => {
     }, 2000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setAnimate(true);
+      setTimeout(() => {
+        setCurrentTestimonial((prev) => (prev + 1) % testimonials.length)
+        setAnimate(false)
+      }, 300)
+    }, 3000)
+    return () => clearInterval(interval)
+  }, [])
+
+  const goToTestimonial = (index) => {
+    setAnimate(true);
+    setTimeout(() => {
+      setCurrentTestimonial(index)
+      setAnimate(false)
+    }, 300)
+  }
+
+
   return (
     <>
      <div  className="relative py-12 px-4 sm:px-6 lg:px-8 text-center min-h-screen flex items-center justify-center"
@@ -102,6 +123,7 @@ const HomePage = () => {
               return (
                 <div
                 key={index}
+                onClick={() => goToTestimonial(index)}
                  className={`
                   cursor-pointer rounded-lg p-6 shadow-lg transition-all duration-300 
                   ${theme === 'dark' ? 'bg-indigo-900 bg-opacity-30 text-white' : 'bg-white'} 
@@ -128,6 +150,24 @@ const HomePage = () => {
               )
             })}
           </div>
+          <div className="flex justify-center mt-8 space-x-2">
+            {testimonials.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToTestimonial(index)}
+                className={`w-3 h-3 rounded-full transition-colors ${
+                  index === currentTestimonial
+                    ? theme === 'dark'
+                      ? 'bg-orange-400'
+                      : 'bg-orange-600'
+                    : theme === 'dark'
+                    ? 'bg-gray-500'
+                    : 'bg-gray-300'
+                }`}
+               />
+            ))}
+          </div>
+
 
 
 </div>
