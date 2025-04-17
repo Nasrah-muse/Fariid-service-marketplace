@@ -14,7 +14,6 @@ const HomePage = () => {
   const { theme } = useTheme()
 
    const [currentBgIndex, setCurrentBgIndex] = useState(0);
-  
    const backgrounds = [bg1, bg2, bg3, bg4, bg5];
 
    useEffect(() => {
@@ -24,7 +23,8 @@ const HomePage = () => {
     return () => clearInterval(interval);
   }, []);
   return (
-    <div  className="relative py-12 px-4 sm:px-6 lg:px-8 text-center min-h-screen flex items-center justify-center"
+    <>
+     <div  className="relative py-12 px-4 sm:px-6 lg:px-8 text-center min-h-screen flex items-center justify-center"
     style={{
       backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgrounds[currentBgIndex]})`,
       backgroundSize: 'cover',
@@ -67,7 +67,15 @@ const HomePage = () => {
 
 
     </div>
-  )
+    <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-50'}`}>
+        <div className="max-w-7xl mx-auto">
+          <h2 className={`text-4xl font-bold text-center mb-12 ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+            See What <span className='text-orange-500'>Our Happy Customers</span> Have to Say
+          </h2>
+</div>
+</div>
+</>
+   )
 }
 
 export default HomePage
