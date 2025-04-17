@@ -112,7 +112,7 @@ const HomePage = () => {
 
 
     </div>
-    <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-gray-800' : 'bg-gray-50'}`}>
+    <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-gray-800' : 'bg-sky-200'}`}>
         <div className="max-w-7xl mx-auto">
           <h2 className={`text-4xl font-bold text-center mb-12 ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
             See What <span className='text-orange-500'>Our Happy Customers</span> Have to Say
@@ -162,7 +162,7 @@ const HomePage = () => {
                       : 'bg-orange-600'
                     : theme === 'dark'
                     ? 'bg-gray-500'
-                    : 'bg-gray-300'
+                    : 'bg-indigo-500'
                 }`}
                />
             ))}
