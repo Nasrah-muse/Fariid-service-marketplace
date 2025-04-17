@@ -96,6 +96,40 @@ const HomePage = () => {
           <h2 className={`text-4xl font-bold text-center mb-12 ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
             See What <span className='text-orange-500'>Our Happy Customers</span> Have to Say
           </h2>
+          <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto transition-all duration-500`}>
+            {testimonials.map((item, index) => {
+              const isActive = index === currentTestimonial
+              return (
+                <div
+                key={index}
+                 className={`
+                  cursor-pointer rounded-lg p-6 shadow-lg transition-all duration-300 
+                  ${theme === 'dark' ? 'bg-indigo-900 bg-opacity-30 text-white' : 'bg-white'} 
+                  ${isActive ? 'scale-105 opacity-100 z-10' : 'scale-95 opacity-60'}
+                `}
+              >
+                <div className="flex flex-col gap-4">
+                  <p className="italic text-center">"{item.quote}"</p>
+              
+                   <div className="flex items-center gap-4 mt-2">
+                    <img
+                      src={item.image}
+                      alt={item.author}
+                      className="w-12 h-12 rounded-full object-cover border-2 border-orange-500"
+                    />
+                    <div>
+                      <p className="font-semibold text-orange-500 ">{item.author}</p>
+                      <p className={`text-sm ${theme === 'dark'? "text-sky-200" : "text-indigo-900"}`}>{item.role}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              
+              )
+            })}
+          </div>
+
+
 </div>
 </div>
 </>
