@@ -6,6 +6,9 @@ import bg3 from '../assets/bg3.jpg'
 import bg4 from '../assets/bg4.jpg'
 import bg5 from '../assets/bg5.jpg'
 
+import author1 from '../assets/author1.jpg'
+import author2 from '../assets/author2.jpg'
+import author3 from '../assets/author3.jpg'
 
 const HomePage = () => {
   const { theme } = useTheme()
