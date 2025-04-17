@@ -16,7 +16,8 @@ const HomePage = () => {
    const [currentBgIndex, setCurrentBgIndex] = useState(0);
    const [currentTestimonial, setCurrentTestimonial] = useState(1)
    const [animate, setAnimate] = useState(false)
- 
+   const [activeIndex, setActiveIndex] = useState(null);
+
    const backgrounds = [bg1, bg2, bg3, bg4, bg5];
 
    const testimonials = [
@@ -37,6 +38,25 @@ const HomePage = () => {
       author: "Hodan Jama",
       role: "Small Business owner",
       image: author3
+    }
+  ]
+  
+  const faqs = [
+    {
+      question: "How can I become a service provider?",
+      answer: "Register on our platform, complete your profile, and we'll verify your documents. Once approved, you can start getting customers."
+    },
+    {
+      question: "Are the service providers verified?",
+      answer: "Yes, we verify all providers through ID checks and document verification before approval."
+    },
+    {
+      question: "What if I have an issue with a service?",
+      answer: "Contact us immediately through the platform. We'll help resolve any service issues quickly."
+    },
+    {
+      question: "How do I make a payment?",
+      answer: "Pay securely through DhaqsoPay. We support mobile money and cards. Payment is only released after you confirm the service is complete."
     }
   ]
 
