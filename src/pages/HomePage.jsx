@@ -1,4 +1,5 @@
 import { useState , useEffect} from 'react';
+import { useTheme } from '../contexts/ThemeContext';
 import bg1 from '../assets/bg1.jpg'
 import bg2 from '../assets/bg2.jpg'
 import bg3 from '../assets/bg3.jpg'
@@ -7,7 +8,7 @@ import bg5 from '../assets/bg5.jpg'
 
 
 const HomePage = () => {
- 
+  const { theme } = useTheme()
 
    const [currentBgIndex, setCurrentBgIndex] = useState(0);
   
@@ -36,6 +37,28 @@ const HomePage = () => {
         <p className="text-xl mb-8">
           Easily connect with professional service providers for home repairs, tutoring, beauty services, and more. Safe, fast, and hassle-free!
         </p>
+        <div className={`rounded-lg shadow-md p-6 ${theme === 'dark' ? 'bg-indigo-900 bg-opacity-90' : 'bg-white bg-opacity-90'}`}>
+          <div className="flex mb-4">
+            <input
+              type="text"
+              className={`flex-grow px-4 py-3 border ${theme === 'dark' ? 'border-indigo-600 bg-indigo-800 text-white' : 'text-blue-500 border-gray-300'} rounded-l-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent`}
+              placeholder="What service are you looking for today?"
+            />
+            <button className={`px-6 py-3 cursor-pointer ${theme === 'dark' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-blue-500 hover:bg-blue-600'} text-white font-medium rounded-r-lg transition duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2`}>
+              Search
+            </button>
+          </div>
+          
+          <div className={`flex flex-wrap items-center justify-center gap-2 ${theme === 'dark' ? 'text-sky-200' : 'text-gray-600'}`}>
+            <span>Popular search: </span>
+            <button className={`px-3 py-1 ${theme === 'dark' ? 'bg-indigo-700 hover:bg-indigo-600' : 'bg-gray-100 hover:bg-gray-200'} rounded-full transition duration-200`}>
+              Plumber
+            </button>
+            <button className={`px-3 py-1 ${theme === 'dark' ? 'bg-indigo-700 hover:bg-indigo-600' : 'bg-gray-100 hover:bg-gray-200'} rounded-full transition duration-200`}>
+              Electrician
+            </button>
+          </div>
+        </div>
        
       </div>
 
