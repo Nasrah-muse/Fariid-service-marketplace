@@ -54,6 +54,14 @@ const AdminDashboard = () => {
                  <FiCheckCircle className="mr-2" />Approve Providers
                  </button>
               </li>
+              <li>
+                <button 
+                     onClick={() => setActiveTab('reports')}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                >
+                 <FiBarChart2 className="mr-2" />Reports and Status
+                 </button>
+              </li>
             
                
             </ul>
