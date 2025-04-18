@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
-import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiLayers, FiMail, FiUsers } from 'react-icons/fi'
+import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiHelpCircle, FiLayers, FiMail, FiUsers } from 'react-icons/fi'
 
 const AdminDashboard = () => {
     const {theme} = useTheme()
@@ -76,6 +76,14 @@ const AdminDashboard = () => {
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiMail className="mr-2" />Send Announcements
+                 </button>
+              </li>
+              <li>
+                <button 
+                     onClick={() => setActiveTab('support')}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                >
+                 <FiHelpCircle className="mr-2" />Support/Complaints
                  </button>
               </li>
             
