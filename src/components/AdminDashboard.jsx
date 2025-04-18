@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
-import { FiBarChart2, FiUsers } from 'react-icons/fi'
+import { FiBarChart2, FiLayers, FiUsers } from 'react-icons/fi'
 
 const AdminDashboard = () => {
     const {theme} = useTheme()
@@ -24,11 +24,19 @@ const AdminDashboard = () => {
               </li>
               <li>
                 <button 
-                     onClick={() => setActiveTab('dashboard')}
+                     onClick={() => setActiveTab('users')}
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                   <FiUsers className="mr-2" /> Manage Users
                 </button>
+              </li>
+              <li>
+                <button 
+                     onClick={() => setActiveTab('services')}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                >
+                 <FiLayers className="mr-2" /> Services & Categories
+                 </button>
               </li>
             
                
