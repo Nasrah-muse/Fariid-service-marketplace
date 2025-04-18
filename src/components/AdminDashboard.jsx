@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
-import { FiBarChart2, FiCalendar, FiCheckCircle, FiLayers, FiUsers } from 'react-icons/fi'
+import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiLayers, FiUsers } from 'react-icons/fi'
 
 const AdminDashboard = () => {
     const {theme} = useTheme()
@@ -60,6 +60,14 @@ const AdminDashboard = () => {
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiBarChart2 className="mr-2" />Reports and Status
+                 </button>
+              </li>
+              <li>
+                <button 
+                     onClick={() => setActiveTab('payments')}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                >
+                 <FiDollarSign className="mr-2" />Manage Payments
                  </button>
               </li>
             
