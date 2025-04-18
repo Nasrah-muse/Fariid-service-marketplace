@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
-import { FiBarChart2, FiLayers, FiUsers } from 'react-icons/fi'
+import { FiBarChart2, FiCalendar, FiLayers, FiUsers } from 'react-icons/fi'
 
 const AdminDashboard = () => {
     const {theme} = useTheme()
@@ -36,6 +36,14 @@ const AdminDashboard = () => {
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiLayers className="mr-2" /> Services & Categories
+                 </button>
+              </li>
+              <li>
+                <button 
+                     onClick={() => setActiveTab('bookings')}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                >
+                 <FiCalendar className="mr-2" /> Bookings
                  </button>
               </li>
             
