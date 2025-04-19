@@ -22,6 +22,17 @@ const AdminDashboard = () => {
               </table>
             </div>
           )
+          case 'services':
+            return (
+              <div>
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className={`text-lg font-medium ${theme === 'dark'? 'text-white' : 'text-indigo-900'}`}>Service Categories</h3>
+                  <button className={`  ${theme === 'dark'? 'bg-sky-200 hover:bg-sky-400 text-indigo-500': 'bg-indigo-600 hover:bg-indigo-800 text-white'}  py-2 px-4 rounded`}>
+                    Add New Category
+                  </button>
+                </div>
+               </div>
+            )
          
        }
     }
