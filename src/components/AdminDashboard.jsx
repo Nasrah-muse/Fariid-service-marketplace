@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
-import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiHelpCircle, FiLayers, FiMail, FiUsers } from 'react-icons/fi'
+import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiHelpCircle, FiLayers, FiMail, FiMenu, FiUsers, FiX } from 'react-icons/fi'
 
 const AdminDashboard = () => {
     const {theme} = useTheme()
     const [activeTab, setActiveTab] = useState('dashboard')
+    const [sidebarOpen, setSidebarOpen] = useState(false)
     const renderContent = () => {
       switch (activeTab) {
         case 'users':
@@ -94,10 +95,10 @@ const AdminDashboard = () => {
           )
           default:
           return (
-            <div className={`rounded-lg shadow p-6 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
+            <div className={`rounded-lg shadow p-6 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'} w-full px-4 sm:px-6 md:px-8 overflow-x-hidden`}>
               <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark'? 'text-white': 'text-indigo-900'} `}>Dashboard Overview</h2>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-4 w-full px-4 mb-8">
                 <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
                   <h3 className={`text-md font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Total Users</h3>
                   <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>3</p>
@@ -120,7 +121,7 @@ const AdminDashboard = () => {
               </div>
                 <div className="mb-8">
                   <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Latest Users</h3>
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x max-w-full">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-indigo-600">
                       <thead className={theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-200'}>
                         <tr>
@@ -145,7 +146,7 @@ const AdminDashboard = () => {
                 </div>
                 <div className="mb-8">
                   <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Latest Services</h3>
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto max-w-full">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-indigo-600">
                       <thead className={theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-200'}>
                         <tr>
@@ -177,16 +178,38 @@ const AdminDashboard = () => {
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-100'} mt-20`}>
-    <div className="flex">
-        
+                      <div className={`lg:hidden fixed top-25 left-0 right- h-12 flex items-center justify-between px-4 ${theme === 'dark' ? 'bg-indigo-600' : 'bg-white'} shadow z-40 border-b ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
+                 <button
+                    onClick={() => setSidebarOpen(!sidebarOpen)}
+                    className="p-2 rounded-md focus:outline-none cursor-pointer"
+                >
+                    {sidebarOpen ? (
+                        <FiX className={`w-5 h-5 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`} />
+                    ) : (
+                        <FiMenu className={`w-5 h-5 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`} />
+                    )}
+                </button>
+            </div>
+            <div className="flex pt-20 lg:pt-0">
+
         {/* Sidebar */}
-        <div className={`w-64 min-h-screen p-4 ${theme === 'dark' ? 'bg-sky-200' : 'bg-white'} shadow`}>
+        <div className={`
+                    ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                    lg:translate-x-0
+                    fixed lg:static
+                    w-64 min-h-screen p-4
+                    ${theme === 'dark' ? 'bg-sky-200' : 'bg-white'}
+                    shadow z-10
+                    transition-transform duration-300 ease-in-out
+                `}>
           <h2 className="text-2xl font-bold mb-8">Admin Dashboard</h2>
           <nav>
             <ul className="space-y-2">
               <li>
                 <button 
-                     onClick={() => setActiveTab('dashboard')}
+                     onClick={() => {setActiveTab('dashboard')
+                       setSidebarOpen(false)}}
+                     
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                   <FiBarChart2 className="mr-2" /> Dashboard
@@ -194,7 +217,9 @@ const AdminDashboard = () => {
               </li>
               <li>
                 <button 
-                     onClick={() => setActiveTab('users')}
+                     onClick={() => {setActiveTab('users')
+                      setSidebarOpen(false)}
+                     }
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'users' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                   <FiUsers className="mr-2" /> Manage Users
@@ -202,7 +227,9 @@ const AdminDashboard = () => {
               </li>
               <li>
                 <button 
-                     onClick={() => setActiveTab('services')}
+                     onClick={() => {setActiveTab('services')
+                      setSidebarOpen(false)}
+                     }
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'services' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiLayers className="mr-2" /> Services & Categories
@@ -210,7 +237,10 @@ const AdminDashboard = () => {
               </li>
               <li>
                 <button 
-                     onClick={() => setActiveTab('bookings')}
+                     onClick={() => {setActiveTab('bookings')
+                      setSidebarOpen(false)}
+
+                     }
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'bookings' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiCalendar className="mr-2" />Manage Bookings
@@ -218,7 +248,8 @@ const AdminDashboard = () => {
               </li>
               <li>
                 <button 
-                     onClick={() => setActiveTab('providers')}
+                     onClick={() => {setActiveTab('providers')   
+                      setSidebarOpen(false)}}
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'providers' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiCheckCircle className="mr-2" />Approve Providers
@@ -234,7 +265,8 @@ const AdminDashboard = () => {
               </li>
               <li>
                 <button 
-                     onClick={() => setActiveTab('payments')}
+                     onClick={() => {setActiveTab('payments')  
+                      setSidebarOpen(false)}}
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'payments' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiDollarSign className="mr-2" />Manage Payments
@@ -242,7 +274,8 @@ const AdminDashboard = () => {
               </li>
               <li>
                 <button 
-                     onClick={() => setActiveTab('announcements')}
+                     onClick={() => {setActiveTab('announcements')  
+                       setSidebarOpen(false)}}
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'announcements' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiMail className="mr-2" />Send Announcements
@@ -250,7 +283,8 @@ const AdminDashboard = () => {
               </li>
               <li>
                 <button 
-                     onClick={() => setActiveTab('support')}
+                     onClick={() => {setActiveTab('support')   
+                      setSidebarOpen(false)}}
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'support' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiHelpCircle className="mr-2" />Support/Complaints
@@ -260,17 +294,24 @@ const AdminDashboard = () => {
                
             </ul>
           </nav>
-          {/* contents */}
           </div>
-          <div className="flex-1 p-8">
+          {sidebarOpen && (
+                    <div
+                        className="fixed inset-0 bg-black bg-opacity-50 z-0 lg:hidden"
+                        onClick={() => setSidebarOpen(false)}
+                    />
+                )}
+
+          {/* contents */}
+          <div className="flex-1 p-4 lg:p-12">
           <div className={`rounded-lg shadow p-6 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
           {renderContent()}
            </div>
         </div>
+        </div>
 
     </div>
-    </div>
-  )
+   )
 }
 
 export default AdminDashboard
