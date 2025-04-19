@@ -143,6 +143,27 @@ const AdminDashboard = () => {
                     </table>
                   </div>
                 </div>
+                <div className="mb-8">
+                  <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Latest Services</h3>
+                  <div className="overflow-x-auto">
+                    <table className="min-w-full divide-y divide-gray-200 dark:divide-indigo-600">
+                      <thead className={theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-200'}>
+                        <tr>
+                          <th className={`px-6 py-3 text-left text-xs font-medium uppercase ${theme === 'dark'? 'text-white': 'text-indigo-600'} `}>Title</th>
+                          <th className={`px-6 py-3 text-left text-xs font-medium uppercase ${theme === 'dark'? 'text-white': 'text-indigo-600'} `}>Category</th>
+                          <th className={`px-6 py-3 text-left text-xs font-medium uppercase ${theme === 'dark'? 'text-white': 'text-indigo-600'} `}>Service Provider</th>
+                        </tr>
+                      </thead>
+                      <tbody className={`divide-y ${theme === 'dark'? 'divide-gray-200':'divide-indigo-500' }`}>
+                        <tr>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>plumbing installition</td>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>Home service</td>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>Ahmed geedi</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
       </div>
           )
 
