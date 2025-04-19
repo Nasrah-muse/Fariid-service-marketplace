@@ -47,7 +47,7 @@ const AdminDashboard = () => {
           case 'providers':
           return (
             <div>
-              <h3 className="text-lg font-medium mb-4">Provider Approval Requests</h3>
+              <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white' : 'text-indigo-900'}`}>Provider Approval Requests</h3>
              </div>
           )
 
