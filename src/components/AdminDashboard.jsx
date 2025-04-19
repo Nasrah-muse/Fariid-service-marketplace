@@ -47,7 +47,7 @@ const AdminDashboard = () => {
               <li>
                 <button 
                      onClick={() => setActiveTab('users')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'users' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                   <FiUsers className="mr-2" /> Manage Users
                 </button>
@@ -55,7 +55,7 @@ const AdminDashboard = () => {
               <li>
                 <button 
                      onClick={() => setActiveTab('services')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'services' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiLayers className="mr-2" /> Services & Categories
                  </button>
@@ -63,7 +63,7 @@ const AdminDashboard = () => {
               <li>
                 <button 
                      onClick={() => setActiveTab('bookings')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'bookings' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiCalendar className="mr-2" />Manage Bookings
                  </button>
@@ -71,7 +71,7 @@ const AdminDashboard = () => {
               <li>
                 <button 
                      onClick={() => setActiveTab('providers')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'providers' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiCheckCircle className="mr-2" />Approve Providers
                  </button>
@@ -79,7 +79,7 @@ const AdminDashboard = () => {
               <li>
                 <button 
                      onClick={() => setActiveTab('reports')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'reports' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiBarChart2 className="mr-2" />Reports and Status
                  </button>
@@ -87,7 +87,7 @@ const AdminDashboard = () => {
               <li>
                 <button 
                      onClick={() => setActiveTab('payments')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'payments' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiDollarSign className="mr-2" />Manage Payments
                  </button>
@@ -95,7 +95,7 @@ const AdminDashboard = () => {
               <li>
                 <button 
                      onClick={() => setActiveTab('announcements')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'announcements' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiMail className="mr-2" />Send Announcements
                  </button>
@@ -103,7 +103,7 @@ const AdminDashboard = () => {
               <li>
                 <button 
                      onClick={() => setActiveTab('support')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'support' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiHelpCircle className="mr-2" />Support/Complaints
                  </button>
