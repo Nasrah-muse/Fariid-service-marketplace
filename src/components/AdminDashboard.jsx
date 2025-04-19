@@ -1,4 +1,4 @@
-import  { useState } from 'react'
+import  { useEffect, useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
 import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiHelpCircle, FiLayers, FiMail, FiMenu, FiUsers, FiX } from 'react-icons/fi' 
 import toast from 'react-hot-toast'
@@ -15,7 +15,24 @@ const AdminDashboard = () => {
   const [error, setError] = useState('')
   const [categories, setCategories] = useState([]);
 
-
+  useEffect(() => {
+    fetchCategories()
+  }, [])
+  
+  const fetchCategories = async () => {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*')
+      .order('created_at', { ascending: false })
+    
+    if (error) {
+      console.error('Error fetching categories:', error)
+      toast.error('Failed to load categories')
+    } else {
+      setCategories(data)
+    }
+  }
+  
   const handleAddCategory = async () => {
     if (!newCategoryName.trim()) {
       setError('Category name is required')
