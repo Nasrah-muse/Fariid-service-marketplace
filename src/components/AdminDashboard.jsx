@@ -13,6 +13,8 @@ const AdminDashboard = () => {
   const [newCategoryName, setNewCategoryName] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [categories, setCategories] = useState([]);
+
 
   const handleAddCategory = async () => {
     if (!newCategoryName.trim()) {
@@ -87,6 +89,47 @@ const AdminDashboard = () => {
                   className={`  ${theme === 'dark'? 'bg-sky-200 hover:bg-sky-400 text-indigo-500': 'bg-indigo-600 hover:bg-indigo-800 text-white'}  py-2 px-4 rounded`}>
                     Add New Category
                   </button>
+                </div>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className={theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-100'}>
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                          Category Name
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                          Created At
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className={`divide-y ${theme === 'dark' ? 'divide-indigo-500 bg-indigo-700' : 'divide-gray-200 bg-white'}`}>
+                      {categories.map((category) => (
+                        <tr key={category.id}>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                            {category.name}
+                          </td>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                            {new Date(category.created_at).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button 
+                               className={`mr-2 ${theme === 'dark' ? 'text-blue-300 hover:text-blue-200' : 'text-blue-600 hover:text-blue-900'}`}
+                            >
+                              Edit
+                            </button>
+                            <button 
+                               className={`${theme === 'dark' ? 'text-red-300 hover:text-red-200' : 'text-red-600 hover:text-red-900'}`}
+                            >
+                              Delete
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </div>
                 {showCategoryModal && (
                 <CategoryModal
