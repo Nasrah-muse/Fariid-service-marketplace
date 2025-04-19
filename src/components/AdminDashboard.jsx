@@ -92,6 +92,34 @@ const AdminDashboard = () => {
               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Recent Support Tickets</h3>
              </div>
           )
+          default:
+          return (
+            <div className={`rounded-lg shadow p-6 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
+              <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark'? 'text-white': 'text-indigo-900'} `}>Dashboard Overview</h2>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+                  <h3 className={`text-md font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Total Users</h3>
+                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>3</p>
+                </div>
+                
+                <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+                  <h3 className={`text-md font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Service Providers</h3>
+                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>2</p>
+                </div>
+                
+                <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+                  <h3 className={`text-md font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Services</h3>
+                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>5</p>
+                </div>
+                
+                <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+                  <h3 className={`text-md font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Categories</h3>
+                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>4</p>
+                </div>
+              </div>
+      </div>
+          )
 
 
 
