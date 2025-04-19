@@ -1,7 +1,6 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
-import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiHelpCircle, FiLayers, FiMail, FiMenu, FiUsers, FiX } from 'react-icons/fi'
-
+import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiHelpCircle, FiLayers, FiMail, FiMenu, FiUsers, FiX } from 'react-icons/fi' 
 const AdminDashboard = () => {
     const {theme} = useTheme()
     const [activeTab, setActiveTab] = useState('dashboard')
