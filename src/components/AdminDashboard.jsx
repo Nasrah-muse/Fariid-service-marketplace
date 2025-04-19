@@ -50,6 +50,14 @@ const AdminDashboard = () => {
               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white' : 'text-indigo-900'}`}>Provider Approval Requests</h3>
              </div>
           )
+          case 'reports':
+          return (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+              <div className={`p-4 rounded-lg shadow ${theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-100'}`}>
+                <h4 className={`font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Active Users</h4>
+               </div>
+             </div>
+          )
 
 
          
