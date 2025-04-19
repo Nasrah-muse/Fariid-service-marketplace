@@ -33,6 +33,18 @@ const AdminDashboard = () => {
                 </div>
                </div>
             )
+            case 'bookings':
+          return (
+            <div>
+              <div className="flex space-x-2 mb-4">
+                <button className="px-4 py-2 rounded bg-blue-500 text-white">All</button>
+                <button className="px-4 py-2 rounded bg-gray-200">Pending</button>
+                <button className="px-4 py-2 rounded bg-green-500 text-white">Completed</button>
+                <button className="px-4 py-2 rounded bg-red-500 text-white">Cancelled</button>
+              </div>
+             </div>
+          )
+
          
        }
     }
