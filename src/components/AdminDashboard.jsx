@@ -86,6 +86,13 @@ const AdminDashboard = () => {
               </div>
             </div>
           )
+          case 'support':
+          return (
+            <div>
+              <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Recent Support Tickets</h3>
+             </div>
+          )
+
 
 
 
