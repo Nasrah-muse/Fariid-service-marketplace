@@ -9,55 +9,42 @@ const CategoryModal = ({
   error,
   handleAddCategory,
   onClose,
+  isEditing
 }) => {
-  const handleClose = () => {
-    setNewCategoryName('');
-    onClose();
-  };
-
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
       <div className={`p-6 rounded-lg shadow-lg w-full max-w-md ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
-        <div className="flex justify-between items-center mb-4">
-          <h3 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
-            Add New Category
+           <h3 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+          {isEditing ? 'Edit Category' : 'Add New Category'}
           </h3>
-          <button onClick={handleClose} className="p-1 rounded-full hover:bg-gray-200" disabled={isLoading}>
-            <FiX className={`w-5 h-5 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`} />
-          </button>
-        </div>
-
-        <div className="mb-4">
-          <label className={`block mb-2 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Category Name</label>
           <input
             type="text"
             value={newCategoryName}
-            onChange={(e) => {
-              setNewCategoryName(e.target.value);
-            }}
-            className={`w-full p-2 border rounded ${theme === 'dark' ? 'bg-indigo-700 text-white' : 'bg-white text-indigo-900'}`}
-            placeholder="e.g., Plumbing"
-            disabled={isLoading}
+            onChange={(e) => setNewCategoryName(e.target.value)}
+            placeholder="Category name"
+            className={`w-full p-2 mb-2 border rounded ${theme === 'dark' ? 'bg-indigo-700 border-indigo-500 text-white' : 'bg-white border-gray-300'}`}
           />
-          {error && <p className="mt-1 text-red-500 text-sm">{error}</p>}
-        </div>
+      {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
-        <div className="flex justify-end gap-2">
-          <button
-            onClick={handleClose}
-            className={`px-4 py-2 rounded ${theme === 'dark' ? 'bg-gray-600 text-white' : 'bg-gray-200 text-indigo-900'}`}
-            disabled={isLoading}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleAddCategory}
-            className={`px-4 py-2 rounded text-white ${isLoading ? 'bg-indigo-400' : theme === 'dark' ? 'bg-sky-500 hover:bg-sky-600' : 'bg-indigo-600 hover:bg-indigo-700'}`}
-            disabled={isLoading}
-          >
-            {isLoading ? 'Adding...' : 'Add Category'}
-          </button>
-        </div>
+      <div className="flex justify-end space-x-2">
+            <button
+              onClick={onClose}
+              className={`px-4 py-2 rounded ${theme === 'dark' ? 'bg-gray-500 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleAddCategory}
+              disabled={isLoading}
+              className={`px-4 py-2 rounded text-white ${isLoading 
+                ? 'bg-gray-400' 
+                : theme === 'dark' 
+                  ? 'bg-sky-600 hover:bg-sky-700' 
+                  : 'bg-indigo-600 hover:bg-indigo-700'}`}
+            >
+              {isLoading ? 'Processing...' : isEditing ? 'Update' : 'Add'}
+            </button>
+          </div>
       </div>
     </div>
   );

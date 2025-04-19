@@ -14,6 +14,7 @@ const AdminDashboard = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [categories, setCategories] = useState([]);
+  const [editingCategory, setEditingCategory] = useState(null)
 
   useEffect(() => {
     fetchCategories()
@@ -32,7 +33,44 @@ const AdminDashboard = () => {
       setCategories(data)
     }
   }
+
+  const handleEditCategory = (category) => {
+    setEditingCategory(category)
+    setNewCategoryName(category.name)
+    setShowCategoryModal(true)
+  }
+  const handleUpdateCategory = async () => {
+    if (!newCategoryName.trim()) {
+      setError('Category name is required')
+      return;
+    }
   
+    setIsLoading(true)
+    setError('')
+  
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .update({ name: newCategoryName.trim() })
+        .eq('id', editingCategory.id)
+        .select()
+  
+      if (error) throw error;
+  
+      toast.success('Category updated successfully!')
+      fetchCategories()
+      setShowCategoryModal(false)
+      setNewCategoryName('')
+      setEditingCategory(null)
+    } catch (err) {
+      setError(err.message || 'Failed to update category')
+      toast.error('Failed to update category')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+
   const handleAddCategory = async () => {
     if (!newCategoryName.trim()) {
       setError('Category name is required')
@@ -133,6 +171,7 @@ const AdminDashboard = () => {
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <button 
+                               onClick={() => handleEditCategory(category)}
                                className={`mr-2 ${theme === 'dark' ? 'text-blue-300 hover:text-blue-200' : 'text-blue-600 hover:text-blue-900'}`}
                             >
                               Edit
@@ -155,8 +194,14 @@ const AdminDashboard = () => {
                   newCategoryName={newCategoryName}
                   setNewCategoryName={setNewCategoryName}
                   error={error}
-                  handleAddCategory={handleAddCategory}
-                  onClose={() => setShowCategoryModal(false)}
+                  handleAddCategory={editingCategory ? handleUpdateCategory : handleAddCategory}
+                  onClose={() => {
+                      setShowCategoryModal(false);
+                      setEditingCategory(null);
+                      setNewCategoryName('');
+                    }}
+                    isEditing={!!editingCategory}
+
                 />
               )}
                </div>
