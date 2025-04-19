@@ -39,10 +39,29 @@ const AdminDashboard = () => {
     setNewCategoryName(category.name)
     setShowCategoryModal(true)
   }
+  // delete
+  const handleDeleteCategory = async (id) => {
+    if (!window.confirm('Are you sure you want to delete this category?')) return;
+  
+    try {
+      const { error } = await supabase
+        .from('categories')
+        .delete()
+        .eq('id', id);
+  
+      if (error) throw error
+  
+      toast.success('Category deleted successfully!')
+      fetchCategories()
+    } catch (err) {
+      toast.error('Failed to delete category')
+      console.error('Error deleting category:', err)
+    }
+  };
   const handleUpdateCategory = async () => {
     if (!newCategoryName.trim()) {
       setError('Category name is required')
-      return;
+      return
     }
   
     setIsLoading(true)
@@ -177,6 +196,7 @@ const AdminDashboard = () => {
                               Edit
                             </button>
                             <button 
+                             onClick={() => handleDeleteCategory(category.id)}
                                className={`${theme === 'dark' ? 'text-red-300 hover:text-red-200' : 'text-red-600 hover:text-red-900'}`}
                             >
                               Delete
