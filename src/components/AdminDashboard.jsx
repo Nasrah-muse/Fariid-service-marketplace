@@ -8,6 +8,7 @@ const AdminDashboard = () => {
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-100'} mt-20`}>
+    <div className="flex">
         
         {/* Sidebar */}
         <div className={`w-64 min-h-screen p-4 ${theme === 'dark' ? 'bg-sky-200' : 'bg-white'} shadow`}>
@@ -90,7 +91,12 @@ const AdminDashboard = () => {
                
             </ul>
           </nav>
-
+          {/* contents */}
+          </div>
+          <div className="flex-1 p-8">
+          <div className={`rounded-lg shadow p-6 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
+           </div>
+        </div>
 
     </div>
     </div>
