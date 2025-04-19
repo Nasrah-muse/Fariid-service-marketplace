@@ -5,6 +5,27 @@ import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiHelpCircle, FiL
 const AdminDashboard = () => {
     const {theme} = useTheme()
     const [activeTab, setActiveTab] = useState('dashboard')
+    const renderContent = () => {
+      switch (activeTab) {
+        case 'users':
+          return (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className={theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-gray-50 text-indigo-900'}>
+                  <tr>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Name</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Type</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Status</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium uppercase">Actions</th>
+                  </tr>
+                </thead>
+              </table>
+            </div>
+          )
+         
+       }
+    }
+  
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-100'} mt-20`}>
@@ -95,6 +116,7 @@ const AdminDashboard = () => {
           </div>
           <div className="flex-1 p-8">
           <div className={`rounded-lg shadow p-6 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
+          {renderContent()}
            </div>
         </div>
 
