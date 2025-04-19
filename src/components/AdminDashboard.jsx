@@ -64,6 +64,29 @@ const AdminDashboard = () => {
               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Pending Payments</h3>
              </div>
           )
+          case 'announcements':
+          return (
+            <div>
+              <div className="mb-4">
+                <textarea 
+                  className={`w-full p-3 border rounded ${theme === 'dark'? 'border-white placeholder:text-white': 'border-indigo-900 placeholder:text-indigo-800'}`} 
+                  rows="4" 
+                  placeholder="Write your announcement...">
+                </textarea>
+                <div className="mt-2 flex justify-between">
+                  <select className={`border rounded p-2 ${theme === 'dark'? 'border-white text-white bg-indigo-800': 'border-indigo-900 text-indigo-800'}`}>
+                    <option>Send to all users</option>
+                    <option>Send to providers only</option>
+                    <option>Send to customers only</option>
+                  </select>
+                  <button className={`  ${theme === 'dark'? 'bg-sky-200 hover:bg-sky-400 text-indigo-500': 'bg-indigo-600 hover:bg-indigo-800 text-white'}  py-2 px-4 rounded`}>
+                    Send Announcement
+                  </button>
+                </div>
+              </div>
+            </div>
+          )
+
 
 
          
