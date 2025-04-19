@@ -1,10 +1,66 @@
 import  { useState } from 'react'
 import { useTheme } from '../contexts/ThemeContext'
 import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiHelpCircle, FiLayers, FiMail, FiMenu, FiUsers, FiX } from 'react-icons/fi' 
+import toast from 'react-hot-toast'
+import CategoryModal from './CategoryModel'
+import supabase from '../lib/supabase'
 const AdminDashboard = () => {
     const {theme} = useTheme()
     const [activeTab, setActiveTab] = useState('dashboard')
     const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  const [showCategoryModal, setShowCategoryModal] = useState(false)
+  const [newCategoryName, setNewCategoryName] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+
+  const handleAddCategory = async () => {
+    if (!newCategoryName.trim()) {
+      setError('Category name is required')
+      return;
+    }
+  
+    setIsLoading(true);
+    setError('')
+  
+    try {
+      const trimmedName = newCategoryName.trim().toLowerCase()
+  
+       const { data: existingCategory, error: checkError } = await supabase
+        .from('categories')
+        .select('*')
+        .ilike('name', trimmedName);
+  
+      if (checkError) throw checkError;
+  
+      if (existingCategory && existingCategory.length > 0) {
+        setError('Category already exists')
+        toast.error('Category already exists')
+        setIsLoading(false)
+        return
+      }
+  
+       const { data, error: insertError } = await supabase
+        .from('categories')
+        .insert([{
+          name: newCategoryName.trim(),
+          created_by: (await supabase.auth.getUser()).data.user?.id
+        }])
+        .select()
+  
+      if (insertError) throw insertError;
+  
+      toast.success('Category added successfully!')
+      setShowCategoryModal(false)
+      setNewCategoryName('')
+    } catch (err) {
+      setError(err.message || 'Failed to add category')
+      toast.error('Failed to add category')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+  
     const renderContent = () => {
       switch (activeTab) {
         case 'users':
@@ -27,10 +83,22 @@ const AdminDashboard = () => {
               <div>
                 <div className="flex justify-between items-center mb-4">
                   <h3 className={`text-lg font-medium ${theme === 'dark'? 'text-white' : 'text-indigo-900'}`}>Service Categories</h3>
-                  <button className={`  ${theme === 'dark'? 'bg-sky-200 hover:bg-sky-400 text-indigo-500': 'bg-indigo-600 hover:bg-indigo-800 text-white'}  py-2 px-4 rounded`}>
+                  <button  onClick={() => setShowCategoryModal(true)}
+                  className={`  ${theme === 'dark'? 'bg-sky-200 hover:bg-sky-400 text-indigo-500': 'bg-indigo-600 hover:bg-indigo-800 text-white'}  py-2 px-4 rounded`}>
                     Add New Category
                   </button>
                 </div>
+                {showCategoryModal && (
+                <CategoryModal
+                  theme={theme}
+                  isLoading={isLoading}
+                  newCategoryName={newCategoryName}
+                  setNewCategoryName={setNewCategoryName}
+                  error={error}
+                  handleAddCategory={handleAddCategory}
+                  onClose={() => setShowCategoryModal(false)}
+                />
+              )}
                </div>
             )
             case 'bookings':
