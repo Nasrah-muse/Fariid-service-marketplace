@@ -58,6 +58,12 @@ const AdminDashboard = () => {
                </div>
              </div>
           )
+          case 'payments':
+          return (
+            <div>
+              <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Pending Payments</h3>
+             </div>
+          )
 
 
          
