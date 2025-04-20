@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { getUserProfile, onAuthChange, signOut } from "../lib/auth";
+import supabase from "../lib/supabase";
 
 const AuthContext = createContext(null);
 
@@ -8,37 +9,65 @@ export function AuthProvider({ children }) {
   const [profile, setProfile] = useState(null);
   const [role, setRole] = useState(null)
   const [isLoading, setIsLoading] = useState(true);
-  
-  useEffect(() => {
-    const cleanUp = onAuthChange(async (user) => {
-      console.log("🔍 Auth changed, User:", user);
-      setUser(user);
-      if (user) {
-        try {
-          const userProfile = await getUserProfile(user.id);
-          setProfile(userProfile);
+  const [hasRegisteredService, setHasRegisteredService] = useState(false)
 
-           if (userProfile && userProfile.role) {
-            setRole(userProfile.role);
-          } else {
-            setRole(null);
-          }
-        } catch (error) {
-          console.error("Error fetching user profile", error);
+     useEffect(() => {
+      const cleanUp = onAuthChange(async (user) => {
+        console.log("🔍 Auth changed, User:", user)
+        setUser(user)
+        
+        if (!user) {
+           setProfile(null);
+          setRole(null);
+          setHasRegisteredService(false);
+          setIsLoading(false);
+          return
         }
-      } else {
-        setProfile(null);
-        setRole(null);
+    
+        setIsLoading(true);
+        try {
+           const userProfile = await getUserProfile(user.id)
+          
+          if (!userProfile) {
+            throw new Error("User profile not found");
+          }
+    
+           setProfile(userProfile);
+          setRole(userProfile.role || null)
+    
+           if (userProfile.role === 'provider') {
+            await checkServiceRegistration(user.id)
+          } else {
+            setHasRegisteredService(false);
+          }
+    
+        } catch (error) {
+          console.error("Error in auth change handler:", error)
+          setProfile(null)
+          setRole(null)
+          setHasRegisteredService(false)
+        } finally {
+          setIsLoading(false)
+        }
+      })
+    
+      return cleanUp;
+    }, [])
+
+    const checkServiceRegistration = async (userId) => {
+      if (role === 'provider') {
+        const { data, error } = await supabase
+          .from('services')
+          .select('id')
+          .eq('provider_id', userId)
+          .single();
+        
+        setHasRegisteredService(!!data && !error)
       }
-      setIsLoading(false);
-    });
-    return cleanUp;
+      setIsLoading(false)
+    }
 
-  }, []);
-
-
-  
-
+    
   const logout = async () => {
      try {
       await signOut();
@@ -53,7 +82,9 @@ export function AuthProvider({ children }) {
     isLoading,
     role,
     isLoggedIn: !!user,
-    logout
+    logout,
+    hasRegisteredService,
+    checkServiceRegistration
   };
 
   return (
