@@ -94,6 +94,49 @@ import { useAuth } from "../contexts/AuthContext"
               />
             </div>
           </div>
+           {/* price */}
+          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+            <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+              Pricing Tiers
+            </h3>
+            
+            {['basic', 'standard', 'premium'].map((tier) => (
+              <div key={tier} className={`mb-4 p-3 rounded ${theme === 'dark' ? 'bg-gray-600' : 'bg-white border'}`}>
+                <h4 className={`font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-indigo-800'}`}>
+                  {tier.charAt(0).toUpperCase() + tier.slice(1)} Tier*
+                </h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className={`block mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Price ($)*
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formData[`${tier}_price`]}
+                      onChange={(e) => setFormData({...formData, [`${tier}_price`]: e.target.value})}
+                      className={`w-full p-2 border rounded-md ${theme === 'dark' ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300'}`}
+                      required
+                    />
+                  </div>
+                  <div>
+                    <label className={`block mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                      Description*
+                    </label>
+                    <textarea
+                      value={formData[`${tier}_description`]}
+                      onChange={(e) => setFormData({...formData, [`${tier}_description`]: e.target.value})}
+                      rows={2}
+                      className={`w-full p-2 border rounded-md ${theme === 'dark' ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300'}`}
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          
 
          
         </form>
