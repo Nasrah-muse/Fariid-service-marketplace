@@ -8,8 +8,7 @@ import { signIn } from "../lib/auth";
 const SignInPage = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
-  const { user, role, hasRegisteredService, isLoading: authLoading } = useAuth();
-
+ 
 
   const userInfo = useAuth()
 console.log(userInfo)
@@ -23,18 +22,7 @@ console.log(userInfo)
   // const [success, setSuccess] = useState(false);
 
 
-  useEffect(() => {
-    if (!authLoading && user) {
-      if (role === 'provider') {
-        navigate(hasRegisteredService ? '/dashboard' : '/dashboard/register')
-      } else if (role === 'admin') {
-        navigate('/dashboard')
-      } else {
-        navigate('/')
-      }
-    }
-  }, [user, role, hasRegisteredService, authLoading, navigate])
-
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true)
@@ -43,7 +31,7 @@ console.log(userInfo)
     try {
       await signIn(email, password);
        // go to home
-      // navigate('/')
+      navigate('/dashboard')
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
     } finally {
