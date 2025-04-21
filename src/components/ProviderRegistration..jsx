@@ -2,13 +2,17 @@ import { useEffect, useState } from "react"
 import { useTheme } from "../contexts/ThemeContext"
 import supabase from "../lib/supabase"
 import { useAuth } from "../contexts/AuthContext"
- 
+  
   
  const ProviderRegistration = () => {
   const {theme } = useTheme()
-  const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+   const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+  const { user, checkServiceRegistration } = useAuth()
   const [categories, setCategories] = useState([])
   const [selectedFiles, setSelectedFiles] = useState([])
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [error, setError] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null);
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -34,6 +38,91 @@ import { useAuth } from "../contexts/AuthContext"
   }, [])
 
   
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setError(null);
+    setSuccessMessage(null)
+
+    try {
+      if (selectedFiles.length === 0 || selectedFiles.length > 3) {
+        throw new Error('Please upload between 1 to 3 images of your work');
+      }
+
+       const imageUrls = await uploadServiceImages();
+
+       const { data: service, error: serviceError } = await supabase
+        .from('services')
+        .insert({
+          ...formData,
+          provider_id: user.id,
+          status: 'pending',
+          service_image_url: imageUrls
+        })
+        .select()
+        .single()
+
+      if (serviceError) throw serviceError
+
+      await checkServiceRegistration(user.id)
+      
+       setSuccessMessage('Your service has been submitted for review. Please wait for admin approval')
+      
+       setFormData({
+        title: '',
+        description: '',
+        category_id: '',
+        basic_price: '',
+        basic_description: '',
+        standard_price: '',
+        standard_description: '',
+        premium_price: '',
+        premium_description: '',
+        availability: daysOfWeek.reduce((acc, day) => ({
+          ...acc,
+          [day]: { available: false, start_time: '08:00', end_time: '17:00' }
+        }), {})
+      });
+      setSelectedFiles([]);
+
+    } catch (err) {
+      setError(err.message || 'Failed to submit service. Please try again.')
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const uploadServiceImages = async () => {
+    const uploadPromises = selectedFiles.map(async (file, index) => {
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${user.id}/${index}-${Date.now()}.${fileExt}`
+      
+      const { data, error } = await supabase
+        .storage
+        .from('service-images')
+        .upload(fileName, file)
+      
+      if (error) throw error
+      
+       const { data: { publicUrl } } = supabase
+        .storage
+        .from('service-images')
+        .getPublicUrl(fileName)
+      
+      return publicUrl
+    })
+    
+    return await Promise.all(uploadPromises)
+  }
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files)
+    if (files.length + selectedFiles.length > 3) {
+      setError('You can upload a maximum of 3 images')
+      return;
+    }
+    setSelectedFiles(prev => [...prev, ...files.slice(0, 3 - prev.length)])
+  }
+  
   const handleAvailabilityChange = (day, field, value) => {
     setFormData(prev => ({
       ...prev,
@@ -53,9 +142,18 @@ import { useAuth } from "../contexts/AuthContext"
             <h2 className={`text-2xl font-bold mb-6 text-center ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
               Service Registration
         </h2>
-
+        {error && (
+          <div className={`mb-4 p-3 rounded-md ${theme === 'dark' ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-700'}`}>
+            {error}
+          </div>
+        )}
+          {successMessage && (
+    <div className={`mb-4 p-3 rounded-md ${theme === 'dark' ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-700'}`}>
+      {successMessage}
+    </div>
+  )}
         {/*  Form */}
-        <form  className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* basic info*/}
           <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
             <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
@@ -200,13 +298,13 @@ import { useAuth } from "../contexts/AuthContext"
              {/* images of service */}
           <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}`}>
             <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
-              Service Images (Minimum 5)*
+              Service Images (Maximum 3)*
             </h3>
             <input
               type="file"
               multiple
               accept="image/*"
-              onChange={(e) => setSelectedFiles([...e.target.files])}
+              onChange={handleFileChange}
               className={`w-full p-2 border rounded ${theme === 'dark' ? 'bg-gray-600 border-gray-500' : 'bg-white border-gray-300'}`}
               required
             />
@@ -228,6 +326,16 @@ import { useAuth } from "../contexts/AuthContext"
                 </div>
               ))}
             </div>
+           <div className="flex justify-end">
+           <button
+            type="submit"
+            disabled={isSubmitting || selectedFiles.length === 0 || selectedFiles.length > 3}
+            className={`px-6 py-2 rounded-md font-medium ${theme === 'dark' ? 'bg-orange-600 hover:bg-orange-700 text-white' : 'bg-indigo-800 hover:bg-indigo-900 text-white'} ${(isSubmitting || selectedFiles.length === 0 || selectedFiles.length > 3) ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit Registration'}
+          </button>
+          </div>
+
           </div>
         </form>
       
