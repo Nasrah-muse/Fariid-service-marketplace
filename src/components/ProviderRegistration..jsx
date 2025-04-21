@@ -1,14 +1,103 @@
+import { useEffect, useState } from "react"
 import { useTheme } from "../contexts/ThemeContext"
-
+import supabase from "../lib/supabase"
+import { useAuth } from "../contexts/AuthContext"
+ 
   
  const ProviderRegistration = () => {
   const {theme } = useTheme()
+  const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+  const [categories, setCategories] = useState([])
+  const [formData, setFormData] = useState({
+    title: '',
+    description: '',
+    category_id: '',
+    basic_price: '',
+    basic_description: '',
+    standard_price: '',
+    standard_description: '',
+    premium_price: '',
+    premium_description: '',
+    availability: daysOfWeek.reduce((acc, day) => ({
+      ...acc,
+      [day]: { available: false, start_time: '08:00', end_time: '17:00' }
+    }), {})
+  })
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      const { data, error } = await supabase.from('categories').select('id, name')
+      if (!error) setCategories(data)
+    }
+    fetchCategories()
+  }, [])
+
    return (
      <div className={`min-h-screen p-6 mt-16 ${theme === 'dark' ? 'bg-indigo-800 text-gray-100' : 'bg-sky-200 text-indigo-900'}`}>
        <div className={`max-w-4xl mx-auto p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-600 shadow-xl' : 'bg-white shadow-md'}`}>
             <h2 className={`text-2xl font-bold mb-6 text-center ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
               Service Registration
         </h2>
+
+        {/*  Form */}
+        <form  className="space-y-6">
+          {/* basic info*/}
+          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+            <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+              Basic Information
+            </h3>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className={`block mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Service Title*
+                </label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => setFormData({...formData, title: e.target.value})}
+                  className={`w-full p-2 border rounded-md ${theme === 'dark' ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300'}`}
+                  required
+                />
+              </div>
+
+              <div>
+                <label className={`block mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                  Category*
+                </label>
+                <select
+                  value={formData.category_id}
+                  onChange={(e) => setFormData({...formData, category_id: e.target.value})}
+                  className={`w-full p-2 border rounded-md ${theme === 'dark' ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300'}`}
+                  required
+                >
+                  <option value="">Select a category</option>
+                  {categories.map(category => (
+                    <option key={category.id} value={category.id}>
+                      {category.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <div className="mt-4">
+              <label className={`block mb-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                Description*
+              </label>
+              <textarea
+                value={formData.description}
+                onChange={(e) => setFormData({...formData, description: e.target.value})}
+                rows={4}
+                className={`w-full p-2 border rounded-md ${theme === 'dark' ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300'}`}
+                required
+              />
+            </div>
+          </div>
+
+         
+        </form>
+      
        </div>
        </div>
    )
