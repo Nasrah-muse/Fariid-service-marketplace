@@ -138,6 +138,28 @@ import { useAuth } from "../contexts/AuthContext"
 
    return (
      <div className={`min-h-screen p-6 mt-16 ${theme === 'dark' ? 'bg-indigo-800 text-gray-100' : 'bg-sky-200 text-indigo-900'}`}>
+          {successMessage && (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+        <div className={`p-6 rounded-lg max-w-md w-full mx-4 ${theme === 'dark' ? 'bg-indigo-700' : 'bg-white'}`}>
+          <h3 className={`text-xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+            Submission Successful
+          </h3>
+          <p className={`mb-6 ${theme === 'dark' ? 'text-gray-200' : 'text-gray-700'}`}>
+            {successMessage}
+          </p>
+          <div className="flex justify-end">
+            <button
+              onClick={() => {
+                setSuccessMessage(null);
+               }}
+              className={`px-4 py-2 rounded-md font-medium ${theme === 'dark' ? 'bg-orange-600 hover:bg-orange-700 text-white' : 'bg-indigo-800 hover:bg-indigo-900 text-white'}`}
+            >
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+    )}
        <div className={`max-w-4xl mx-auto p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-600 shadow-xl' : 'bg-white shadow-md'}`}>
             <h2 className={`text-2xl font-bold mb-6 text-center ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
               Service Registration
@@ -147,11 +169,6 @@ import { useAuth } from "../contexts/AuthContext"
             {error}
           </div>
         )}
-          {successMessage && (
-    <div className={`mb-4 p-3 rounded-md ${theme === 'dark' ? 'bg-green-900 text-green-100' : 'bg-green-100 text-green-700'}`}>
-      {successMessage}
-    </div>
-  )}
         {/*  Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* basic info*/}
