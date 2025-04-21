@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { useTheme } from "../contexts/ThemeContext";
 import { useAuth } from "../contexts/AuthContext";
@@ -8,28 +8,42 @@ import { signIn } from "../lib/auth";
 const SignInPage = () => {
   const { theme } = useTheme();
   const navigate = useNavigate();
+  const { user, role, hasRegisteredService, isLoading: authLoading } = useAuth();
+
 
   const userInfo = useAuth()
 console.log(userInfo)
 
   const [email, setEmail] = useState('')
-  const [username, setUsername] = useState('')
+  // const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
+  // const [confirmPassword, setConfirmPassword] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(null)
-  const [success, setSuccess] = useState(false);
+  // const [success, setSuccess] = useState(false);
 
+
+  useEffect(() => {
+    if (!authLoading && user) {
+      if (role === 'provider') {
+        navigate(hasRegisteredService ? '/dashboard' : '/dashboard/register')
+      } else if (role === 'admin') {
+        navigate('/dashboard')
+      } else {
+        navigate('/')
+      }
+    }
+  }, [user, role, hasRegisteredService, authLoading, navigate])
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true)
-    setError(null);
+    setError(null)
     
     try {
       await signIn(email, password);
        // go to home
-      navigate('/')
+      // navigate('/')
     } catch (err) {
       setError(err.message || "Login failed. Please try again.");
     } finally {

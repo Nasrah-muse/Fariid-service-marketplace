@@ -52,21 +52,22 @@ export async function getUserProfile(userId) {
 
   if (error && error.code === "PGRST116") {
     const { data: userData } = await supabase.auth.getUser();
-    const email = userData?.user?.email;
-    const username = userData?.user?.username || email?.split('@')[0] || `user_${Date.now()}`;
 
+    const email = userData?.user?.email
+    const metadata = userData?.user?.user_metadata || {}
+    const username = metadata.username || email?.split('@')[0] || `user_${Date.now()}`
+    const role = metadata.role || "customer"
 
     const { data: newProfile, error: insertError } = await supabase
-  .from("users")
-  .insert({
-    id: userId,
-    username,
-    role: "customer",
-    avatar_url: null,
-  })
-  .select()
-  .single();
-
+      .from("users")
+      .insert({
+        id: userId,
+        username,
+        role,
+        avatar_url: null,
+      })
+      .select()
+      .single()
 
     if (insertError) throw insertError;
     return newProfile;
@@ -76,6 +77,7 @@ export async function getUserProfile(userId) {
 
   return data;
 }
+
 
 //  signin
 
