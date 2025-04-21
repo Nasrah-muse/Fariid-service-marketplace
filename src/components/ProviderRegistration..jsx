@@ -4,7 +4,7 @@ import supabase from "../lib/supabase"
 import { useAuth } from "../contexts/AuthContext"
   
   
- const ProviderRegistration = () => {
+ const ServiceRegistration = () => {
   const {theme } = useTheme()
    const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
   const { user, checkServiceRegistration } = useAuth()
@@ -361,4 +361,4 @@ import { useAuth } from "../contexts/AuthContext"
    )
  }
  
- export default ProviderRegistration
+ export default ServiceRegistration
