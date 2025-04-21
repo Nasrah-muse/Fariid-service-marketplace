@@ -8,6 +8,7 @@ import { useAuth } from "../contexts/AuthContext"
   const {theme } = useTheme()
   const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
   const [categories, setCategories] = useState([])
+  const [selectedFiles, setSelectedFiles] = useState([])
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -196,8 +197,38 @@ import { useAuth } from "../contexts/AuthContext"
               ))}
             </div>
           </div>
-
-         
+             {/* images of service */}
+          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-50'}`}>
+            <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+              Service Images (Minimum 5)*
+            </h3>
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={(e) => setSelectedFiles([...e.target.files])}
+              className={`w-full p-2 border rounded ${theme === 'dark' ? 'bg-gray-600 border-gray-500' : 'bg-white border-gray-300'}`}
+              required
+            />
+            <div className="flex flex-wrap gap-2 mt-4">
+              {selectedFiles.map((file, index) => (
+                <div key={index} className="relative">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`Preview ${index + 1}`}
+                    className="h-24 w-24 object-cover rounded border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setSelectedFiles(selectedFiles.filter((_, i) => i !== index))}
+                    className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center"
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
         </form>
       
        </div>
