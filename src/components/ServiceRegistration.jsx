@@ -7,7 +7,7 @@ import { useAuth } from "../contexts/AuthContext"
  const ServiceRegistration = () => {
   const {theme } = useTheme()
    const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-  const { user, checkServiceRegistration } = useAuth()
+  const { user } = useAuth()
   const [categories, setCategories] = useState([])
   const [selectedFiles, setSelectedFiles] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -64,8 +64,7 @@ import { useAuth } from "../contexts/AuthContext"
 
       if (serviceError) throw serviceError
 
-      await checkServiceRegistration(user.id)
-      
+       
        setSuccessMessage('Your service has been submitted for review. Please wait for admin approval')
       
        setFormData({
