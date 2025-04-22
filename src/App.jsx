@@ -15,7 +15,7 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import ProfilePage from "./pages/ProfilePage"
 import Dashboard from "./pages/Dashboard"
 import  { Toaster } from 'react-hot-toast';
-import ProviderRegistration from "./components/ProviderRegistration."
+import ProviderRegistration from "./components/ServiceRegistration"
 
  
 function App() {
@@ -59,11 +59,6 @@ function App() {
         </ProtectedRoute>
       
       }/>
-      <Route path="/dashboard/register" element={
-            <ProtectedRoute>
-              <ProviderRegistration />
-            </ProtectedRoute>
-          } />
      </Routes>
 
 

@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react"
-import { useTheme } from "../contexts/ThemeContext"
-import supabase from "../lib/supabase"
+ import supabase from "../lib/supabase"
 import { useAuth } from "../contexts/AuthContext"
   
   
- const ProviderRegistration = () => {
-  const {theme } = useTheme()
+ const ServiceRegistration = ({onClose, theme, editingService}) => {
    const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
-  const { user, checkServiceRegistration } = useAuth()
+  const { user } = useAuth()
   const [categories, setCategories] = useState([])
   const [selectedFiles, setSelectedFiles] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -30,6 +28,48 @@ import { useAuth } from "../contexts/AuthContext"
   })
 
   useEffect(() => {
+    if (editingService) {
+       setFormData({
+        title: editingService.title || '',
+        description: editingService.description || '',
+        category_id: editingService.category_id || '',
+        basic_price: editingService.basic_price || '',
+        basic_description: editingService.basic_description || '',
+        standard_price: editingService.standard_price || '',
+        standard_description: editingService.standard_description || '',
+        premium_price: editingService.premium_price || '',
+        premium_description: editingService.premium_description || '',
+        availability: editingService.availability || daysOfWeek.reduce((acc, day) => ({
+          ...acc,
+          [day]: { 
+            available: editingService.availability?.[day]?.available || false,
+            start_time: editingService.availability?.[day]?.start_time || '08:00',
+            end_time: editingService.availability?.[day]?.end_time || '17:00'
+          }
+        }), {})
+      })
+    } else {
+       setFormData({
+        title: '',
+        description: '',
+        category_id: '',
+        basic_price: '',
+        basic_description: '',
+        standard_price: '',
+        standard_description: '',
+        premium_price: '',
+        premium_description: '',
+        availability: daysOfWeek.reduce((acc, day) => ({
+          ...acc,
+          [day]: { available: false, start_time: '08:00', end_time: '17:00' }
+        }), {})
+      })
+      setSelectedFiles([])
+    }
+  }, [editingService])
+  
+  
+  useEffect(() => {
     const fetchCategories = async () => {
       const { data, error } = await supabase.from('categories').select('id, name')
       if (!error) setCategories(data)
@@ -50,7 +90,14 @@ import { useAuth } from "../contexts/AuthContext"
       }
 
        const imageUrls = await uploadServiceImages();
-
+       if (editingService) {
+         const { data, error } = await supabase
+          .from('services')
+          .update({ ...formData })
+          .eq('id', editingService.id)
+          .select()
+          .single()
+      }else{
        const { data: service, error: serviceError } = await supabase
         .from('services')
         .insert({
@@ -61,11 +108,12 @@ import { useAuth } from "../contexts/AuthContext"
         })
         .select()
         .single()
-
-      if (serviceError) throw serviceError
-
-      await checkServiceRegistration(user.id)
       
+      if (serviceError) throw serviceError
+      }
+
+
+       
        setSuccessMessage('Your service has been submitted for review. Please wait for admin approval')
       
        setFormData({
@@ -84,6 +132,7 @@ import { useAuth } from "../contexts/AuthContext"
         }), {})
       });
       setSelectedFiles([]);
+      onClose()
 
     } catch (err) {
       setError(err.message || 'Failed to submit service. Please try again.')
@@ -137,7 +186,7 @@ import { useAuth } from "../contexts/AuthContext"
   }
 
    return (
-     <div className={`min-h-screen p-6 mt-16 ${theme === 'dark' ? 'bg-indigo-800 text-gray-100' : 'bg-sky-200 text-indigo-900'}`}>
+     <div className='min-h-screen p-6 '>
           {successMessage && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className={`p-6 rounded-lg max-w-md w-full mx-4 ${theme === 'dark' ? 'bg-indigo-700' : 'bg-white'}`}>
@@ -172,7 +221,7 @@ import { useAuth } from "../contexts/AuthContext"
         {/*  Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* basic info*/}
-          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+          <div className='p-4 rounded-lg'>
             <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
               Basic Information
             </h3>
@@ -361,4 +410,4 @@ import { useAuth } from "../contexts/AuthContext"
    )
  }
  
- export default ProviderRegistration
+ export default ServiceRegistration
