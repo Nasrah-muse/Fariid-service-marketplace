@@ -7,6 +7,66 @@ import {  FiBarChart2, FiCalendar, FiMail, FiMenu, FiX } from 'react-icons/fi';
    const [sidebarOpen, setSidebarOpen] = useState(false)
    const [activeTab, setActiveTab] = useState('dashboard')
 
+   const renderContent = () => {
+    switch (activeTab) {
+      case 'services':
+        return (
+          <div>
+            <div className="flex justify-between items-center mb-4">
+              <h3 className={`text-lg font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>My Services</h3>
+              </div>
+              </div>
+        )
+     case 'bookings':
+      return (
+        <div>
+          <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Latest Booking</h3>
+          <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <p className="font-medium">Client</p>
+                <p className="mt-2">Raage Abdi</p>
+              </div>
+              <div>
+                <p className="font-medium">Service</p>
+                <p className="mt-2">Plumbing</p>
+              </div>
+              <div>
+                <p className="font-medium">Date</p>
+                <p className="mt-2">April 22, 2025</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    case 'messages':
+      return (
+        <div>
+          <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Messages</h3>
+          <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+            <div className="space-y-4">
+              <div className="border-b pb-4">
+                <p className="font-medium">From: Client A</p>
+                <p className="text-sm mt-1">"Hi, I need to reschedule my appointment..."</p>
+              </div>
+              <div className="border-b pb-4">
+                <p className="font-medium">From: Client B</p>
+                <p className="text-sm mt-1">"Can you provide a quote for additional work?"</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )
+    default:
+      return (
+        <div>
+          <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Dashboard Overview</h2>
+        </div>
+      )
+  }
+}
+
+
    return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-100'} mt-20`}>
        <div className={`lg:hidden fixed top-25 left-0 right-0 h-12 flex items-center justify-between px-4 ${theme === 'dark' ? 'bg-indigo-600' : 'bg-white'} shadow z-40 border-b ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
@@ -90,9 +150,15 @@ import {  FiBarChart2, FiCalendar, FiMail, FiMenu, FiX } from 'react-icons/fi';
             onClick={() => setSidebarOpen(false)}
           />
         )}
-
+        {/* main */}
+       <div className="flex-1 p-4 lg:p-12">
+      <div className={`rounded-lg shadow p-6 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
+        {renderContent()}
       </div>
     </div>
+  </div>
+       </div>
+
    )
  }
  
