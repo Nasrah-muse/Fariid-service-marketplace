@@ -309,6 +309,42 @@ const ServiceDetailsModal = ({ service, onClose, theme }) => {
       return (
         <div>
           <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Dashboard Overview</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+              <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+                <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Active Services</h3>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+                  {services.filter(s => s.status === 'approved').length}
+                </p>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+                <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Bookings This Month</h3>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>12</p>
+              </div>
+              
+              <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+                <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>New Messages</h3>
+                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>3</p>
+              </div>
+            </div>
+
+            <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'} mb-8`}>
+              <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Latest Booking</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <p className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Client</p>
+                  <p className={`${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Ahmed Qasim</p>
+                </div>
+                <div>
+                  <p className={` font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Service</p>
+                  <p className={`${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>House Cleaning</p>
+                </div>
+                <div>
+                  <p className={` font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Date</p>
+                  <p className={`${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>April 22, 2025</p>
+                </div>
+              </div>
+            </div>
         </div>
       )
   }
