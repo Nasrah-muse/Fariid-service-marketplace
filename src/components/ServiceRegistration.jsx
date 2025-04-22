@@ -186,7 +186,7 @@ import { useAuth } from "../contexts/AuthContext"
   }
 
    return (
-     <div className={`min-h-screen p-6 mt-16 ${theme === 'dark' ? 'bg-indigo-800 text-gray-100' : 'bg-sky-200 text-indigo-900'}`}>
+     <div className='min-h-screen p-6 '>
           {successMessage && (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
         <div className={`p-6 rounded-lg max-w-md w-full mx-4 ${theme === 'dark' ? 'bg-indigo-700' : 'bg-white'}`}>
@@ -221,7 +221,7 @@ import { useAuth } from "../contexts/AuthContext"
         {/*  Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* basic info*/}
-          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+          <div className='p-4 rounded-lg'>
             <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
               Basic Information
             </h3>
