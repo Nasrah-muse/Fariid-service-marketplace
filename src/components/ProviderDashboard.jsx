@@ -1,10 +1,11 @@
 import { useState} from 'react';
 import { useTheme } from '../contexts/ThemeContext';
-import {  FiMenu, FiX } from 'react-icons/fi';
+import {  FiBarChart2, FiCalendar, FiMail, FiMenu, FiX } from 'react-icons/fi';
 
  const ProviderDashboard = () => {
   const { theme } = useTheme()
    const [sidebarOpen, setSidebarOpen] = useState(false)
+   const [activeTab, setActiveTab] = useState('dashboard')
 
    return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-100'} mt-20`}>
@@ -33,6 +34,54 @@ import {  FiMenu, FiX } from 'react-icons/fi';
           transition-transform duration-300 ease-in-out
         `}>
           <h2 className="text-2xl font-bold mb-8 text-indigo-900">Service Provider</h2>
+          <nav>
+            <ul className="space-y-2">
+              <li>
+                <button
+                  onClick={() => {
+                    setActiveTab('dashboard');
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'dashboard' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                >
+                  <FiBarChart2 className="mr-2" /> Dashboard
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    setActiveTab('services');
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'services' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                >
+                  <FiBarChart2 className="mr-2" /> My Services
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    setActiveTab('bookings');
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'bookings' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                >
+                  <FiCalendar className="mr-2" /> Bookings
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => {
+                    setActiveTab('messages');
+                    setSidebarOpen(false);
+                  }}
+                  className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'messages' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
+                >
+                  <FiMail className="mr-2" /> Messages
+                </button>
+              </li>
+            </ul>
+          </nav>
         </div>
 
         {sidebarOpen && (
