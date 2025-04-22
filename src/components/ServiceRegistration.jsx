@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react"
-import { useTheme } from "../contexts/ThemeContext"
-import supabase from "../lib/supabase"
+ import supabase from "../lib/supabase"
 import { useAuth } from "../contexts/AuthContext"
   
   
- const ServiceRegistration = () => {
-  const {theme } = useTheme()
+ const ServiceRegistration = ({onClose, theme, editingService}) => {
    const daysOfWeek = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
   const { user } = useAuth()
   const [categories, setCategories] = useState([])
@@ -30,6 +28,48 @@ import { useAuth } from "../contexts/AuthContext"
   })
 
   useEffect(() => {
+    if (editingService) {
+       setFormData({
+        title: editingService.title || '',
+        description: editingService.description || '',
+        category_id: editingService.category_id || '',
+        basic_price: editingService.basic_price || '',
+        basic_description: editingService.basic_description || '',
+        standard_price: editingService.standard_price || '',
+        standard_description: editingService.standard_description || '',
+        premium_price: editingService.premium_price || '',
+        premium_description: editingService.premium_description || '',
+        availability: editingService.availability || daysOfWeek.reduce((acc, day) => ({
+          ...acc,
+          [day]: { 
+            available: editingService.availability?.[day]?.available || false,
+            start_time: editingService.availability?.[day]?.start_time || '08:00',
+            end_time: editingService.availability?.[day]?.end_time || '17:00'
+          }
+        }), {})
+      })
+    } else {
+       setFormData({
+        title: '',
+        description: '',
+        category_id: '',
+        basic_price: '',
+        basic_description: '',
+        standard_price: '',
+        standard_description: '',
+        premium_price: '',
+        premium_description: '',
+        availability: daysOfWeek.reduce((acc, day) => ({
+          ...acc,
+          [day]: { available: false, start_time: '08:00', end_time: '17:00' }
+        }), {})
+      })
+      setSelectedFiles([])
+    }
+  }, [editingService])
+  
+  
+  useEffect(() => {
     const fetchCategories = async () => {
       const { data, error } = await supabase.from('categories').select('id, name')
       if (!error) setCategories(data)
@@ -50,7 +90,14 @@ import { useAuth } from "../contexts/AuthContext"
       }
 
        const imageUrls = await uploadServiceImages();
-
+       if (editingService) {
+         const { data, error } = await supabase
+          .from('services')
+          .update({ ...formData })
+          .eq('id', editingService.id)
+          .select()
+          .single()
+      }else{
        const { data: service, error: serviceError } = await supabase
         .from('services')
         .insert({
@@ -61,8 +108,10 @@ import { useAuth } from "../contexts/AuthContext"
         })
         .select()
         .single()
-
+      
       if (serviceError) throw serviceError
+      }
+
 
        
        setSuccessMessage('Your service has been submitted for review. Please wait for admin approval')
@@ -83,6 +132,7 @@ import { useAuth } from "../contexts/AuthContext"
         }), {})
       });
       setSelectedFiles([]);
+      onClose()
 
     } catch (err) {
       setError(err.message || 'Failed to submit service. Please try again.')
