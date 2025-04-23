@@ -23,6 +23,15 @@ export default function AdminServiceList() {
     fetchServices()
   }, [])
 
+  const updateStatus = async (id, status) => {
+    const { error } = await supabase
+      .from("services")
+      .update({ status })
+      .eq("id", id)
+
+    if (error) console.error("Error updating status:", error);
+    else setServices(prev => prev.map(s => s.id === id ? { ...s, status } : s))
+  }
 
   return (
      <div className="p-4">
@@ -55,6 +64,7 @@ export default function AdminServiceList() {
                 <td className={`border p-2 ${theme === 'dark'? 'border-gray-100 text-sky-200': 'border-indigo-600 text-indigo-900'}`}>
                   <button
                     className="bg-green-500 text-white px-3 py-1 mr-2 rounded"
+                    onClick={() => updateStatus(service.id, "approved")}
                    >
                     Approve
                   </button>
