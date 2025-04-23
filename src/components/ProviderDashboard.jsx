@@ -4,17 +4,26 @@ import {  FiBarChart2, FiCalendar, FiEdit, FiInfo, FiMail, FiMenu, FiPlus, FiTra
 import { useAuth } from '../contexts/AuthContext'
 import ServiceRegistration from './ServiceRegistration'
 import supabase from '../lib/supabase';
-const ServiceDetailsModal = ({ service, onClose, theme }) => {
+export const ServiceDetailsModal = ({ service, onClose, theme }) => {
   if (!service) return null
+  console.log(service.service_image_url)
+  let imageUrls = [];
+  try {
+    imageUrls = Array.isArray(service.service_image_url)
+      ? service.service_image_url
+      : JSON.parse(service.service_image_url || '[]');
+  } catch (err) {
+    console.error("Failed to parse service_image_url:", err);
+  }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className={`p-6 rounded-lg max-w-2xl w-full mx-4 ${theme === 'dark' ? 'bg-indigo-700' : 'bg-white'}`}>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto ">
+   + <div className={`p-4 md:p-6 rounded-lg max-w-2xl w-full mx-2 sm:mx-4 my-6 ${theme === 'dark' ? 'bg-indigo-700' : 'bg-white'}`}>
       <h3 className={`text-xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
         {service.title}
       </h3>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4">
           <div>
             <p className={`font-medium  ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Category</p>
             <p className={`${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>{service.category_name}</p>
@@ -35,9 +44,23 @@ const ServiceDetailsModal = ({ service, onClose, theme }) => {
           <p className={`font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Description</p>
           <p className = {`${theme === 'dark'? 'text-indigo-400': 'text-indigo-600'}`}>{service.description}</p>
         </div>
-        
+          {imageUrls.length > 0 && (
+          <div className="mb-4">
+            <h4 className={`font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Images</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+              {imageUrls.map((url, idx) => (
+                <img
+                  key={idx}
+                  src={url}
+                  alt={`Service image ${idx + 1}`}
+                  className="w-full h-48 object-cover rounded"
+                />
+              ))}
+            </div>
+          </div>
+        )}
         <h4 className={`font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Pricing Tiers</h4>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mb-4">
           <div className={`p-3 rounded ${theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-100'}`}>
             <h5 className={`font-medium  ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Basic</h5>
             <p className={`text-lg font-bold ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>${service.basic_price}</p>

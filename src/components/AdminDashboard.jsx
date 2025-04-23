@@ -4,6 +4,7 @@ import { FiBarChart2, FiCalendar, FiCheckCircle, FiDollarSign, FiHelpCircle, FiL
 import toast from 'react-hot-toast'
 import CategoryModal from './CategoryModel'
 import supabase from '../lib/supabase'
+import AdminServiceList from './AdminServiceList'
 const AdminDashboard = () => {
     const {theme} = useTheme()
     const [activeTab, setActiveTab] = useState('dashboard')
@@ -241,6 +242,7 @@ const AdminDashboard = () => {
           return (
             <div>
               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white' : 'text-indigo-900'}`}>Provider Approval Requests</h3>
+              <AdminServiceList/>
              </div>
           )
           case 'reports':

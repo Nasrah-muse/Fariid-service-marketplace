@@ -93,7 +93,8 @@ import { useAuth } from "../contexts/AuthContext"
        if (editingService) {
          const { data, error } = await supabase
           .from('services')
-          .update({ ...formData })
+          .update({ ...formData,
+           status: editingService.status === 'rejected' ? 'pending' : editingService.status })
           .eq('id', editingService.id)
           .select()
           .single()
