@@ -4,7 +4,7 @@ import {  FiBarChart2, FiCalendar, FiEdit, FiInfo, FiMail, FiMenu, FiPlus, FiTra
 import { useAuth } from '../contexts/AuthContext'
 import ServiceRegistration from './ServiceRegistration'
 import supabase from '../lib/supabase';
-const ServiceDetailsModal = ({ service, onClose, theme }) => {
+export const ServiceDetailsModal = ({ service, onClose, theme }) => {
   if (!service) return null
 
   return (

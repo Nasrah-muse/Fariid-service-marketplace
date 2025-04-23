@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "../contexts/ThemeContext"
 import supabase from "../lib/supabase";
+import { ServiceDetailsModal } from "./ProviderDashboard";
 
  
 export default function AdminServiceList() {
  const {theme} = useTheme()
  const [services, setServices] = useState([])
+ const [selectedService, setSelectedService] = useState(null)
+
   useEffect(() => {
     const fetchServices = async () => {
       const { data, error } = await supabase
@@ -32,6 +35,15 @@ export default function AdminServiceList() {
     if (error) console.error("Error updating status:", error);
     else setServices(prev => prev.map(s => s.id === id ? { ...s, status } : s))
   }
+  
+  const handleServiceClick = (service) => {
+    setSelectedService(service)
+  }
+
+  const closeModal = () => {
+    setSelectedService(null)
+  }
+
 
   return (
      <div className="p-4">
@@ -48,7 +60,7 @@ export default function AdminServiceList() {
     <tbody>
     {services.map(service => (
               <tr key={service.id}>
-                <td className={`border p-2 ${theme === 'dark'? 'border-gray-100 text-sky-200': 'border-indigo-600 text-indigo-900'}`}>
+                <td className={`border p-2 cursor-pointer text-xl ${theme === 'dark'? 'border-gray-100 text-sky-200 hover:text-sky-300': 'border-indigo-600 text-indigo-900 hover:text-blue-500'}`} onClick={() => handleServiceClick(service)}>
                   {service.title}
                 </td>
                 <td className={`border p-2 ${theme === 'dark'? 'border-gray-100 text-sky-200': 'border-indigo-600 text-indigo-900'}`}>
@@ -82,6 +94,10 @@ export default function AdminServiceList() {
   </table>
 
      </div>
+     {selectedService && (
+        <ServiceDetailsModal service={selectedService} onClose={closeModal} theme={theme} />
+      )}
+
      </div>
   )
 }
