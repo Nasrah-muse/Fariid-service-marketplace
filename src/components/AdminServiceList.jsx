@@ -70,6 +70,7 @@ export default function AdminServiceList() {
                   </button>
                   <button
                     className="bg-red-500 text-white px-3 py-1 rounded"
+                    onClick={() => updateStatus(service.id, "rejected")}
                    >
                     Reject
                   </button>
