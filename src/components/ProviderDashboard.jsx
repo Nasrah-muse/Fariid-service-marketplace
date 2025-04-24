@@ -7,18 +7,38 @@ import supabase from '../lib/supabase';
 export const ServiceDetailsModal = ({ service, onClose, theme }) => {
   if (!service) return null
   console.log(service.service_image_url)
-  let imageUrls = [];
-  try {
-    imageUrls = Array.isArray(service.service_image_url)
-      ? service.service_image_url
-      : JSON.parse(service.service_image_url || '[]');
-  } catch (err) {
-    console.error("Failed to parse service_image_url:", err);
+  const parseImageUrls = (imageData) => {
+    try {
+       if (Array.isArray(imageData)) {
+        return imageData
+      }
+
+       if (typeof imageData === 'string') {
+         const cleanString = imageData
+          .replace(/^\{/, '')
+          .replace(/\}$/, '')
+          .replace(/\\"/g, '"')
+          .replace(/^"+|"+$/g, '')
+
+         const parsed = JSON.parse(cleanString)
+        
+         return Array.isArray(parsed) ? parsed : [parsed]
+      }
+
+      return []
+    } catch (err) {
+      console.error("Image URL parsing failed:", err)
+      return []
+    }
   }
 
+   const imageUrls = parseImageUrls(service.service_image_url)
+
+  console.log('Original:', service.service_image_url)
+  console.log('Parsed:', imageUrls)
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 overflow-y-auto ">
-   + <div className={`p-4 md:p-6 rounded-lg max-w-2xl w-full mx-2 sm:mx-4 my-6 ${theme === 'dark' ? 'bg-indigo-700' : 'bg-white'}`}>
+   <div className={`p-4 md:p-6 rounded-lg max-w-2xl w-full mx-2 sm:mx-4 my-6 ${theme === 'dark' ? 'bg-indigo-700' : 'bg-white'}`}>
       <h3 className={`text-xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
         {service.title}
       </h3>
@@ -44,18 +64,27 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
           <p className={`font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>Description</p>
           <p className = {`${theme === 'dark'? 'text-indigo-400': 'text-indigo-600'}`}>{service.description}</p>
         </div>
-          {imageUrls.length > 0 && (
+        {imageUrls.length > 0 && (
           <div className="mb-4">
             <h4 className={`font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Images</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-              {imageUrls.map((url, idx) => (
-                <img
-                  key={idx}
-                  src={url}
-                  alt={`Service image ${idx + 1}`}
-                  className="w-full h-48 object-cover rounded"
-                />
-              ))}
+              {imageUrls.map((url, idx) => {
+                 const cleanUrl = url.replace(/\\/g, '')
+                return (
+                  <div key={idx} className="relative h-48">
+                    <img
+                      src={cleanUrl}
+                      alt={`Service image ${idx + 1}`}
+                      className="w-full h-full object-cover rounded"
+                      onError={(e) => {
+                        e.target.src = 'https://placehold.co/300x200?text=Image+Not+Found';
+                        e.target.className = 'w-full h-full object-contain rounded bg-gray-100 p-2'
+                      }}
+                      loading="lazy"
+                    />
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
