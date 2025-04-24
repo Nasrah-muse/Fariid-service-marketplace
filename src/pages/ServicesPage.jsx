@@ -125,6 +125,7 @@ const ServicesPage = () => {
           .from('services')
           .select('*, categories(name)')
           .neq('status', 'pending')
+          .neq('status', 'rejected')
         if (servicesError) throw servicesError
 
          const processedServices = servicesData.map(service => {
