@@ -145,6 +145,42 @@ const ServicesPage = () => {
 
     fetchData()
   }, [])
+  
+  const filteredServices = services.filter(service => {
+    const matchesCategory =
+      selectedCategory === 'All Services' || service.categories?.name === selectedCategory;
+    const matchesSearch = service.title?.toLowerCase().includes(searchQuery.toLowerCase())
+    return matchesCategory && matchesSearch
+  })
+
+  const getPrice = (service) => {
+    switch (priceFilter) {
+      case 'standard': return service.standard_price || 0
+      case 'premium': return service.premium_price || 0
+      default: return service.basic_price || 0
+    }
+  }
+
+  const sortedServices = [...filteredServices].sort((a, b) => {
+    const priceA = getPrice(a);
+    const priceB = getPrice(b);
+    switch (sortOption) {
+      case 'price-desc': return priceB - priceA;
+      case 'rating-desc': return (b.rating || 0) - (a.rating || 0)
+      case 'rating-asc': return (a.rating || 0) - (b.rating || 0)
+      default: return priceA - priceB
+    }
+  })
+
+  if (loading) {
+    return (
+      <div className={`flex justify-center items-center h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+
+
 
 
   return (
@@ -227,7 +263,51 @@ const ServicesPage = () => {
           </select>
         </div>
       </div>
-
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedServices.length > 0 ? (
+          sortedServices.map(service => {
+            
+            return (
+              <div 
+                key={service.id} 
+                className={`rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow ${
+                  theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+                }`}
+              >
+                <div className="relative h-40 w-full mb-4 bg-gray-100 rounded-lg overflow-hidden">
+              {service.firstImageUrl && typeof service.firstImageUrl === 'string' ? (
+                <img
+                  src={service.firstImageUrl}
+                  alt={service.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    console.error('Image failed to load:', service.firstImageUrl);
+                    e.target.src = 'https://placehold.co/300x200?text=Image+Not+Found';
+                    e.target.className = 'w-full h-full object-contain rounded bg-gray-100 p-2';
+                  }}
+                  loading="lazy"
+                />
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center p-4">
+                    <svg className="w-12 h-12 mx-auto text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    <p className="mt-2 text-sm text-gray-500">No image available</p>
+                  </div>
+                </div>
+              )}
+               </div>
+        
+              </div>
+            )
+          })
+        ) : (
+          <p className={`col-span-full text-center text-lg ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+            No services found matching your search.
+          </p>
+        )}
+      </div>
 
 
       </div>
