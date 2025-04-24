@@ -4,7 +4,44 @@ import { FiSearch, FiStar } from "react-icons/fi";
 import supabase from "../lib/supabase";
 import toast from "react-hot-toast";
 
- 
+const StarRating = ({ rating = 0, theme }) => {
+   const validatedRating = Math.min(Math.max(Number(rating) || 0, 0), 5);
+  
+  const fullStars = Math.floor(validatedRating);
+  const hasHalfStar = validatedRating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+
+  return (
+    <div className="flex items-center mt-1">
+      <div className="flex">
+        {[...Array(Math.max(0, fullStars))].map((_, i) => (
+          <FiStar 
+            key={`full-${i}`} 
+            className={`w-4 h-4 ${theme === 'dark' ? 'text-orange-600 ' : 'text-orange-400'}`} 
+          />
+        ))}
+        {hasHalfStar && (
+          <div className="relative w-4 h-4">
+            <FiStar className={`w-4 h-4 ${theme === 'dark' ? 'text-indigo-400' : 'text-sky-300'}`} />
+            <div className="absolute left-0 top-0 w-1/2 overflow-hidden">
+              <FiStar className={`w-4 h-4 ${theme === 'dark' ? 'text-orange-500' : 'text-yellow-500'}`} />
+            </div>
+          </div>
+        )}
+        {[...Array(Math.max(0, emptyStars))].map((_, i) => (
+          <FiStar 
+            key={`empty-${i}`} 
+            className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-300'}`} 
+          />
+        ))}
+      </div>
+      <span className={`ml-1 text-xs ${theme === 'dark' ? 'text-indigo-900' : 'text-sky-200'}`}>
+        ({validatedRating.toFixed(1)})
+      </span>
+    </div>
+  )
+}
+
 const ServicesPage = () => {
   const {theme} = useTheme()
 
@@ -17,6 +54,9 @@ const ServicesPage = () => {
    const [priceFilter, setPriceFilter] = useState('basic')
   const [sortOption, setSortOption] = useState('price-asc')
 
+  const generateRandomRating = () => {
+    return Math.round((Math.random() * 4 + 3) * 2) / 2
+  }
   const getAvatarUrl = (avatarPath) => {
     if (!avatarPath) return null;
     if (avatarPath.startsWith('http')) return avatarPath;
@@ -113,7 +153,8 @@ const ServicesPage = () => {
         
           return {
             ...service,
-            firstImageUrl
+            firstImageUrl,
+            rating: Number(service.rating) || generateRandomRating() 
           }
         })
 
@@ -164,11 +205,14 @@ const ServicesPage = () => {
   const sortedServices = [...filteredServices].sort((a, b) => {
     const priceA = getPrice(a);
     const priceB = getPrice(b);
+    const ratingA = Number(a.rating) || 0
+  const ratingB = Number(b.rating) || 0
     switch (sortOption) {
       case 'price-desc': return priceB - priceA;
-      case 'rating-desc': return (b.rating || 0) - (a.rating || 0)
-      case 'rating-asc': return (a.rating || 0) - (b.rating || 0)
-      default: return priceA - priceB
+      case 'price-asc':  return priceA - priceB
+    case 'rating-desc': return ratingB - ratingA || priceA - priceB
+    case 'rating-asc':  return ratingA - ratingB || priceA - priceB
+    default: return priceA - priceB
     }
   })
 
@@ -302,12 +346,8 @@ const ServicesPage = () => {
                </div>
                   <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-indigo-900' : 'text-sky-200'}`}>
                   {service.title}
-                  {service.rating && (
-                    <span className="ml-2 text-sm font-normal">
-                      <FiStar/>
-                     </span>
-                  )}
-                </h3>
+                  <StarRating rating={service.rating} theme={theme} />
+                 </h3>
 
                  <div className={`my-3 h-px ${theme === 'dark' ? 'bg-orange-500' : 'bg-gray-200'}`} />
 
