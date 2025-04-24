@@ -187,6 +187,46 @@ const ServicesPage = () => {
           </button>
         ))}
       </div>
+          <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div className="flex gap-2 items-center">
+          <label className={`text-md font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+            Price Tier:
+          </label>
+          <select
+            value={priceFilter}
+            onChange={(e) => setPriceFilter(e.target.value)}
+            className={`px-4 py-2 rounded-lg ${
+              theme === 'dark'
+                ? 'bg-white text-indigo-900 focus:ring-blue-500'
+                : 'bg-indigo-800 text-white border border-gray-300 focus:ring-blue-500'
+            } focus:outline-none focus:ring-2`}
+          >
+            <option value="basic">Basic</option>
+            <option value="standard">Standard</option>
+            <option value="premium">Premium</option>
+          </select>
+        </div>
+
+        <div className="flex gap-2 items-center">
+          <label className={`text-md font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+            Sort By:
+          </label>
+          <select
+            value={sortOption}
+            onChange={(e) => setSortOption(e.target.value)}
+            className={`px-4 py-2 rounded-lg ${
+              theme === 'dark'
+                  ? 'bg-white text-indigo-900 focus:ring-blue-500'
+                : 'bg-indigo-800 text-white border border-gray-300 focus:ring-blue-500'
+            } focus:outline-none focus:ring-2`}
+          >
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+            <option value="rating-desc">Top Rated</option>
+            <option value="rating-asc">Lowest Rated</option>
+          </select>
+        </div>
+      </div>
 
 
 
