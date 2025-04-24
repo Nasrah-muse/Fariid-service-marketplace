@@ -273,10 +273,10 @@ const ServicesPage = () => {
               <div 
                 key={service.id} 
                 className={`rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow ${
-                  theme === 'dark' ? 'bg-gray-800' : 'bg-white'
+                  theme === 'dark' ? 'bg-sky-200' : 'bg-indigo-900'
                 }`}
               >
-                <div className="relative h-40 w-full mb-4 bg-gray-100 rounded-lg overflow-hidden">
+                <div className="relative h-42 w-full mb-2 bg-gray-100 rounded-lg overflow-hidden">
               {service.firstImageUrl && typeof service.firstImageUrl === 'string' ? (
                 <img
                   src={service.firstImageUrl}
@@ -300,7 +300,7 @@ const ServicesPage = () => {
                 </div>
               )}
                </div>
-                  <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-indigo-900' : 'text-sky-200'}`}>
                   {service.title}
                   {service.rating && (
                     <span className="ml-2 text-sm font-normal">
@@ -309,7 +309,7 @@ const ServicesPage = () => {
                   )}
                 </h3>
 
-                 <div className={`my-3 h-px ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`} />
+                 <div className={`my-3 h-px ${theme === 'dark' ? 'bg-orange-500' : 'bg-gray-200'}`} />
 
                  <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -317,17 +317,17 @@ const ServicesPage = () => {
                       <img
                         src={provider.formattedAvatarUrl}
                         alt={provider.username}
-                        className="w-8 h-8 rounded-full object-cover"
+                        className={`w-8 h-8 rounded-full object-cover border  ${theme === 'dark'? 'border-indigo-900': 'border-orange-500'}`}
                         onError={(e) => {
                           e.target.src = 'https://placehold.co/40x40?text=No+Image';
                         }}
                       />
                     )}
-                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <p className={`text-md font-bold ${theme === 'dark' ? 'text-indigo-900' : 'text-orange-500'}`}>
                       {provider?.username || 'Unknown Provider'}
                     </p>
                   </div>
-                  <p className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  <p className={`text-md font-semibold px-2 py-1 rounded ${theme === 'dark' ? 'bg-indigo-900 text-white' : 'bg-orange-500 text-white'}`}>
                     From ${price}
                   </p>
                 </div>
