@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTheme } from "../contexts/ThemeContext"
-import { FiSearch } from "react-icons/fi";
+import { FiSearch, FiStar } from "react-icons/fi";
 import supabase from "../lib/supabase";
 import toast from "react-hot-toast";
 
@@ -266,7 +266,9 @@ const ServicesPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {sortedServices.length > 0 ? (
           sortedServices.map(service => {
-            
+            const provider = providers[service.provider_id]
+            const price = getPrice(service)
+
             return (
               <div 
                 key={service.id} 
@@ -298,6 +300,37 @@ const ServicesPage = () => {
                 </div>
               )}
                </div>
+                  <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                  {service.title}
+                  {service.rating && (
+                    <span className="ml-2 text-sm font-normal">
+                      <FiStar/>
+                     </span>
+                  )}
+                </h3>
+
+                 <div className={`my-3 h-px ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-200'}`} />
+
+                 <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {provider?.formattedAvatarUrl && (
+                      <img
+                        src={provider.formattedAvatarUrl}
+                        alt={provider.username}
+                        className="w-8 h-8 rounded-full object-cover"
+                        onError={(e) => {
+                          e.target.src = 'https://placehold.co/40x40?text=No+Image';
+                        }}
+                      />
+                    )}
+                    <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                      {provider?.username || 'Unknown Provider'}
+                    </p>
+                  </div>
+                  <p className={`text-sm font-semibold ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    From ${price}
+                  </p>
+                </div>
         
               </div>
             )
