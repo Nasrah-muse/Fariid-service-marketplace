@@ -168,6 +168,27 @@ const ServicesPage = () => {
           </span>
         </div>
       </div>
+      <div className="flex flex-wrap justify-center gap-4 mb-8">
+        {categories.map(category => (
+          <button
+            key={category.id || 0}
+            onClick={() => setSelectedCategory(category.name)}
+            className={`px-4 py-2 rounded-full transition-colors ${
+              selectedCategory === category.name
+                ? theme === 'dark'
+                  ? 'bg-sky-300 text-indigo-900 hover:bg-sky-500 hover:text-white'
+                  : 'bg-indigo-900 text-white hover:bg-blue-600'
+                : theme === 'dark'
+                  ? 'bg-white text-indigo-900 hover:bg-indigo-600'
+                  : 'bg-white text-indigo-900 border border-gray-500 hover:bg-gray-50'
+            }`}
+          >
+            {category.name}
+          </button>
+        ))}
+      </div>
+
+
 
       </div>
   )
