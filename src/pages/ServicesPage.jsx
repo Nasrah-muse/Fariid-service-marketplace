@@ -1,12 +1,151 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "../contexts/ThemeContext"
 import { FiSearch } from "react-icons/fi";
+import supabase from "../lib/supabase";
+import toast from "react-hot-toast";
 
  
 const ServicesPage = () => {
   const {theme} = useTheme()
 
   const [searchQuery, setSearchQuery] = useState('');
+  const [categories, setCategories] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [services, setServices] = useState([])
+  const [providers, setProviders] = useState({})
+   const [selectedCategory, setSelectedCategory] = useState('All Services')
+   const [priceFilter, setPriceFilter] = useState('basic')
+  const [sortOption, setSortOption] = useState('price-asc')
+
+  const getAvatarUrl = (avatarPath) => {
+    if (!avatarPath) return null;
+    if (avatarPath.startsWith('http')) return avatarPath;
+    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(avatarPath)
+    return publicUrl
+  }
+
+  const parseServiceImages = (imageData) => {
+    try {
+      if (!imageData) return []
+  
+       if (Array.isArray(imageData)) {
+        return imageData.map(url => typeof url === 'string' ? url.replace(/\\/g, '') : url)
+      }
+  
+       if (typeof imageData === 'string') {
+         let cleanString = imageData
+          .replace(/^\{/, '')
+          .replace(/\}$/, '')
+          .replace(/\\"/g, '"')
+          .trim()
+  
+         try {
+           if (cleanString.startsWith('[') && cleanString.endsWith(']')) {
+            const parsed = JSON.parse(cleanString);
+            return Array.isArray(parsed) 
+              ? parsed.map(url => typeof url === 'string' ? url.replace(/\\/g, '') : url)
+              : [parsed]
+          }
+  
+           const parsed = JSON.parse(cleanString)
+          if (typeof parsed === 'string') {
+            try {
+              const innerParsed = JSON.parse(parsed)
+              return Array.isArray(innerParsed) ? innerParsed : [innerParsed]
+            } catch {
+              return [parsed]
+            }
+          }
+  
+          return Array.isArray(parsed) ? parsed : [parsed]
+        } catch (e) {
+           return [cleanString.replace(/^"+|"+$/g, '')]
+        }
+      }
+  
+      return [];
+    } catch (err) {
+      console.error("Failed to parse service_image_url:", imageData, err)
+      return []
+    }
+  }
+
+  
+  useEffect(() => {
+    const fetchData = async () => {;
+      try {
+        setLoading(true);
+
+         const { data: categoriesData, error: categoriesError } = await supabase
+          .from('categories')
+          .select('*');
+        if (categoriesError) throw categoriesError;
+
+         const { data: servicesData, error: servicesError } = await supabase
+          .from('services')
+          .select('*, categories(name)')
+          .neq('status', 'pending')
+        if (servicesError) throw servicesError
+
+         const processedServices = servicesData.map(service => {
+          const imageUrls = parseServiceImages(service.service_image_url)
+          
+           let firstImageUrl = null
+          if (imageUrls.length > 0) {
+            firstImageUrl = imageUrls[0]
+             if (typeof firstImageUrl === 'string') {
+              firstImageUrl = firstImageUrl.replace(/\\/g, '').replace(/^"+|"+$/g, '')
+              
+               if (firstImageUrl.startsWith('[') || firstImageUrl.startsWith('{')) {
+                const cleaned = parseServiceImages(firstImageUrl)
+                firstImageUrl = cleaned[0] || null
+              }
+            } else {
+              firstImageUrl = null
+            }
+          }
+        
+          console.log('Processed service image:', {
+            raw: service.service_image_url,
+            parsed: imageUrls,
+            firstImage: firstImageUrl
+          })
+        
+          return {
+            ...service,
+            firstImageUrl
+          }
+        })
+
+         const providerIds = [...new Set(processedServices.map(service => service.provider_id))];
+
+         const { data: providersData, error: providersError } = await supabase
+          .from('users')
+          .select('id, username, avatar_url, role')
+          .in('id', providerIds);
+        if (providersError) throw providersError
+
+         const providersMap = {};
+        providersData.forEach(provider => {
+          providersMap[provider.id] = {
+            ...provider,
+            formattedAvatarUrl: getAvatarUrl(provider.avatar_url),
+          }
+        })
+        setCategories([{ id: 0, name: 'All Services' }, ...categoriesData])
+        setServices(processedServices);
+        setProviders(providersMap);
+      } catch (error) {
+        console.error('Error fetching data:', error)
+        toast.error('Failed to load data')
+      } finally {
+        setLoading(false)
+      }
+    };
+
+    fetchData()
+  }, [])
+
 
   return (
     <div  className={`min-h-screen p-6 mt-20 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
