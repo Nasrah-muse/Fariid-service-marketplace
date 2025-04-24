@@ -62,14 +62,6 @@ console.log("User profile", profile)
             >
               Services
             </NavLink>
-
-            <NavLink
-              to="/categories"
-              className={({ isActive }) => getNavLinkClass(isActive)}
-            >
-              Categories
-            </NavLink>
-
             <NavLink
               to="/contact"
               className={({ isActive }) => getNavLinkClass(isActive)}
