@@ -16,6 +16,32 @@ const AdminDashboard = () => {
   const [error, setError] = useState('')
   const [categories, setCategories] = useState([]);
   const [editingCategory, setEditingCategory] = useState(null)
+  const [users, setUsers] = useState([])
+  const [loadingUsers, setLoadingUsers] = useState(false)
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      setLoadingUsers(true);
+      try {
+        const { data, error } = await supabase
+        .from('users_with_email')
+        .select('*')
+        .neq('role', 'admin')
+        .order('created_at', { ascending: false })
+
+        if (error) throw error
+
+        setUsers(data);
+      } catch (err) {
+        toast.error('Failed to fetch users')
+        console.error('Error fetching users:', err)
+      } finally {
+        setLoadingUsers(false)
+      }
+    }
+
+    fetchUsers()
+  }, [])
 
   useEffect(() => {
     fetchCategories()
