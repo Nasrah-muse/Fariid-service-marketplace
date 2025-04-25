@@ -43,6 +43,25 @@ const AdminDashboard = () => {
     fetchUsers()
   }, [])
 
+  const handleVerifyUser = async (userId) => {
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ status: 'verified' })
+        .eq('id', userId)
+  
+      if (error) throw error;
+  
+      setUsers(users.map(user => 
+        user.id === userId ? { ...user, status: 'verified' } : user
+      ));
+      toast.success('User verified successfully')
+    } catch (err) {
+      toast.error('Failed to verify user');
+      console.error('Error verifying user:', err)
+    }
+  }
+  
   useEffect(() => {
     fetchCategories()
   }, [])
@@ -223,6 +242,7 @@ const AdminDashboard = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                     {!user.blocked && !user.verified && (
                       <button
+                      onClick={() => handleVerifyUser(user.id)}
                          className={`mr-2 ${theme === 'dark' ? 'text-green-300 hover:text-green-200' : 'text-green-600 hover:text-green-900'}`}
                       >
                         Verify
