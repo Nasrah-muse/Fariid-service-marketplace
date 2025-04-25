@@ -1,4 +1,5 @@
-import { useTheme } from "../contexts/ThemeContext";
+ import { useTheme } from "../contexts/ThemeContext";
+ import { FiAward, FiGlobe, FiLayers, FiShield, FiUsers, FiZap } from "react-icons/fi";
 
  
 const AboutPage = () => {
@@ -60,6 +61,58 @@ const AboutPage = () => {
               Our mission is to remove barriers in service commerce by combining smart technology with human expertise – helping businesses grow and professionals thrive
               </p>
             </div>
+          </div>
+          </div>
+        </section>
+         <section className="w-full mt-12">
+         <h1 className="text-center text-3xl font-bold mb-4 text-indigo-600"><span className="text-orange-600">Our</span> Values</h1>
+          <div className="max-w-4xl mx-auto  px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
+              <FiZap/>
+            <h2 className={`text-xl font-bold   rounded ${theme === 'dark'? '  text-sky-200': '  text-orange-500'}`}>Innovation</h2>
+              <p className="text-center font-sm">
+              To create the simplest, most reliable platform where skilled professionals and clients connect effortlessly – making quality services accessible to everyone
+              </p>
+            </div>
+            <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
+              <FiShield/>
+            <h2 className={`text-xl font-bold   rounded ${theme === 'dark'? '  text-sky-200': '  text-orange-500'}`}>Trust</h2>
+              <p className="text-center font-sm">
+              Every interaction on our platform is built on transparency, verified reviews, and secure transactions to foster genuine confidence
+              </p>
+            </div>
+            <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
+              <FiAward/>
+            <h2 className={`text-xl font-bold   rounded ${theme === 'dark'? '  text-sky-200': '  text-orange-500'}`}>Quality</h2>
+              <p className="text-center font-sm">
+              We maintain rigorous standards so clients consistently receive exceptional service and professionals get rewarding opportunities
+              </p>
+            </div>
+            <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
+              <FiGlobe/>
+            <h2 className={`text-xl font-bold   rounded ${theme === 'dark'? '  text-sky-200': '  text-orange-500'}`}>Accessibility</h2>
+              <p className="text-center font-sm">
+              Our marketplace breaks down barriers - making professional services available to all businesses regardless of size or budget
+              </p>
+            </div>
+           
+            <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
+              <FiLayers/>
+            <h2 className={`text-xl font-bold   rounded ${theme === 'dark'? '  text-sky-200': '  text-orange-500'}`}>Simplicity</h2>
+              <p className="text-center font-sm">
+              Complex problems deserve elegant solutions - we streamline every process from discovery to payment in one intuitive platform
+              </p>
+            </div>
+           
+            <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
+              <FiUsers/>
+            <h2 className={`text-xl font-bold   rounded ${theme === 'dark'? '  text-sky-200': '  text-orange-500'}`}>Collabration</h2>
+              <p className="text-center font-sm">
+              We believe the best results come when diverse talents work together towards shared success
+              </p>
+            </div>
+           
           </div>
           </div>
         </section>
