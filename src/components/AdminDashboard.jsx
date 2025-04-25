@@ -172,8 +172,12 @@ const AdminDashboard = () => {
               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                 Manage Users
               </h3>
-
-              <table className="min-w-full divide-y divide-gray-200">
+              {loadingUsers ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+              ):(
+               <table className="min-w-full divide-y divide-gray-200">
                 <thead className={theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-gray-50 text-indigo-900'}>
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase">Name</th>
@@ -182,7 +186,67 @@ const AdminDashboard = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium uppercase">Actions</th>
                   </tr>
                 </thead>
+                <tbody className={`divide-y ${theme === 'dark' ? 'divide-indigo-700 bg-indigo-900' : 'divide-gray-200 bg-white'}`}>
+              {users.map((user) => (
+                <tr key={user.id}>
+                  <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    {user.username || 'N/A'}
+                  </td>
+                  <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    {user.email}
+                  </td>
+                  <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                    <span className={`px-2 py-1 text-xs rounded-full ${
+                      user.role === 'provider' 
+                        ? theme === 'dark' 
+                          ? 'bg-green-300 text-green-900' 
+                          : 'bg-green-100 text-green-800'
+                        : theme === 'dark' 
+                          ? 'bg-blue-300 text-blue-900' 
+                          : 'bg-blue-100 text-blue-800'
+                    }`}>
+                      {user.role === 'provider' ? 'Provider' : 'Customer'}
+                    </span>
+                  </td>
+                  <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                                      <span className={`px-2 py-1 text-xs rounded-full ${
+                      user.status === 'blocked'
+                        ? 'bg-red-100 text-red-800'
+                        : theme === 'dark'
+                          ? 'bg-green-300 text-green-900'
+                          : 'bg-green-100 text-green-800'
+                    }`}>
+                      {user.status === 'blocked' ? 'Blocked' : 'Verified'}
+                    </span>
+
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                    {!user.blocked && !user.verified && (
+                      <button
+                         className={`mr-2 ${theme === 'dark' ? 'text-green-300 hover:text-green-200' : 'text-green-600 hover:text-green-900'}`}
+                      >
+                        Verify
+                      </button>
+                    )}
+                    <button
+                       className={user.blocked 
+                        ? theme === 'dark' 
+                          ? 'text-green-300 hover:text-green-200' 
+                          : 'text-green-600 hover:text-green-900'
+                        : theme === 'dark' 
+                          ? 'text-red-300 hover:text-red-200' 
+                          : 'text-red-600 hover:text-red-900'
+                      }
+                    >
+                      {user.blocked ? 'Unblock' : 'Block'}
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          
               </table>
+              )}
             </div>
           )
           case 'services':
