@@ -62,6 +62,26 @@ const AdminDashboard = () => {
     }
   }
   
+  const handleToggleBlockUser = async (userId, currentStatus) => {
+    const newStatus = currentStatus === 'blocked' ? 'verified' : 'blocked';
+    try {
+      const { error } = await supabase
+        .from('users')
+        .update({ status: newStatus })
+        .eq('id', userId)
+  
+      if (error) throw error
+  
+      setUsers(users.map(user =>
+        user.id === userId ? { ...user, status: newStatus } : user
+      ));
+      toast.success(`User ${newStatus === 'blocked' ? 'blocked' : 'unblocked'} successfully`)
+    } catch (err) {
+      toast.error('Failed to update user status')
+      console.error('Error updating status:', err)
+    }
+  }
+  
   useEffect(() => {
     fetchCategories()
   }, [])
@@ -249,6 +269,7 @@ const AdminDashboard = () => {
                       </button>
                     )}
                     <button
+                    onClick={() => handleToggleBlockUser(user.id, user.blocked)}
                        className={user.blocked 
                         ? theme === 'dark' 
                           ? 'text-green-300 hover:text-green-200' 
