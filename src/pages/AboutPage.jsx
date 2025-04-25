@@ -19,21 +19,21 @@ const AboutPage = () => {
           <div className="grid md:grid-cols-3 gap-8">
             <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
             <h2 className="text-2xl font-bold ">01</h2>
-              <div className="text-center font-semibold">
+              <p className="text-center font-semibold">
               To connect skilled professionals with clients who need their services, making work easier for everyone
-              </div>
+              </p>
             </div>
             <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
             <h2 className="text-2xl font-bold ">02</h2>
-              <div className="text-center font-semibold">
+              <p className="text-center font-semibold">
               A world where finding the right service is quick, easy, and fair for both providers and customers.
-              </div>
+              </p>
             </div>
             <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
             <h2 className="text-2xl font-bold ">03</h2>
-              <div className="text-center font-semibold">
+              <p className="text-center font-semibold">
               Helping people grow their businesses and careers through trusted service partnerships
-              </div>
+              </p>
             </div>
           </div>
           </div>
