@@ -18,6 +18,76 @@ const AdminDashboard = () => {
   const [editingCategory, setEditingCategory] = useState(null)
   const [users, setUsers] = useState([])
   const [loadingUsers, setLoadingUsers] = useState(false)
+  
+ const [dashboardStats, setDashboardStats] = useState({
+  totalUsers: 0,
+  serviceProviders: 0,
+  services: 0,
+  categories: 0
+});
+const [latestUsers, setLatestUsers] = useState([]);
+const [latestServices, setLatestServices] = useState([]);
+const [loadingStats, setLoadingStats] = useState(false);
+
+ useEffect(() => {
+  const fetchDashboardData = async () => {
+    setLoadingStats(true)
+    try {
+       const { count: totalUsers } = await supabase
+        .from('users')
+        .select('*', { count: 'exact', head: true })
+        .neq('role', 'admin')
+
+       const { count: serviceProviders } = await supabase
+        .from('users')
+        .select('*', { count: 'exact', head: true })
+        .eq('role', 'provider')
+
+       const { count: services } = await supabase
+        .from('services')
+        .select('*', { count: 'exact', head: true });
+
+       const { data: latestUsers } = await supabase
+        .from('users_with_email')
+        .select('*')
+        .neq('role', 'admin')
+        .order('created_at', { ascending: false })
+        .limit(5)
+
+       const { data: latestServices } = await supabase
+        .from('services')
+        .select('*, provider:users(username, role)')
+        .order('created_at', { ascending: false })
+        .limit(5)
+
+       const filteredServices = latestServices 
+        ? latestServices.filter(service => service.provider?.role !== 'admin') 
+        : [];
+
+      setDashboardStats({
+        totalUsers,
+        serviceProviders,
+        services,
+        categories: categories.length
+      });
+      
+      setLatestUsers(latestUsers || [])
+      setLatestServices(filteredServices)
+      
+    } catch (err) {
+      toast.error('Failed to load dashboard data')
+      console.error('Error loading dashboard data:', err)
+    } finally {
+      setLoadingStats(false)
+    }
+  }
+
+  if (activeTab === 'dashboard') {
+    fetchDashboardData()
+  }
+}, [activeTab, categories.length])
+
+
 
   useEffect(() => {
     const fetchUsers = async () => {
