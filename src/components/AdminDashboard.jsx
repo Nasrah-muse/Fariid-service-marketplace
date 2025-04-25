@@ -496,30 +496,38 @@ const [loadingStats, setLoadingStats] = useState(false);
           return (
             <div className={`rounded-lg shadow p-6 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'} w-full px-4 sm:px-6 md:px-8 overflow-x-hidden`}>
               <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark'? 'text-white': 'text-indigo-900'} `}>Dashboard Overview</h2>
-              
+              {loadingStats ? (
+        <div className="flex justify-center items-center h-64">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+        </div>
+      ) : (
+        <>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3  lg:grid-cols-4 gap-4 w-full px-4 mb-8">
                 <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
                   <h3 className={`text-md font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Total Users</h3>
-                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>3</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>{dashboardStats.totalUsers}</p>
                 </div>
                 
                 <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
                   <h3 className={`text-md font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Service Providers</h3>
-                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>2</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>{dashboardStats.serviceProviders}</p>
                 </div>
                 
                 <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
                   <h3 className={`text-md font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Services</h3>
-                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>5</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>{dashboardStats.services}</p>
                 </div>
                 
                 <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
                   <h3 className={`text-md font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Categories</h3>
-                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>4</p>
+                  <p className={`text-2xl font-bold ${theme === 'dark'? 'text-sky-200': 'text-indigo-900'}`}>{dashboardStats.categories}</p>
                 </div>
               </div>
                 <div className="mb-8">
                   <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Latest Users</h3>
+                  {latestUsers.length === 0 ? (
+              <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>No users found</p>
+            ): (
                   <div className="overflow-x max-w-full">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-indigo-600">
                       <thead className={theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-200'}>
@@ -530,21 +538,27 @@ const [loadingStats, setLoadingStats] = useState(false);
                         </tr>
                       </thead>
                       <tbody className={`divide-y ${theme === 'dark'? 'divide-gray-200':'divide-indigo-500' }`}>
-                        <tr>
-                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>Nasra muuse</td>
-                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>nasra@gmail.com</td>
+                      {latestUsers.map(user => (
+                        <tr key={user.id}>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>{user.username || 'N/A'}</td>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>{user.email}</td>
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`px-2 py-1 text-xs rounded-full ${theme === 'dark'? 'bg-sky-200 text-indigo-900': 'bg-indigo-900 text-white '} `}>
-                              Customer
+                            {user.role === 'provider' ? 'Provider' : 'Customer'}
                             </span>
                           </td>
                         </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
+                   )}
                 </div>
                 <div className="mb-8">
                   <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Latest Services</h3>
+                  {latestServices.length === 0 ? (
+              <p className={`${theme === 'dark' ? 'text-gray-300' : 'text-gray-500'}`}>No services found</p>
+            ):(
                   <div className="overflow-x-auto max-w-full">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-indigo-600">
                       <thead className={theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-200'}>
@@ -555,15 +569,21 @@ const [loadingStats, setLoadingStats] = useState(false);
                         </tr>
                       </thead>
                       <tbody className={`divide-y ${theme === 'dark'? 'divide-gray-200':'divide-indigo-500' }`}>
-                        <tr>
-                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>plumbing installition</td>
-                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>Home service</td>
-                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>Ahmed geedi</td>
+                      {latestServices.map(service => (
+                        <tr key={service.id}>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>{service.title}</td>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>{categories.find(cat => cat.id === service.category_id)?.name || 'N/A'} </td>
+                          <td className={`px-6 py-4 whitespace-nowrap ${theme === 'dark'? ' text-white': 'text-indigo-700'}`}>{service.provider?.username || 'N/A'}
+                          </td>
                         </tr>
+                        ))}
                       </tbody>
                     </table>
                   </div>
-                </div>
+                  )}
+                  </div>
+                  </>
+                )}
       </div>
           )
 
