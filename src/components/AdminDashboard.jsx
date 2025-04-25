@@ -143,6 +143,10 @@ const AdminDashboard = () => {
         case 'users':
           return (
             <div className="overflow-x-auto">
+              <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                Manage Users
+              </h3>
+
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className={theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-gray-50 text-indigo-900'}>
                   <tr>
