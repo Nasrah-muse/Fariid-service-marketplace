@@ -15,7 +15,7 @@ const AboutPage = () => {
         </div>
          <section className="w-full">
           <div className="max-w-4xl mx-auto  px-4 sm:px-6 lg:px-8 py-12">
-            <h1 className="text-center text-3xl font-bold mb-4">Our Vision</h1>
+            <h1 className="text-center text-3xl font-bold mb-4"><span className="text-orange-600">Our</span> Vision</h1>
           <div className="grid md:grid-cols-3 gap-8">
             <div className={`flex flex-col items-center justify-center ${theme === 'dark'? 'bg-indigo-700': 'bg-white'} shadow-lg rounded p-4 gap-1`}>
             <h2 className="text-2xl font-bold ">01</h2>
