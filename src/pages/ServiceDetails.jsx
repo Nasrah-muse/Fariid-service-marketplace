@@ -14,6 +14,7 @@ const ServiceDetails = () => {
   const [loading, setLoading] = useState(true)
   const [serviceImages, setServiceImages] = useState([])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [selectedPriceTier, setSelectedPriceTier] = useState('basic')
 
   useEffect(() => {
     const fetchServiceDetails = async () => {
@@ -200,7 +201,7 @@ const ServiceDetails = () => {
         </div>
         </div>
 
-<div className="max-w-6xl mx-auto grid grid-col-1 md:grid-cols-2 mt-12 ">
+<div className="max-w-6xl mx-auto grid grid-col-1 md:grid-cols-2 gap-4 mt-12 ">
 <div className="container mx-auto px-4 mb-12">
   {serviceImages.length > 0 && (
     <>
@@ -277,6 +278,87 @@ const ServiceDetails = () => {
     </>
   )}
 </div>
+         <div className="container">
+          <div className="grid grid-cols-3  gap-4 mb-6">
+            <button
+              onClick={() => setSelectedPriceTier('basic')}
+              className={`p-4 rounded-lg text-left transition-all ${selectedPriceTier === 'basic' ? (theme === 'dark' ? 'bg-indigo-700 border-2 border-white' : 'bg-indigo-900 border-2 border-orange-500') : (theme === 'dark' ? 'bg-indigo-800' : 'bg-indigo-100')}`}
+            >
+              <h3 className={`text-xl font-bold mb-2 ${selectedPriceTier === 'basic' ? (theme === 'dark' ? 'text-white' : 'text-white') : (theme === 'dark' ? 'text-white' : 'text-indigo-900')}`}>
+                Basic
+              </h3>
+              <p className={`text-lg font-semibold mb-3 ${selectedPriceTier === 'basic' ? (theme === 'dark' ? 'text-white' : 'text-white') : (theme === 'dark' ? 'text-gray-300' : 'text-indigo-700')}`}>
+                ${service.basic_price || 'N/A'}
+              </p>
+            </button>
+
+            <button
+              onClick={() => setSelectedPriceTier('standard')}
+              className={`p-4 rounded-lg text-left transition-all ${selectedPriceTier === 'standard' ? (theme === 'dark' ? 'bg-indigo-700 border-2 border-white' : 'bg-indigo-900 border-2 border-orange-500') : (theme === 'dark' ? 'bg-indigo-800' : 'bg-indigo-100')}`}
+            >
+              <h3 className={`text-xl font-bold mb-2 ${selectedPriceTier === 'standard' ? (theme === 'dark' ? 'text-white' : 'text-white') : (theme === 'dark' ? 'text-white' : 'text-indigo-900')}`}>
+                Standard
+              </h3>
+              <p className={`text-lg font-semibold mb-3 ${selectedPriceTier === 'standard' ? (theme === 'dark' ? 'text-white' : 'text-white') : (theme === 'dark' ? 'text-gray-300' : 'text-indigo-700')}`}>
+                ${service.standard_price || 'N/A'}
+              </p>
+            </button>
+
+            <button
+              onClick={() => setSelectedPriceTier('premium')}
+              className={`p-4 rounded-lg text-left transition-all ${selectedPriceTier === 'premium' ? (theme === 'dark' ? 'bg-indigo-700 border-2 border-white' : 'bg-indigo-900 border-2 border-orange-500') : (theme === 'dark' ? 'bg-indigo-800' : 'bg-indigo-100')}`}
+            >
+              <h3 className={`text-xl font-bold mb-2 ${selectedPriceTier === 'premium' ? (theme === 'dark' ? 'text-white' : 'text-white') : (theme === 'dark' ? 'text-white' : 'text-indigo-900')}`}>
+                Premium
+              </h3>
+              <p className={`text-lg font-semibold mb-3 ${selectedPriceTier === 'premium' ? (theme === 'dark' ? 'text-white' : 'text-white') : (theme === 'dark' ? 'text-gray-300' : 'text-indigo-700')}`}>
+                ${service.premium_price || 'N/A'}
+              </p>
+            </button>
+          </div>
+
+           <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-800' : 'bg-indigo-100'}`}>
+            {selectedPriceTier === 'basic' && (
+              <>
+                <h3 className={`text-xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Basic Package Includes:</h3>
+                <ul className={`space-y-2 ${theme === 'dark' ? 'text-gray-300' : 'text-indigo-800'}`}>
+                {service.basic_description.split('.').filter(item => item.trim()).map((item, index) => (
+                    <li key={index} className="flex items-start">
+                      <span className="mr-2">-</span>
+                      <span>{item.trim()}</span>
+                    </li>
+                  ))}      
+                </ul>
+              </>
+            )}
+            {selectedPriceTier === 'standard' && (
+              <>
+                <h3 className={`text-xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Standard Package Includes:</h3>
+                <ul className={`space-y-2 ${theme === 'dark' ? 'text-gray-300' : 'text-indigo-800'}`}>
+                {service.standard_description.split('.').filter(item => item.trim()).map((item, index) => (
+                    <li key={index} className="flex items-start">
+                      <span className="mr-2">-</span>
+                      <span>{item.trim()}</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+            {selectedPriceTier === 'premium' && (
+              <>
+                <h3 className={`text-xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Premium Package Includes:</h3>
+                <ul className={`space-y-2 ${theme === 'dark' ? 'text-gray-300' : 'text-indigo-800'}`}>
+                {service.premium_description.split('.').filter(item => item.trim()).map((item, index) => (
+                  <li key={index} className="flex items-start">
+                    <span className="mr-2">-</span>
+                    <span>{item.trim()}</span>
+                  </li>
+                ))}
+                </ul>
+              </>
+            )}
+          </div>
+        </div>
 
 </div>
 
