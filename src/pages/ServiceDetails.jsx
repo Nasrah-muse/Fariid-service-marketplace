@@ -47,6 +47,13 @@ const ServiceDetails = () => {
     fetchServiceDetails()
   }, [id])
 
+  const getAvatarUrl = (avatarPath) => {
+    if (!avatarPath) return null
+    if (avatarPath.startsWith('http')) return avatarPath;
+    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(avatarPath)
+    return publicUrl
+  }
+
 
   return (
     <div>ServiceDetails</div>
