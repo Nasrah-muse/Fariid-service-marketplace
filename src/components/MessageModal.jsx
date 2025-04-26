@@ -1,6 +1,8 @@
 import { useState } from "react"
+import toast from "react-hot-toast"
 import { FiPaperclip, FiSend, FiX } from "react-icons/fi"
 import { useNavigate } from "react-router"
+import supabase from "../lib/supabase"
 
 const MessageModal = ({ 
   provider, 
@@ -13,6 +15,72 @@ const MessageModal = ({
     const [message, setMessage] = useState("")
     const [attachments, setAttachments] = useState([]);
     const [isSending, setIsSending] = useState(false)
+
+const handleSendMessage = async () => {
+    if (!currentUser) {
+      toast.error("You must be logged in to send messages");
+      navigate("/signin")
+      return
+    }
+    
+    if (currentUser.role !== "customer") {
+      toast.error("You must be a customer to contact providers");
+      navigate("/signup")
+      return
+    }
+
+    if (!message.trim()) return;
+    
+    setIsSending(true)
+    try {
+       const attachmentUrls = []
+      for (const file of attachments) {
+        const filePath = `messages/${Date.now()}-${file.name}`
+        const { error: uploadError } = await supabase.storage
+          .from('message-attachments')
+          .upload(filePath, file)
+        
+        if (uploadError) throw uploadError
+
+        const { data: { publicUrl } } = supabase.storage
+          .from('message-attachments')
+          .getPublicUrl(filePath)
+        
+        attachmentUrls.push(publicUrl)
+      }
+
+       const { error } = await supabase.from('messages').insert([{
+        sender_id: currentUser.id,
+        receiver_id: provider.id,
+        service_id: service.id, 
+        content: message,
+        attachments: attachmentUrls,
+        created_at: new Date().toISOString()
+      }])
+
+      if (error) throw error
+      
+      toast.success('Message sent successfully!')
+      onClose();
+      setMessage("")
+      setAttachments([])
+    } catch (error) {
+      console.error('Error sending message:', error)
+      toast.error('Failed to send message')
+    } finally {
+      setIsSending(false)
+    }
+  }
+
+  const handleFileUpload = (e) => {
+    setAttachments([...attachments, ...Array.from(e.target.files)])
+  }
+
+  const removeAttachment = (index) => {
+    setAttachments(attachments.filter((_, i) => i !== index))
+  }
+
+    
  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -95,7 +163,8 @@ const MessageModal = ({
               <label className={`cursor-pointer p-2 rounded-full ${theme === 'dark' ? 'hover:bg-indigo-800' : 'hover:bg-gray-200'}`}>
                 <FiPaperclip className={theme === 'dark' ? 'text-white' : 'text-indigo-900'} />
                 <input 
-                  type="file" 
+                  type="file"
+                  onChange={handleFileUpload}
                    className="hidden"
                   multiple
                   accept="image/*,.pdf,.doc,.docx"
@@ -103,6 +172,7 @@ const MessageModal = ({
               </label>
               
               <button
+                onClick={handleSendMessage}
                  disabled={!message.trim() || isSending}
                 className={`flex items-center gap-2 px-4 py-2 rounded-lg ${!message.trim() || isSending ? 'bg-gray-400' : theme === 'dark' ? 'bg-orange-600 hover:bg-orange-700' : 'bg-indigo-900 hover:bg-indigo-800'} text-white`}
               >
@@ -127,6 +197,7 @@ const MessageModal = ({
                     >
                       <span className="truncate max-w-xs">{file.name}</span>
                       <button 
+                      onClick={() => removeAttachment(index)}
                          className="ml-2"
                       >
                         ×
