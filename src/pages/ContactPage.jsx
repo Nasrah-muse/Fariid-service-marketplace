@@ -73,7 +73,7 @@ const ContactPage = () => {
 
         <button
           type="submit"
-          className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md ${theme === 'dark' ? 'bg-sky-200 hover:bg-sky-300 text-indigo-900' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
+          className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md font-semibold ${theme === 'dark' ? 'bg-sky-200 hover:bg-sky-300 text-indigo-900' : 'bg-orange-500 hover:bg-orange-600 text-white'}`}
         >
           Send Message <FiSend/>
         </button>
