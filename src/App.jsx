@@ -14,6 +14,7 @@ import ProtectedRoute from "./components/ProtectedRoute"
 import ProfilePage from "./pages/ProfilePage"
 import Dashboard from "./pages/Dashboard"
 import  { Toaster } from 'react-hot-toast';
+import ServiceDetails from "./pages/ServiceDetails"
  
  
 function App() {
@@ -30,6 +31,7 @@ function App() {
      <Routes>
      <Route path="/" element={<HomePage/>}/>
      <Route path="/services" element={<ServicesPage/>}/>
+     <Route path="/service/:id" element={<ServiceDetails/>}/>
       <Route path="/contact" element={<ContactPage/>}/>
      <Route path="/about" element={<AboutPage/>}/>
      <Route path="/signin" element={

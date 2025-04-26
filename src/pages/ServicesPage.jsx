@@ -3,8 +3,9 @@ import { useTheme } from "../contexts/ThemeContext"
 import { FiSearch, FiStar } from "react-icons/fi";
 import supabase from "../lib/supabase";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router";
 
-const StarRating = ({ rating = 0, theme }) => {
+export const StarRating = ({ rating = 0, theme }) => {
    const validatedRating = Math.min(Math.max(Number(rating) || 0, 0), 5);
   
   const fullStars = Math.floor(validatedRating);
@@ -44,6 +45,7 @@ const StarRating = ({ rating = 0, theme }) => {
 
 const ServicesPage = () => {
   const {theme} = useTheme()
+  const navigate = useNavigate()
 
   const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState([])
@@ -224,6 +226,9 @@ const ServicesPage = () => {
       </div>
     )
   }
+  const handleServiceSelect = (serviceId) => {
+    navigate(`/service/${serviceId}`);
+  }
 
 
 
@@ -320,6 +325,7 @@ const ServicesPage = () => {
                 className={`rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow ${
                   theme === 'dark' ? 'bg-sky-200' : 'bg-indigo-900'
                 }`}
+                onClick={() => handleServiceSelect(service.id)}
               >
                 <div className="relative h-42 w-full mb-2 bg-gray-100 rounded-lg overflow-hidden">
               {service.firstImageUrl && typeof service.firstImageUrl === 'string' ? (
