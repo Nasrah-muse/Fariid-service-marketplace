@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { FiX } from "react-icons/fi"
+import { FiPaperclip, FiSend, FiX } from "react-icons/fi"
 import { useNavigate } from "react-router"
 
 const MessageModal = ({ 
@@ -11,6 +11,7 @@ const MessageModal = ({
 }) => {
     const navigate = useNavigate()
     const [message, setMessage] = useState("")
+    const [isSending, setIsSending] = useState(false)
  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -80,6 +81,37 @@ const MessageModal = ({
               >
                 <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Do you have any experience with...?</p>
               </div>
+            </div>
+            <textarea
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              placeholder="Type your message here..."
+              className={`w-full p-3 rounded-lg mb-3 ${theme === 'dark' ? 'bg-indigo-800 text-white placeholder-gray-400' : 'bg-gray-100 text-gray-800 placeholder-gray-500'}`}
+              rows={4}
+            />
+            
+            <div className="flex items-center justify-between">
+              <label className={`cursor-pointer p-2 rounded-full ${theme === 'dark' ? 'hover:bg-indigo-800' : 'hover:bg-gray-200'}`}>
+                <FiPaperclip className={theme === 'dark' ? 'text-white' : 'text-indigo-900'} />
+                <input 
+                  type="file" 
+                   className="hidden"
+                  multiple
+                  accept="image/*,.pdf,.doc,.docx"
+                />
+              </label>
+              
+              <button
+                 disabled={!message.trim() || isSending}
+                className={`flex items-center gap-2 px-4 py-2 rounded-lg ${!message.trim() || isSending ? 'bg-gray-400' : theme === 'dark' ? 'bg-orange-600 hover:bg-orange-700' : 'bg-indigo-900 hover:bg-indigo-800'} text-white`}
+              >
+                {isSending ? 'Sending...' : (
+                  <>
+                    <span>Send</span>
+                    <FiSend />
+                  </>
+                )}
+              </button>
             </div>
           </>
 
