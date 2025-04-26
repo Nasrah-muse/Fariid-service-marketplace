@@ -1,5 +1,6 @@
+ import { FiSend } from 'react-icons/fi';
 import { useTheme } from '../contexts/ThemeContext';
-
+ 
 const ContactPage = () => {
   const { theme } = useTheme();
 
@@ -15,6 +16,71 @@ const ContactPage = () => {
           </p>
         </div>
       </div>
+   <div className="max-w-6xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+     <div className={`p-6 rounded-lg shadow-lg md:col-span-2 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
+      <h2 className={`text-xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+      Send Us a Message
+      </h2>
+      <form>
+        <div className="mb-4">
+          <label htmlFor="name" className={`block mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            Name*
+          </label>
+          <input
+            type="text"
+            id="name"
+            className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-indigo-700 border-indigo-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="email" className={`block mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            Email*
+          </label>
+          <input
+            type="email"
+            id="email"
+            className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-indigo-700 border-indigo-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="subject" className={`block mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            Subject*
+          </label>
+          <input
+            type="text"
+            id="subject"
+            className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-indigo-700 border-indigo-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+            required
+          />
+        </div>
+
+        <div className="mb-4">
+          <label htmlFor="message" className={`block mb-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            Message*
+          </label>
+          <textarea
+            id="message"
+            rows="4"
+            className={`w-full px-3 py-2 border rounded-md ${theme === 'dark' ? 'bg-indigo-700 border-indigo-600 text-white' : 'bg-white border-gray-300 text-gray-900'}`}
+            required
+          ></textarea>
+        </div>
+
+        <button
+          type="submit"
+          className={`w-full flex items-center justify-center gap-2 py-2 px-4 rounded-md ${theme === 'dark' ? 'bg-sky-200 hover:bg-sky-300 text-indigo-900' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
+        >
+          Send Message <FiSend/>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
 
 
     </div>
