@@ -4,6 +4,7 @@ import supabase from "../lib/supabase";
 import toast from "react-hot-toast";
 import { useTheme } from "../contexts/ThemeContext";
 import { StarRating } from "./ServicesPage";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
  
 const ServiceDetails = () => {
   const { id } = useParams()
@@ -12,8 +13,7 @@ const ServiceDetails = () => {
   const [provider, setProvider] = useState(null)
   const [loading, setLoading] = useState(true)
   const [serviceImages, setServiceImages] = useState([])
-
-   
+  const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
   useEffect(() => {
     const fetchServiceDetails = async () => {
@@ -101,6 +101,19 @@ const ServiceDetails = () => {
              .replace(/https:\/\//g, 'https://')
   }
 
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === serviceImages.length - 1 ? 0 : prevIndex + 1
+    )
+  }
+
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) => 
+      prevIndex === 0 ? serviceImages.length - 1 : prevIndex - 1
+    )
+  }
+
+
   if (loading) {
     return (
       <div className={`flex justify-center items-center h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
@@ -185,7 +198,89 @@ const ServiceDetails = () => {
             <StarRating rating={service.rating || 5 }  />
           </div>
         </div>
+        </div>
+
+<div className="max-w-6xl mx-auto grid grid-col-1 md:grid-cols-2 mt-12 ">
+<div className="container mx-auto px-4 mb-12">
+  {serviceImages.length > 0 && (
+    <>
+      <div className="relative">
+         <div className="relative h-64 md:h-96 w-full overflow-hidden rounded-lg">
+          {serviceImages.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              alt={`${service.title} ${index + 1}`}
+              className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
+                index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0'
+              }`}
+              onError={(e) => {
+                e.target.src = 'https://placehold.co/800x600?text=Image+Not+Found';
+                e.target.className = `absolute inset-0 w-full h-full object-contain bg-gray-100 p-4 transition-opacity duration-300 ${
+                  index === currentImageIndex ? 'opacity-100 z-10' : 'opacity-0'
+                }`
+              }}
+            />
+          ))}
+        </div>
+        
+         {serviceImages.length > 1 && (
+          <>
+            <button 
+              onClick={prevImage}
+              className={`absolute left-4 top-1/2 -translate-y-1/2 p-2 rounded-full ${
+                theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-white text-indigo-900'
+              } shadow-md hover:scale-110 transition-transform z-20`}
+              aria-label="Previous image"
+            >
+              <FiChevronLeft size={24} />
+            </button>
+            <button 
+              onClick={nextImage}
+              className={`absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-full ${
+                theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-white text-indigo-900'
+              } shadow-md hover:scale-110 transition-transform z-20`}
+              aria-label="Next image"
+            >
+              <FiChevronRight size={24} />
+            </button>
+          </>
+        )}
+
+         {serviceImages.length > 1 && (
+          <div className="flex justify-center mt-4 gap-2 overflow-x-auto py-2">
+            {serviceImages.map((img, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentImageIndex(index)}
+                className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all ${
+                  index === currentImageIndex 
+                    ? (theme === 'dark' ? 'border-white scale-105' : 'border-indigo-900 scale-105') 
+                    : (theme === 'dark' ? 'border-gray-600 opacity-70' : 'border-gray-300 opacity-70')
+                }`}
+                aria-label={`Go to image ${index + 1}`}
+              >
+                <img
+                  src={img}
+                  alt=""
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.src = 'https://placehold.co/100?text=Image+Not+Found';
+                    e.target.className = 'w-full h-full object-contain bg-gray-100 p-1';
+                  }}
+                />
+              </button>
+            ))}
+          </div>
+        )}
       </div>
+    </>
+  )}
+</div>
+
+</div>
+
+    
     
 
        </div>
