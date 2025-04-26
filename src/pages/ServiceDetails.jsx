@@ -3,13 +3,15 @@ import { useParams } from "react-router";
 import supabase from "../lib/supabase";
 import toast from "react-hot-toast";
 import { useTheme } from "../contexts/ThemeContext";
-
+ 
 const ServiceDetails = () => {
   const { id } = useParams()
    const { theme } = useTheme()
   const [service, setService] = useState(null)
   const [provider, setProvider] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [serviceImages, setServiceImages] = useState([])
+
    
 
   useEffect(() => {
@@ -36,6 +38,11 @@ const ServiceDetails = () => {
 
         setService(serviceData)
         setProvider(providerData)
+          const images = parseServiceImages(serviceData.service_image_url)
+          console.log('Parsed images:', images) 
+         setServiceImages(images)
+         setService(serviceData)
+         setProvider(providerData)
       } catch (error) {
         console.error('Error fetching service details:', error)
         toast.error('Failed to load service details')
@@ -52,6 +59,45 @@ const ServiceDetails = () => {
     if (avatarPath.startsWith('http')) return avatarPath;
     const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(avatarPath)
     return publicUrl
+  }
+
+  const parseServiceImages = (imageData) => {
+    try {
+      if (!imageData) return []
+  
+       if (Array.isArray(imageData)) {
+        return imageData.map(url => cleanUrl(url))
+      }
+  
+       if (typeof imageData === 'string') {
+         let cleanString = imageData.replace(/\\/g, '').replace(/^"+|"+$/g, '')
+        
+         cleanString = cleanString.replace(/https:\/\//g, 'https://')
+        
+         try {
+          const parsed = JSON.parse(cleanString);
+          if (Array.isArray(parsed)) {
+            return parsed.map(url => cleanUrl(url));
+          }
+          return [cleanUrl(parsed)];
+        } catch (e) {
+           const urlMatches = cleanString.match(/https?:\/\/[^\s,"']+/g)
+          return urlMatches ? urlMatches.map(url => cleanUrl(url)) : []
+        }
+      }
+  
+      return [];
+    } catch (err) {
+      console.error("Failed to parse service_image_url:", imageData, err)
+      return []
+    }
+  }
+  
+   const cleanUrl = (url) => {
+    if (typeof url !== 'string') return url
+    return url.replace(/\\/g, '')
+             .replace(/^"+|"+$/g, '')
+             .replace(/https:\/\//g, 'https://')
   }
 
   if (loading) {
@@ -72,7 +118,42 @@ const ServiceDetails = () => {
 
 
   return (
-    <div>ServiceDetails</div>
+    <div className={`min-h-screen ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
+<div className="relative h-96 w-full">
+  {serviceImages.length > 0 ? (
+    <img
+      src={serviceImages[0]}
+      alt={service.title}
+      className="w-full h-full object-cover"
+      onError={(e) => {
+        console.error('Failed to load image:', {
+          originalUrl: serviceImages[0],
+          parsedImages: serviceImages
+        });
+        e.target.src = 'https://placehold.co/1200x600?text=Image+Not+Found';
+        e.target.className = 'w-full h-full object-contain bg-gray-100 p-4';
+      }}
+       
+    />
+  ) : (
+    <div className="max-w-7xl h-full bg-gray-200 flex items-center justify-center">
+      <div className="text-center">
+        <svg className="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+        <p className="mt-2 text-gray-500">No images available</p>
+        {service.service_image_url && (
+          <p className="text-xs text-gray-400 mt-1">
+            Raw data: {typeof service.service_image_url === 'string' 
+              ? service.service_image_url.substring(0, 100) + (service.service_image_url.length > 100 ? '...' : '')
+              : 'Non-string data'}
+          </p>
+        )}
+      </div>
+    </div>
+  )}
+</div>
+       </div>
   )
 }
 
