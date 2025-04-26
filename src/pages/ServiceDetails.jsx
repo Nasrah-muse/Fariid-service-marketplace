@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useTheme } from "../contexts/ThemeContext";
 import { StarRating } from "./ServicesPage";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
+import { FaStar } from "react-icons/fa";
  
 const ServiceDetails = () => {
   const { id } = useParams()
@@ -380,7 +381,36 @@ const ServiceDetails = () => {
         </div>
 
         </div>
-
+    
+    </div>
+    <div className="max-w-6xl p-6">
+    <div className={`inline-flex flex-col  ${theme === 'dark'? 'bg-indigo-600 text-white' : 'bg-white text-indigo-800'} rounded-lg shadow-md p-6 max-w-md mx-auto`}>
+       <h2 className="text-xl font-bold mb-4">
+        What people say about this Provider
+      </h2>
+      
+       <div className="border-t pt-4">
+         <div className="flex justify-between items-start mb-2">
+          <div>
+            <h3 className="font-bold">Nasra Muse</h3>
+             <div className="flex items-center mt-1">
+              {[...Array(5)].map((_, i) => (
+                <FaStar
+                  key={i} 
+                  className={`w-4 h-4 ${i < 5 ? 'text-orange-500' : 'text-gray-300'}`} 
+                />
+              ))}
+              <span className="ml-1 text-sm text-gray-600">5</span>
+            </div>
+          </div>
+          <span className="text-s">3 days ago</span>
+        </div>
+        
+         <p className=" mt-3">
+         Extremely respectful and professional! Worked diligently to complete the job perfectly. Highly recommend for their strong work ethic and attention to detail
+        </p>
+      </div>
+      </div>
 </div>
 
     
