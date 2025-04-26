@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import supabase from "../lib/supabase";
 import toast from "react-hot-toast";
 import { useTheme } from "../contexts/ThemeContext";
@@ -9,6 +9,7 @@ import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 const ServiceDetails = () => {
   const { id } = useParams()
    const { theme } = useTheme()
+   const navigate = useNavigate()
   const [service, setService] = useState(null)
   const [provider, setProvider] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -357,7 +358,27 @@ const ServiceDetails = () => {
                 </ul>
               </>
             )}
+         
           </div>
+         <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
+          <button
+            onClick={() => navigate('/services')}
+            className={`px-8 py-3 rounded-lg font-medium ${theme === 'dark' ? 'bg-white text-indigo-900 hover:bg-gray-200' : 'bg-gray-300 text-indigo-900 hover:bg-gray-400'}`}
+          >
+            Back to Services
+          </button>
+          <button
+            className={`px-8 py-3 rounded-lg font-medium ${theme === 'dark' ? 'bg-orange-600 text-white hover:bg-orange-700' : 'bg-indigo-900 text-white hover:bg-indigo-800'}`}
+          >
+            Contact Me
+          </button>
+          <button
+            className={`px-8 py-3 rounded-lg font-medium ${theme === 'dark' ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-orange-500 text-white hover:bg-orange-600'}`}
+          >
+            Continue
+          </button>
+        </div>
+
         </div>
 
 </div>
