@@ -1,4 +1,4 @@
- import { FiSend } from 'react-icons/fi';
+ import { FiMail, FiPhone, FiSend, FiSmartphone } from 'react-icons/fi';
 import { useTheme } from '../contexts/ThemeContext';
  
 const ContactPage = () => {
@@ -78,6 +78,40 @@ const ContactPage = () => {
           Send Message <FiSend/>
         </button>
       </form>
+    </div>
+    <div className={`p-6 h-70 flex flex-col items-center rounded-lg shadow-lg ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
+      <h2 className={`text-xl font-bold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+        Our Contact
+      </h2>
+
+      <div className="space-y-4">
+        <div>
+          <h3 className={`text-md font-medium flex items-center justify-between gap-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+          <FiSmartphone/>  Phone Number
+          </h3>
+          <p className={`mt-1 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+            123-456-7890
+          </p>
+        </div>
+
+        <div>
+          <h3 className={`text-md font-medium  flex items-center justify-between gap-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+          <FiPhone/>    Mobile Number
+          </h3>
+          <p className={`mt-1 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+            +123-456-7890
+          </p>
+        </div>
+
+        <div>
+          <h3 className={`text-md font-medium  flex items-center justify-between gap-1 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+           <FiMail/>  Email Address
+          </h3>
+          <p className={`mt-1 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+            info@fariid.com
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </div>
