@@ -1,4 +1,5 @@
 import { FiX } from "react-icons/fi"
+import { useNavigate } from "react-router"
 
 const MessageModal = ({ 
   provider, 
@@ -7,6 +8,7 @@ const MessageModal = ({
   onClose,
   currentUser 
 }) => {
+    const navigate = useNavigate()
  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -27,6 +29,33 @@ const MessageModal = ({
             <FiX className={theme === 'dark' ? 'text-white' : 'text-gray-600'} />
           </button>
  </div>
+ {!currentUser ? (
+          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-800' : 'bg-gray-100'}`}>
+            <p className={`mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+              Please sign in to contact this provider
+            </p>
+            <button
+              onClick={() => navigate("/signin")}
+              className={`w-full py-2 rounded-lg ${theme === 'dark' ? 'bg-orange-600 text-white' : 'bg-indigo-900 text-white'}`}
+            >
+              Sign In
+            </button>
+          </div>
+        ) : currentUser.role !== "customer" ? (
+          <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-800' : 'bg-gray-100'}`}>
+            <p className={`mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+              You need a customer account to contact providers
+            </p>
+            <button
+              onClick={() => navigate("/signup")}
+              className={`w-full py-2 rounded-lg ${theme === 'dark' ? 'bg-orange-600 text-white' : 'bg-indigo-900 text-white'}`}
+            >
+              Sign Up as Customer
+            </button>
+          </div>
+        ) : (
+            <o>No messages yet</o>
+        )}
 </div>
 </div>
   )
