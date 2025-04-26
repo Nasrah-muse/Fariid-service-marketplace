@@ -1,3 +1,4 @@
+import { useState } from "react"
 import { FiX } from "react-icons/fi"
 import { useNavigate } from "react-router"
 
@@ -9,6 +10,7 @@ const MessageModal = ({
   currentUser 
 }) => {
     const navigate = useNavigate()
+    const [message, setMessage] = useState("")
  
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -54,7 +56,33 @@ const MessageModal = ({
             </button>
           </div>
         ) : (
-            <o>No messages yet</o>
+            <>
+            <p className={`mb-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+              Ask {provider?.username || 'the provider'} a question or share what you need
+            </p>
+            
+            <div className="space-y-2 mb-4">
+              <div 
+                className={`p-3 rounded-lg cursor-pointer ${theme === 'dark' ? 'bg-indigo-800 hover:bg-indigo-700' : 'bg-gray-100 hover:bg-gray-200'}`}
+                onClick={() => setMessage(`Hey ${provider?.username || 'there'}, can you help...`)}
+              >
+                <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Hey {provider?.username || 'there'}, can you help...</p>
+              </div>
+              <div 
+                className={`p-3 rounded-lg cursor-pointer ${theme === 'dark' ? 'bg-indigo-800 hover:bg-indigo-700' : 'bg-gray-100 hover:bg-gray-200'}`}
+                onClick={() => setMessage("Can you send me some work examples?")}
+              >
+                <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Can you send me some work examples?</p>
+              </div>
+              <div 
+                className={`p-3 rounded-lg cursor-pointer ${theme === 'dark' ? 'bg-indigo-800 hover:bg-indigo-700' : 'bg-gray-100 hover:bg-gray-200'}`}
+                onClick={() => setMessage("Do you have any experience with...?")}
+              >
+                <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>Do you have any experience with...?</p>
+              </div>
+            </div>
+          </>
+
         )}
 </div>
 </div>
