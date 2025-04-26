@@ -11,6 +11,7 @@ const MessageModal = ({
 }) => {
     const navigate = useNavigate()
     const [message, setMessage] = useState("")
+    const [attachments, setAttachments] = useState([]);
     const [isSending, setIsSending] = useState(false)
  
   return (
@@ -113,6 +114,28 @@ const MessageModal = ({
                 )}
               </button>
             </div>
+            {attachments.length > 0 && (
+              <div className="mt-3">
+                <p className={`text-sm mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'}`}>
+                  Attachments ({attachments.length}):
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {attachments.map((file, index) => (
+                    <div 
+                      key={index}
+                      className={`text-xs p-1 px-2 rounded flex items-center ${theme === 'dark' ? 'bg-indigo-800' : 'bg-gray-200'}`}
+                    >
+                      <span className="truncate max-w-xs">{file.name}</span>
+                      <button 
+                         className="ml-2"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </>
 
         )}
