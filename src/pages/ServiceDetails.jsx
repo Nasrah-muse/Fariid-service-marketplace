@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 import supabase from "../lib/supabase";
 import toast from "react-hot-toast";
 import { useTheme } from "../contexts/ThemeContext";
+import { StarRating } from "./ServicesPage";
  
 const ServiceDetails = () => {
   const { id } = useParams()
@@ -119,7 +120,7 @@ const ServiceDetails = () => {
 
   return (
     <div className={`min-h-screen ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
-<div className="relative h-96 w-full">
+<div className="relative h-80 w-full">
   {serviceImages.length > 0 ? (
     <img
       src={serviceImages[0]}
@@ -136,7 +137,7 @@ const ServiceDetails = () => {
        
     />
   ) : (
-    <div className="max-w-7xl h-full bg-gray-200 flex items-center justify-center">
+    <div className=" bg-gray-200 flex items-center justify-center">
       <div className="text-center">
         <svg className="w-20 h-20 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -152,7 +153,41 @@ const ServiceDetails = () => {
       </div>
     </div>
   )}
-</div>
+  <div className={`absolute inset-0 bg-gradient-to-t ${theme === 'dark' ? 'from-indigo-900' : 'from-sky-300'} to-transparent`}></div>
+        
+         <div className="absolute bottom-0 left-0 right-0 p-6">
+          <div className="max-w-4xl mx-auto flex items-end justify-between">
+            <div className="flex flex-col items-center gap-2">
+              <h1 className={`text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                {service.title}
+              </h1>
+              <div className="flex items-center mt-2">
+                {provider?.avatar_url && (
+                  <img
+                    src={getAvatarUrl(provider.avatar_url)}
+                    alt={provider.username}
+                    className={`w-20 h-20 rounded-full object-cover border-2 ${theme === 'dark' ? 'border-white' : 'border-orange-500'}`}
+                    onError={(e) => {
+                      e.target.src = 'https://placehold.co/40x40?text=No+Image'
+                    }}
+                  />
+                )}
+                <div className="ml-3">
+                  <p className={`font-semibold text-2xl ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                    {provider?.username || 'Unknown Provider'}
+                  </p>
+                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-indigo-700'}`}>
+                    {provider?.role || 'Service Provider'}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <StarRating rating={service.rating || 5 }  />
+          </div>
+        </div>
+      </div>
+    
+
        </div>
   )
 }

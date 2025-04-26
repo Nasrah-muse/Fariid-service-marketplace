@@ -5,7 +5,7 @@ import supabase from "../lib/supabase";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
-const StarRating = ({ rating = 0, theme }) => {
+export const StarRating = ({ rating = 0, theme }) => {
    const validatedRating = Math.min(Math.max(Number(rating) || 0, 0), 5);
   
   const fullStars = Math.floor(validatedRating);
