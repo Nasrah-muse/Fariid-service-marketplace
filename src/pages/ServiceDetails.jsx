@@ -54,6 +54,22 @@ const ServiceDetails = () => {
     return publicUrl
   }
 
+  if (loading) {
+    return (
+      <div className={`flex justify-center items-center h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+
+  if (!service) {
+    return (
+      <div className={`flex justify-center items-center h-screen ${theme === 'dark' ? 'bg-gray-900' : 'bg-gray-50'}`}>
+        <p className={`text-lg ${theme === 'dark' ? 'text-white' : 'text-black'}`}>Service not found</p>
+      </div>
+    )
+  }
+
 
   return (
     <div>ServiceDetails</div>
