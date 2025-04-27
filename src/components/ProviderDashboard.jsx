@@ -6,6 +6,7 @@ import ServiceRegistration from './ServiceRegistration'
 import supabase from '../lib/supabase';
 import toast from 'react-hot-toast';
 import { MessagesList } from './MessagesList';
+import BookingsTable from './BookingsTable';
 export const ServiceDetailsModal = ({ service, onClose, theme }) => {
   if (!service) return null
   console.log(service.service_image_url)
@@ -452,25 +453,14 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
         )
      case 'bookings':
       return (
+        <div className="space-y-6">
         <div>
-          <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Latest Booking</h3>
-          <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <p className="font-medium">Client</p>
-                <p className="mt-2">Raage Abdi</p>
-              </div>
-              <div>
-                <p className="font-medium">Service</p>
-                <p className="mt-2">Plumbing</p>
-              </div>
-              <div>
-                <p className="font-medium">Date</p>
-                <p className="mt-2">April 22, 2025</p>
-              </div>
-            </div>
-          </div>
+          <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+            Your Bookings
+          </h2>
+          <BookingsTable />
         </div>
+      </div>
       )
     case 'messages':
       return (
