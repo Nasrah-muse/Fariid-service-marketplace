@@ -4,6 +4,8 @@ import {  FiBarChart2, FiCalendar, FiEdit, FiInfo, FiMail, FiMenu, FiPlus, FiTra
 import { useAuth } from '../contexts/AuthContext'
 import ServiceRegistration from './ServiceRegistration'
 import supabase from '../lib/supabase';
+import toast from 'react-hot-toast';
+import { MessagesList } from './MessagesList';
 export const ServiceDetailsModal = ({ service, onClose, theme }) => {
   if (!service) return null
   console.log(service.service_image_url)
@@ -132,7 +134,68 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
    const [selectedService, setSelectedService] = useState(null)
    const [loadingServices, setLoadingServices] = useState(false)
    const [editingService, setEditingService] = useState(null)
-
+   const [replyingTo, setReplyingTo] = useState(null)
+    const [messages, setMessages] = useState([])
+   const [messagesLoading, setMessagesLoading] = useState(false)
+ 
+  
+   useEffect(() => {
+     const fetchMessages = async () => {
+       if (!user?.id) {
+         setMessagesLoading(false)
+         return
+       }
+     
+       try {
+         setMessagesLoading(true)
+          const { data: messages, error: messagesError } = await supabase
+           .from('messages')
+           .select('*')
+           .eq('receiver_id', user.id)
+           .order('created_at', { ascending: false })
+     
+         if (messagesError) throw messagesError
+         if (!messages?.length) {
+           setMessages([])
+           return
+         }
+     
+        const serviceIds = [...new Set(messages.map(msg => msg.service_id).filter(Boolean))];
+        const senderIds = [...new Set(messages.map(msg => msg.sender_id).filter(Boolean))];
+     
+         const [
+           { data: services, error: servicesError },
+           { data: senders, error: sendersError }
+         ] = await Promise.all([
+           supabase.from('services').select('id, title').in('id', serviceIds),
+           supabase.from('users').select('id, username').in('id', senderIds)
+         ])
+     
+         if (servicesError) throw servicesError;
+         if (sendersError) throw sendersError;
+     
+          const enrichedMessages = messages.map(msg => ({
+           ...msg,
+           services: services?.find(s => s.id === msg.service_id) || { title: 'Unknown Service' },
+           senders: senders?.find(u => u.id === msg.sender_id) || { username: 'Unknown User' }
+         }))
+     
+         setMessages(enrichedMessages)
+       } catch (error) {
+         console.error('Error fetching messages:', error)
+         toast.error('Failed to load messages')
+         setMessages([])
+       } finally {
+         setMessagesLoading(false);
+       }
+     }
+      if (activeTab === 'messages') {
+        fetchMessages()
+      }
+    }, [activeTab, user?.id])
+   
+ 
+    
    useEffect(() => {
     if (activeTab === 'services' && user) {
       fetchServices()
@@ -341,20 +404,22 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
       )
     case 'messages':
       return (
+          
         <div>
-          <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Messages</h3>
-          <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
-            <div className="space-y-4">
-              <div className="border-b pb-4">
-                <p className="font-medium">From: Client A</p>
-                <p className="text-sm mt-1">"Hi, I need to reschedule my appointment..."</p>
-              </div>
-              <div className="border-b pb-4">
-                <p className="font-medium">From: Client B</p>
-                <p className="text-sm mt-1">"Can you provide a quote for additional work?"</p>
-              </div>
-            </div>
-          </div>
+        <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+          Messages {!messagesLoading && `(${messages.length})`}
+        </h3>
+        <MessagesList
+          theme={theme}
+          messages={messages}
+          loading={messagesLoading}
+          onReply={(msg) => {
+          setReplyingTo(msg);
+          }}
+        />
+
+       
+ 
         </div>
       )
     default:
