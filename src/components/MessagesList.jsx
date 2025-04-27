@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { MessageDetailModal } from "./MessageDetailModal";
  
 export const MessagesList = ({ theme, messages, loading, onDelete, onReply, userRole }) => {
     const [selectedMessage, setSelectedMessage] = useState(null);
@@ -66,6 +67,16 @@ export const MessagesList = ({ theme, messages, loading, onDelete, onReply, user
             )}
           </div>
         ))}
+        {selectedMessage && (
+          <MessageDetailModal
+            message={selectedMessage}
+            onClose={() => setSelectedMessage(null)}
+            theme={theme}
+            onDelete={onDelete}
+            onReply={onReply}
+          />
+        )}
+
       
       </div>
     )
