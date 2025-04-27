@@ -6,6 +6,8 @@ import { useTheme } from "../contexts/ThemeContext";
 import { StarRating } from "./ServicesPage";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
+import MessageModal from "../components/MessageModal";
+
  
 const ServiceDetails = () => {
   const { id } = useParams()
@@ -17,7 +19,35 @@ const ServiceDetails = () => {
   const [serviceImages, setServiceImages] = useState([])
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [selectedPriceTier, setSelectedPriceTier] = useState('basic')
+  const [showMessageModal, setShowMessageModal] = useState(false);
 
+  const [currentUser, setCurrentUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+  
+   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        setLoadingUser(true);
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+           const { data: userData, error } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', user.id)
+            .single();
+            
+          if (error) throw error;
+          setCurrentUser(userData);
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      } finally {
+        setLoadingUser(false);
+      }
+    };
+    
+    fetchUser();
+  }, []);
   useEffect(() => {
     const fetchServiceDetails = async () => {
       try {
@@ -369,6 +399,7 @@ const ServiceDetails = () => {
             Back to Services
           </button>
           <button
+            onClick={() => setShowMessageModal(true)}
             className={`px-8 py-3 rounded-lg font-medium ${theme === 'dark' ? 'bg-orange-600 text-white hover:bg-orange-700' : 'bg-indigo-900 text-white hover:bg-indigo-800'}`}
           >
             Contact Me
@@ -414,7 +445,16 @@ const ServiceDetails = () => {
 </div>
 
     
-    
+{showMessageModal && (
+  <MessageModal 
+  provider={provider}
+  service={service}
+  theme={theme}
+  onClose={() => setShowMessageModal(false)}
+  currentUser={currentUser} // Pass the currentUser here
+  />
+)}
+
 
        </div>
   )

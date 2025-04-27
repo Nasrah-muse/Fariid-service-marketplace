@@ -4,6 +4,8 @@ import {  FiBarChart2, FiCalendar, FiEdit, FiInfo, FiMail, FiMenu, FiPlus, FiTra
 import { useAuth } from '../contexts/AuthContext'
 import ServiceRegistration from './ServiceRegistration'
 import supabase from '../lib/supabase';
+import toast from 'react-hot-toast';
+import { MessagesList } from './MessagesList';
 export const ServiceDetailsModal = ({ service, onClose, theme }) => {
   if (!service) return null
   console.log(service.service_image_url)
@@ -132,7 +134,138 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
    const [selectedService, setSelectedService] = useState(null)
    const [loadingServices, setLoadingServices] = useState(false)
    const [editingService, setEditingService] = useState(null)
+   const [replyingTo, setReplyingTo] = useState(null)
+    const [messages, setMessages] = useState([])
+   const [messagesLoading, setMessagesLoading] = useState(false)
+   const [replyContent, setReplyContent] = useState('')
 
+   const handleDeleteMessage = async (messageId) => {
+    if (!window.confirm('Are you sure you want to delete this message?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('messages')
+        .delete()
+        .eq('id', messageId)
+      
+      if (error) throw error;
+      
+      setMessages(messages.filter(msg => msg.id !== messageId))
+      toast.success('Message deleted successfully')
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      toast.error('Failed to delete message. Please check your permissions.')
+    }
+  }
+
+  const handleSendReply = async (message) => {
+    try {
+       if (!replyContent.trim()) {
+        throw new Error('Reply content cannot be empty')
+      }
+  
+      const newMessage = {
+        sender_id: user.id,
+        receiver_id: message.sender_id,
+        content: replyContent,
+        is_reply: true,
+        original_message_id: message.id,
+        service_id: message.service_id || null,
+        attachments: null
+      }
+  
+       const { data, error } = await supabase
+        .from('messages')
+        .insert([newMessage])
+        .select();
+  
+      if (error) throw error
+  
+       toast.success('Reply sent!')
+      
+       setMessages(prev => [{
+        ...data[0],
+        services: message.services,
+        senders: { username: user.username }
+      }, ...prev])
+
+      setMessages(prevMessages =>
+        prevMessages.map(m =>
+          m.id === message.id ? { ...m, replied: true } : m
+        )
+      )
+  
+      setReplyingTo(null)
+      setReplyContent('')
+  
+    } catch (error) {
+      console.error('Reply failed:', {
+        error,
+        message: error.message,
+        supabaseError: error.details?.hint
+      })
+      toast.error(`Failed: ${error.message}`)
+    }
+  }
+ 
+  
+   useEffect(() => {
+     const fetchMessages = async () => {
+       if (!user?.id) {
+         setMessagesLoading(false)
+         return
+       }
+     
+       try {
+         setMessagesLoading(true)
+          const { data: messages, error: messagesError } = await supabase
+           .from('messages')
+           .select('*')
+           .eq('receiver_id', user.id)
+           .order('created_at', { ascending: false })
+     
+         if (messagesError) throw messagesError
+         if (!messages?.length) {
+           setMessages([])
+           return
+         }
+     
+        const serviceIds = [...new Set(messages.map(msg => msg.service_id).filter(Boolean))];
+        const senderIds = [...new Set(messages.map(msg => msg.sender_id).filter(Boolean))];
+     
+         const [
+           { data: services, error: servicesError },
+           { data: senders, error: sendersError }
+         ] = await Promise.all([
+           supabase.from('services').select('id, title').in('id', serviceIds),
+           supabase.from('users').select('id, username').in('id', senderIds)
+         ])
+     
+         if (servicesError) throw servicesError;
+         if (sendersError) throw sendersError;
+     
+          const enrichedMessages = messages.map(msg => ({
+           ...msg,
+           services: services?.find(s => s.id === msg.service_id) || { title: 'Unknown Service' },
+           senders: senders?.find(u => u.id === msg.sender_id) || { username: 'Unknown User' }
+         }))
+     
+         setMessages(enrichedMessages)
+       } catch (error) {
+         console.error('Error fetching messages:', error)
+         toast.error('Failed to load messages')
+         setMessages([])
+       } finally {
+         setMessagesLoading(false);
+       }
+     }
+      if (activeTab === 'messages') {
+        fetchMessages()
+      }
+    }, [activeTab, user?.id])
+   
+ 
+    
    useEffect(() => {
     if (activeTab === 'services' && user) {
       fetchServices()
@@ -341,20 +474,55 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
       )
     case 'messages':
       return (
+          
         <div>
-          <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Messages</h3>
-          <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
-            <div className="space-y-4">
-              <div className="border-b pb-4">
-                <p className="font-medium">From: Client A</p>
-                <p className="text-sm mt-1">"Hi, I need to reschedule my appointment..."</p>
-              </div>
-              <div className="border-b pb-4">
-                <p className="font-medium">From: Client B</p>
-                <p className="text-sm mt-1">"Can you provide a quote for additional work?"</p>
+        <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+          Messages {!messagesLoading && `(${messages.length})`}
+        </h3>
+        <MessagesList
+          theme={theme}
+          messages={messages}
+          loading={messagesLoading}
+          onDelete={handleDeleteMessage}
+          onReply={(msg) => {
+          setReplyingTo(msg);
+          }}
+        />
+        {/* reply*/}
+        {replyingTo && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className={`rounded-lg p-6 w-full max-w-md ${theme === 'dark' ? 'bg-indigo-900' : 'bg-white'}`}>
+              <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                Reply to {replyingTo.senders?.username || 'Customer'}
+              </h3>
+              <textarea
+                value={replyContent}
+                onChange={(e) => setReplyContent(e.target.value)}
+                className={`w-full p-3 rounded-lg mb-3 ${theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-gray-100'}`}
+                rows={4}
+                placeholder="Type your reply here..."
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={() => setReplyingTo(null)}
+                  className={`px-4 py-2 rounded-md ${theme === 'dark' ? 'bg-gray-600 hover:bg-gray-700 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleSendReply(replyingTo)}
+                  className={`px-4 py-2 rounded-md ${theme === 'dark' ? 'bg-orange-600 hover:bg-orange-700 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
+                  disabled={!replyContent.trim()}
+                >
+                  Send Reply
+                </button>
               </div>
             </div>
           </div>
+        )} 
+
+       
+ 
         </div>
       )
     default:
