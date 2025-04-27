@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import CategoryModal from './CategoryModel'
 import supabase from '../lib/supabase'
 import AdminServiceList from './AdminServiceList'
+import BookingManagement from './BookingsManagement'
 const AdminDashboard = () => {
     const {theme} = useTheme()
     const [activeTab, setActiveTab] = useState('dashboard')
@@ -435,12 +436,10 @@ const [loadingStats, setLoadingStats] = useState(false);
             case 'bookings':
           return (
             <div>
-              <div className="flex space-x-2 mb-4">
-                <button className="px-4 py-2 rounded bg-blue-500 text-white">All</button>
-                <button className="px-4 py-2 rounded bg-gray-200">Pending</button>
-                <button className="px-4 py-2 rounded bg-green-500 text-white">Completed</button>
-                <button className="px-4 py-2 rounded bg-red-500 text-white">Cancelled</button>
-              </div>
+               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+        Manage Bookings
+      </h3>
+         <BookingManagement theme={theme} />
              </div>
           )
           case 'providers':
@@ -448,20 +447,6 @@ const [loadingStats, setLoadingStats] = useState(false);
             <div>
               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white' : 'text-indigo-900'}`}>Provider Approval Requests</h3>
               <AdminServiceList/>
-             </div>
-          )
-          case 'reports':
-          return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <div className={`p-4 rounded-lg shadow ${theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-100'}`}>
-                <h4 className={`font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Active Users</h4>
-               </div>
-             </div>
-          )
-          case 'payments':
-          return (
-            <div>
-              <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Pending Payments</h3>
              </div>
           )
           case 'announcements':
@@ -490,6 +475,16 @@ const [loadingStats, setLoadingStats] = useState(false);
           return (
             <div>
               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Recent Support Tickets</h3>
+              <div className={`flex flex-col items-center justify-center p-8 rounded-lg ${theme === 'dark' ? 'bg-indigo-800' : 'bg-gray-50'}`}>
+          <FiCheckCircle className={`w-12 h-12 mb-4 ${theme === 'dark' ? 'text-green-300' : 'text-green-500'}`} />
+          <h4 className={`text-xl font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+            No Complaints Found
+          </h4>
+          <p className={`text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+            There are currently no support tickets or complaints from users.
+          </p>
+        </div>
+
              </div>
           )
           default:
@@ -672,23 +667,6 @@ const [loadingStats, setLoadingStats] = useState(false);
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'providers' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiCheckCircle className="mr-2" />Approve Providers
-                 </button>
-              </li>
-              <li>
-                <button 
-                     onClick={() => setActiveTab('reports')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'reports' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
-                >
-                 <FiBarChart2 className="mr-2" />Reports and Status
-                 </button>
-              </li>
-              <li>
-                <button 
-                     onClick={() => {setActiveTab('payments')  
-                      setSidebarOpen(false)}}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'payments' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
-                >
-                 <FiDollarSign className="mr-2" />Manage Payments
                  </button>
               </li>
               <li>

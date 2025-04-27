@@ -7,6 +7,7 @@ import { StarRating } from "./ServicesPage";
 import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 import { FaStar } from "react-icons/fa";
 import MessageModal from "../components/MessageModal";
+import BookingForm from "../components/BookingForm";
 
  
 const ServiceDetails = () => {
@@ -20,6 +21,7 @@ const ServiceDetails = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [selectedPriceTier, setSelectedPriceTier] = useState('basic')
   const [showMessageModal, setShowMessageModal] = useState(false);
+  const [showBookingForm, setShowBookingForm] = useState(false)
 
   const [currentUser, setCurrentUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
@@ -146,6 +148,14 @@ const ServiceDetails = () => {
     )
   }
 
+  const handleContinue = () => {
+    if (currentUser?.role === 'customer') {
+      setShowBookingForm(true)
+    } else {
+      toast.error('Only customers can book services.')
+    }
+  }
+  
 
   if (loading) {
     return (
@@ -405,6 +415,7 @@ const ServiceDetails = () => {
             Contact Me
           </button>
           <button
+              onClick={handleContinue}
             className={`px-8 py-3 rounded-lg font-medium ${theme === 'dark' ? 'bg-indigo-600 text-white hover:bg-indigo-700' : 'bg-orange-500 text-white hover:bg-orange-600'}`}
           >
             Continue
@@ -451,9 +462,18 @@ const ServiceDetails = () => {
   service={service}
   theme={theme}
   onClose={() => setShowMessageModal(false)}
-  currentUser={currentUser} // Pass the currentUser here
+  currentUser={currentUser}
   />
 )}
+{showBookingForm && (
+  <BookingForm 
+    service={service}
+    provider={provider}
+    currentUser={currentUser}
+    onClose={() => setShowBookingForm(false)}
+  />
+)}
+
 
 
        </div>
