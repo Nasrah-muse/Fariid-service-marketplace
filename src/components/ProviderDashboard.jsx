@@ -137,6 +137,76 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
    const [replyingTo, setReplyingTo] = useState(null)
     const [messages, setMessages] = useState([])
    const [messagesLoading, setMessagesLoading] = useState(false)
+   const [replyContent, setReplyContent] = useState('')
+
+   const handleDeleteMessage = async (messageId) => {
+    if (!window.confirm('Are you sure you want to delete this message?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('messages')
+        .delete()
+        .eq('id', messageId)
+      
+      if (error) throw error;
+      
+      setMessages(messages.filter(msg => msg.id !== messageId))
+      toast.success('Message deleted successfully')
+    } catch (error) {
+      console.error('Error deleting message:', error);
+      toast.error('Failed to delete message. Please check your permissions.')
+    }
+  }
+
+  const handleSendReply = async (message) => {
+    try {
+       if (!replyContent.trim()) {
+        throw new Error('Reply content cannot be empty')
+      }
+  
+      const newMessage = {
+        sender_id: user.id,
+        receiver_id: message.sender_id,
+        content: replyContent,
+        is_reply: true,
+        original_message_id: message.id,
+        service_id: message.service_id || null,
+        attachments: null
+      }
+  
+       const { data, error } = await supabase
+        .from('messages')
+        .insert([newMessage])
+        .select();
+  
+      if (error) throw error
+  
+       toast.success('Reply sent!')
+      
+       setMessages(prev => [{
+        ...data[0],
+        services: message.services,
+        senders: { username: user.username }
+      }, ...prev])
+
+      setMessages(prevMessages =>
+        prevMessages.map(m =>
+          m.id === message.id ? { ...m, replied: true } : m
+        )
+      )
+  
+      setReplyingTo(null)
+      setReplyContent('')
+  
+    } catch (error) {
+      console.error('Reply failed:', {
+        error,
+        message: error.message,
+        supabaseError: error.details?.hint
+      })
+      toast.error(`Failed: ${error.message}`)
+    }
+  }
  
   
    useEffect(() => {
@@ -413,10 +483,43 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
           theme={theme}
           messages={messages}
           loading={messagesLoading}
+          onDelete={handleDeleteMessage}
           onReply={(msg) => {
           setReplyingTo(msg);
           }}
         />
+        {/* reply*/}
+        {replyingTo && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className={`rounded-lg p-6 w-full max-w-md ${theme === 'dark' ? 'bg-indigo-900' : 'bg-white'}`}>
+              <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                Reply to {replyingTo.senders?.username || 'Customer'}
+              </h3>
+              <textarea
+                value={replyContent}
+                onChange={(e) => setReplyContent(e.target.value)}
+                className={`w-full p-3 rounded-lg mb-3 ${theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-gray-100'}`}
+                rows={4}
+                placeholder="Type your reply here..."
+              />
+              <div className="flex justify-end space-x-2">
+                <button
+                  onClick={() => setReplyingTo(null)}
+                  className={`px-4 py-2 rounded-md ${theme === 'dark' ? 'bg-gray-600 hover:bg-gray-700 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={() => handleSendReply(replyingTo)}
+                  className={`px-4 py-2 rounded-md ${theme === 'dark' ? 'bg-orange-600 hover:bg-orange-700 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
+                  disabled={!replyContent.trim()}
+                >
+                  Send Reply
+                </button>
+              </div>
+            </div>
+          </div>
+        )} 
 
        
  
