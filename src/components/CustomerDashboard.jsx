@@ -13,7 +13,11 @@ const CustomerDashboard = () => {
      const [sidebarOpen, setSidebarOpen] = useState(false)
      const [activeTab, setActiveTab] = useState('dashboard')
      const [messages, setMessages] = useState([]);
-      const [messagesLoading, setMessagesLoading] = useState(false)
+    const [messagesLoading, setMessagesLoading] = useState(false)   
+  const [selectedMessage, setSelectedMessage] = useState(null)
+   const [replyingTo, setReplyingTo] = useState(null)
+  const [replyContent, setReplyContent] = useState('')
+
 
 
 
@@ -80,6 +84,88 @@ const CustomerDashboard = () => {
       }
     }, [activeTab, user?.id])
     
+    const handleDeleteMessage = async (messageId) => {
+      if (!window.confirm('Are you sure you want to delete this message?')) return;
+      
+      try {
+         setMessages(prev => prev.filter(msg => msg.id !== messageId));
+        
+        const { error } = await supabase
+          .from('messages')
+          .delete()
+          .eq('id', messageId);
+        
+        if (error) throw error;
+        
+        toast.success('Message deleted successfully');
+        
+         if (selectedMessage?.id === messageId) {
+          setSelectedMessage(null);
+        }
+      } catch (error) {
+        fetchMessages();
+        console.error('Error deleting message:', error)
+        toast.error('Failed to delete message')
+      }
+    }
+  
+    const handleSendReply = async (message) => {
+      try {
+        if (!replyContent.trim()) {
+          throw new Error('Reply content cannot be empty')
+        }
+  
+        const newMessage = {
+          sender_id: user.id,
+          receiver_id: message.sender_id,
+          content: replyContent,
+          is_reply: true,
+          original_message_id: message.id,
+          service_id: message.service_id || null,
+        }
+  
+         
+        const optimisticReply = {
+          ...newMessage,
+          id: `temp-${Date.now()}`,
+          created_at: new Date().toISOString(),
+          services: message.services,
+          senders: { ...user },
+          is_optimistic: true
+        };
+  
+        setMessages(prev => [optimisticReply, ...prev]);
+        setMessages(prev => prev.map(m => 
+          m.id === message.id ? { ...m, replied: true } : m
+        ));
+  
+        const { data, error } = await supabase
+          .from('messages')
+          .insert([newMessage])
+          .select()
+  
+        if (error) throw error
+  
+         
+        setMessages(prev => [
+          {
+            ...data[0],
+            services: message.services,
+            senders: { ...user }
+          },
+          ...prev.filter(msg => msg.id !== optimisticReply.id)
+        ]);
+  
+        toast.success('Reply sent!');
+        setReplyingTo(null)
+        setReplyContent('')
+      } catch (error) {
+        console.error('Reply failed:', error)
+        toast.error(`Failed: ${error.message}`)
+        fetchMessages()
+      }
+    }
+  
   
 
      const renderContent = () => {
@@ -113,9 +199,45 @@ const CustomerDashboard = () => {
                   theme={theme}
                   messages={messages}
                   loading={messagesLoading}
-                   
+                  onDelete={handleDeleteMessage}
+                  onReply={(msg) => {
+                  setReplyingTo(msg);
+                  }}   
                 />
               )}
+              {/* Reply Modal */}
+              {replyingTo && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                  <div className={`rounded-lg p-6 w-full max-w-md ${theme === 'dark' ? 'bg-indigo-900' : 'bg-white'}`}>
+                    <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                      Reply to {replyingTo.sender?.username || replyingTo.senders?.username || 'User'}
+                    </h3>
+                    <textarea
+                      value={replyContent}
+                      onChange={(e) => setReplyContent(e.target.value)}
+                      className={`w-full p-3 rounded-lg mb-3 ${theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-gray-100'}`}
+                      rows={4}
+                      placeholder="Type your reply here..."
+                    />
+                    <div className="flex justify-end space-x-2">
+                      <button
+                        onClick={() => setReplyingTo(null)}
+                        className={`px-4 py-2 rounded-md ${theme === 'dark' ? 'bg-gray-600 hover:bg-gray-700 text-white' : 'bg-gray-200 hover:bg-gray-300'}`}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={() => handleSendReply(replyingTo)}
+                        className={`px-4 py-2 rounded-md ${theme === 'dark' ? 'bg-orange-600 hover:bg-orange-700 text-white' : 'bg-indigo-600 hover:bg-indigo-700 text-white'}`}
+                        disabled={!replyContent.trim()}
+                      >
+                        Send Reply
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            
 
               </div>
             )
