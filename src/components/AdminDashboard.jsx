@@ -450,20 +450,6 @@ const [loadingStats, setLoadingStats] = useState(false);
               <AdminServiceList/>
              </div>
           )
-          case 'reports':
-          return (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-              <div className={`p-4 rounded-lg shadow ${theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-100'}`}>
-                <h4 className={`font-medium ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Active Users</h4>
-               </div>
-             </div>
-          )
-          case 'payments':
-          return (
-            <div>
-              <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Pending Payments</h3>
-             </div>
-          )
           case 'announcements':
           return (
             <div>
@@ -672,23 +658,6 @@ const [loadingStats, setLoadingStats] = useState(false);
                    className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'providers' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
                 >
                  <FiCheckCircle className="mr-2" />Approve Providers
-                 </button>
-              </li>
-              <li>
-                <button 
-                     onClick={() => setActiveTab('reports')}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'reports' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
-                >
-                 <FiBarChart2 className="mr-2" />Reports and Status
-                 </button>
-              </li>
-              <li>
-                <button 
-                     onClick={() => {setActiveTab('payments')  
-                      setSidebarOpen(false)}}
-                   className={`w-full text-left px-4 py-2 rounded flex items-center cursor-pointer ${activeTab === 'payments' ? 'bg-indigo-900 text-white' : theme === 'dark' ? 'hover:bg-blue-500' : 'hover:bg-gray-100'}`}
-                >
-                 <FiDollarSign className="mr-2" />Manage Payments
                  </button>
               </li>
               <li>
