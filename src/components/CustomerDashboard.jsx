@@ -7,6 +7,30 @@ const CustomerDashboard = () => {
   const { theme } = useTheme()
      const [sidebarOpen, setSidebarOpen] = useState(false)
      const [activeTab, setActiveTab] = useState('dashboard')
+
+     const renderContent = () => {
+      switch (activeTab) {
+        case 'bookings':
+          return (
+            <div>
+              No Booking yet
+            </div>
+          );
+          case 'messages':
+            return (
+              <div>
+               No messages yet
+              </div>
+            )
+        default:
+          return (
+            <div>
+              <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Dashboard Overview</h2>
+            </div>
+          )
+      }
+    }
+  
     
 
   return (
@@ -82,6 +106,13 @@ const CustomerDashboard = () => {
               onClick={() => setSidebarOpen(false)}
             />
           )}
+          
+          <div className="flex-1 p-4 lg:p-12">
+        <div className={`rounded-lg shadow p-6 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-white'}`}>
+          {renderContent()}
+        </div>
+      </div>
+
     </div>
       
          </div>

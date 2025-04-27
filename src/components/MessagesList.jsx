@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { MessageDetailModal } from "./MessageDetailModal";
  
-export const MessagesList = ({ theme, messages, loading, onDelete, onReply, userRole }) => {
-    const [selectedMessage, setSelectedMessage] = useState(null);
+export const MessagesList = ({ theme, messages, loading, onDelete, onReply , userRole}) => {
+     const [selectedMessage, setSelectedMessage] = useState(null);
   
     if (loading) {
       return (
@@ -11,15 +11,15 @@ export const MessagesList = ({ theme, messages, loading, onDelete, onReply, user
         </div>
       )
     }
-  
-     const filteredMessages = messages.filter((message) => {
+    const filteredMessages = messages.filter((message) => {
       if (userRole === 'provider') {
-        return !message.replied
+         return !message.replied
       } else if (userRole === 'customer') {
-        return message.replied
+         return message.replied;
       }
       return true
     })
+    
   
     if (!filteredMessages || filteredMessages.length === 0) {
       return (
@@ -42,7 +42,7 @@ export const MessagesList = ({ theme, messages, loading, onDelete, onReply, user
             <div className="flex justify-between items-start">
               <div>
                 <h4 className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
-                  {message.senders?.username || 'Unknown User'}
+                {message.sender?.username || message.senders?.username || 'Unknown User'}
                 </h4>
                 <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
                   Regarding: {message.services?.title || 'Unknown Service'}
