@@ -18,12 +18,68 @@ const CustomerDashboard = () => {
    const [replyingTo, setReplyingTo] = useState(null)
   const [replyContent, setReplyContent] = useState('')
 
-
+  const [bookings, setBookings] = useState([]);
+  const [loadingBookings, setLoadingBookings] = useState(false);
+  const [dashboardStats, setDashboardStats] = useState({
+    totalBookings: 0,
+    upcomingBookings: 0,
+    completedBookings: 0,
+    cancelledBookings: 0
+  })
+  
+   useEffect(() => {
+    const fetchBookings = async () => {
+      if (!user?.id) return
+    
+      try {
+        setLoadingBookings(true)
+        
+         const { data, error } = await supabase
+          .from('bookings')
+          .select(`
+            id,
+            status,
+            service_date,
+            service_time,
+            created_at,
+            service_id (id, title, description),
+            provider_id (id, username, avatar_url),
+            price
+          `)
+          .eq('customer_id', user.id)
+          .order('service_date', { ascending: false })
+    
+        if (error) throw error
+    
+        setBookings(data || [])
+    
+    
+        const now = new Date()
+        setDashboardStats({
+          totalBookings: data?.length || 0,
+          upcomingBookings: data?.filter(b => 
+            new Date(b.service_date) > now && b.status !== 'cancelled'
+          ).length || 0,
+          completedBookings: data?.filter(b => b.status === 'completed').length || 0,
+          cancelledBookings: data?.filter(b => b.status === 'cancelled').length || 0
+        })
+    
+      } catch (error) {
+        console.error('Booking fetch error:', error);
+        toast.error(`Failed to load bookings: ${error.message}`)
+      } finally {
+        setLoadingBookings(false)
+      }
+    }
+    if (activeTab === 'bookings' || activeTab === 'dashboard') {
+      fetchBookings()
+    }
+  }, [activeTab, user?.id])
 
 
      const fetchMessages = async () => {
       if (!user?.id) {
-        setMessagesLoading(false);
+        setMessagesLoading(false)
         return
       }
   
@@ -187,8 +243,101 @@ const CustomerDashboard = () => {
         case 'bookings':
           return (
             <div>
-              No Booking yet
-            </div>
+            <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+              My Bookings {!loadingBookings && `(${bookings.length})`}
+            </h3>
+            
+            {loadingBookings ? (
+              <div className="flex justify-center items-center h-32">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+              </div>
+            ) : bookings.length === 0 ? (
+              <div className={`p-6 rounded-lg text-center ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-100'}`}>
+                <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>
+                  You don't have any bookings yet
+                </p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                  <thead className={theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-100'}>
+                    <tr>
+                      <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                        Service
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                        Provider
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                        Date/Time
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                        Status
+                      </th>
+                      <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                        Price
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className={`divide-y ${theme === 'dark' ? 'divide-indigo-800' : 'divide-gray-200'}`}>
+                    {bookings.map(booking => (
+                      <tr key={booking.id} className={theme === 'dark' ? 'hover:bg-indigo-800' : 'hover:bg-gray-50'}>
+                        <td className="px-4 py-4">
+                          <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                            {booking.service_id?.title || 'Unknown Service'}
+                          </div>
+                          <div className="text-sm text-gray-500">
+                            {booking.service_id?.description}
+                          </div>
+                        </td>
+                        <td className="px-4 py-4">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10">
+                              <img 
+                                className="h-10 w-10 rounded-full" 
+                                src={booking.provider_id?.avatar_url || '/default-avatar.png'} 
+                                alt={booking.provider_id?.username}
+                                onError={(e) => {
+                                  e.target.src = '/default-avatar.png'
+                                }}
+                              />
+                            </div>
+                            <div className="ml-3">
+                              <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                                {booking.provider_id?.username || 'Unknown'}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <p className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                            {new Date(booking.service_date).toLocaleDateString()}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {booking.service_time}
+                          </p>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap">
+                          <span className={`px-2 py-1 text-xs rounded-full ${
+                            booking.status === 'pending'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : booking.status === 'completed'
+                              ? 'bg-green-100 text-green-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                          </span>
+                        </td>
+                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                          ${booking.price || '0'}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
           );
           case 'messages':
             return (
@@ -259,6 +408,106 @@ const CustomerDashboard = () => {
           return (
             <div>
               <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Dashboard Overview</h2>
+               {/* Stats Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+              <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                Total Bookings
+              </h3>
+              <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+                {dashboardStats.totalBookings}
+              </p>
+            </div>
+            
+            <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+              <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                Upcoming
+              </h3>
+              <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+                {dashboardStats.upcomingBookings}
+              </p>
+            </div>
+            
+            <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+              <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                Completed
+              </h3>
+              <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+                {dashboardStats.completedBookings}
+              </p>
+            </div>
+            
+            <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
+              <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                Cancelled
+              </h3>
+              <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+                {dashboardStats.cancelledBookings}
+              </p>
+            </div>
+          </div>
+
+          {/* Recent Bookings */}
+          <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+            Recent Bookings
+          </h3>
+          
+          {loadingBookings ? (
+            <div className="flex justify-center items-center h-32">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+            </div>
+          ) : bookings.length === 0 ? (
+            <div className={`p-6 rounded-lg text-center ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-100'}`}>
+              <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>
+                You don't have any bookings yet
+              </p>
+            </div>
+          ) : (
+            <div className="overflow-x-auto">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className={theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-100'}>
+                  <tr>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Service
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Date
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                      Status
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className={`divide-y ${theme === 'dark' ? 'divide-indigo-800' : 'divide-gray-200'}`}>
+                  {bookings.slice(0, 5).map(booking => (
+                    <tr key={booking.id} className={theme === 'dark' ? 'hover:bg-indigo-800' : 'hover:bg-gray-50'}>
+                      <td className="px-4 py-4">
+                        <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                          {booking.service_id?.title || 'Unknown Service'}
+                        </div>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <p className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                          {new Date(booking.service_date).toLocaleDateString()}
+                        </p>
+                      </td>
+                      <td className="px-4 py-4 whitespace-nowrap">
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          booking.status === 'pending'
+                            ? 'bg-yellow-100 text-yellow-800'
+                            : booking.status === 'completed'
+                            ? 'bg-green-100 text-green-800'
+                            : 'bg-red-100 text-red-800'
+                        }`}>
+                          {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
             </div>
           )
       }
