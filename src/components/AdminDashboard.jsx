@@ -5,6 +5,7 @@ import toast from 'react-hot-toast'
 import CategoryModal from './CategoryModel'
 import supabase from '../lib/supabase'
 import AdminServiceList from './AdminServiceList'
+import BookingManagement from './BookingsManagement'
 const AdminDashboard = () => {
     const {theme} = useTheme()
     const [activeTab, setActiveTab] = useState('dashboard')
@@ -435,12 +436,10 @@ const [loadingStats, setLoadingStats] = useState(false);
             case 'bookings':
           return (
             <div>
-              <div className="flex space-x-2 mb-4">
-                <button className="px-4 py-2 rounded bg-blue-500 text-white">All</button>
-                <button className="px-4 py-2 rounded bg-gray-200">Pending</button>
-                <button className="px-4 py-2 rounded bg-green-500 text-white">Completed</button>
-                <button className="px-4 py-2 rounded bg-red-500 text-white">Cancelled</button>
-              </div>
+               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+        Manage Bookings
+      </h3>
+         <BookingManagement theme={theme} />
              </div>
           )
           case 'providers':
