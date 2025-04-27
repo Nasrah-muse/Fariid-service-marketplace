@@ -45,7 +45,7 @@ export const MessagesList = ({ theme, messages, loading, onDelete, onReply , use
                 {message.sender?.username || message.senders?.username || 'Unknown User'}
                 </h4>
                 <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                  Regarding: {message.services?.title || 'Unknown Service'}
+                  Regarding: {message.service?.title || message.services?.title || 'Unknown Service'}
                 </p>
               </div>
               <span className={`text-xs ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>

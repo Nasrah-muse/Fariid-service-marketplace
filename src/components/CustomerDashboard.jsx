@@ -38,6 +38,8 @@ const CustomerDashboard = () => {
   
         if (error) throw error;
         if (!messages?.length) {
+          console.log("Messages with service_id:", messages.map(m => m.service_id));
+
           setMessages([]);
           return;
         }
@@ -50,23 +52,35 @@ const CustomerDashboard = () => {
         const serviceIds = messages
           .map(m => m.service_id)
           .filter(Boolean);
-  
+          console.log("Service IDs being fetched:", serviceIds)
+
+          
+         const servicesPromise = serviceIds.length
+          ? supabase.from('services').select('id, title').in('id', serviceIds)
+          : Promise.resolve({ data: [] });
+
+ 
          const [
           { data: users },
           { data: services }
         ] = await Promise.all([
           supabase.from('users').select('id, username, avatar_url').in('id', userIds),
-          serviceIds.length ? supabase.from('services').select('id, title').in('id', serviceIds) : { data: [] }
+          servicesPromise
+        
         ])
   
-         const enrichedMessages = messages.map(message => ({
-          ...message,
-          sender: users?.find(u => u.id === message.sender_id),
-          receiver: users?.find(u => u.id === message.receiver_id),
-          service: services?.find(s => s.id === message.service_id),
-           isCustomerMessage: message.sender_id === user.id
-        }))
-  
+        const enrichedMessages = messages.map(message => {
+          const matchedService = services?.find(s => s.id === message.service_id);
+          console.log(`Message ${message.id} - service_id: ${message.service_id}, matched service:`, matchedService);
+          return {
+            ...message,
+            sender: users?.find(u => u.id === message.sender_id),
+            receiver: users?.find(u => u.id === message.receiver_id),
+            service: matchedService || { title: 'Unknown Service' },
+            isCustomerMessage: message.sender_id === user.id
+          }
+        })
+        
         setMessages(enrichedMessages);
       } catch (error) {
         console.error('Error fetching messages:', error)
