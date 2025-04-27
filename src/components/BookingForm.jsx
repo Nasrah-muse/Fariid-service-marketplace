@@ -15,11 +15,82 @@ export default function BookingForm({ service, provider, onClose, currentUser })
   const [time, setTime] = useState('')
   const [notes, setNotes] = useState('')
   const [loading, setLoading] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
+
+  const handlePriceChange = (tier) => {
+    setPriceTier(tier)
+    if (tier === 'basic') setPrice(service.basic_price)
+    else if (tier === 'standard') setPrice(service.standard_price)
+    else if (tier === 'premium') setPrice(service.premium_price)
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setLoading(true)
+    
+    if (!priceTier || !name || !village || !date || !time) {
+      toast.error('Please fill all required fields.')
+      setLoading(false)
+      return
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('bookings')
+        .insert([{
+          customer_id: currentUser.id,
+          provider_id: provider.id,
+          service_id: service.id,
+          price_tier: priceTier,
+          price: price,
+          customer_name: name,
+          customer_phone: phone,
+          city: city,
+          village: village,
+          service_date: date,
+          service_time: time,
+          notes: notes,
+          status: 'pending'
+        }])
+        .select();
+
+      if (error) throw error
+
+      toast.success('Booking submitted successfully!')
+      setSubmitted(true);
+    } catch (error) {
+      console.error('Error submitting booking:', error)
+      toast.error('Failed to submit booking')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  if (submitted) {
+    return (
+      <div className={`fixed inset-0  ${theme === 'dark'? 'bg-indigo-600 text-white': 'bg-gray-200 text-indigo-900'} bg-opacity-50 flex items-center justify-center z-50`}>
+        <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-md w-full">
+          <div className="text-4xl mb-4">🎉</div>
+          <h2 className="text-2xl font-bold mb-2">Booking Successful!</h2>
+          <p className="mb-6">Thank you for booking {service.title}. We will contact you shortly.</p>
+          <div className="flex gap-4 justify-center">
+            <button 
+              onClick={onClose}
+              className={`px-6 py-2  text-white font-bold ${theme === 'dark'? 'bg-orange-500  hover:bg-orange-600': 'bg-indigo-900 hover:bg-indigo-600'}  rounded-lg `}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
 
  
   return (
     <div className={`fixed inset-0 ${theme === 'dark'? 'bg-indigo-600 text-white': 'bg-gray-200 text-indigo-900'} bg-opacity-10 flex items-center justify-center z-50 p-4`}>
-      <form  className={`${theme === 'dark'? 'bg-indigo-700': 'bg-white'} p-6 rounded-2xl shadow-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto`}>
+      <form  onSubmit={handleSubmit} className={`${theme === 'dark'? 'bg-indigo-700': 'bg-white'} p-6 rounded-2xl shadow-lg w-full max-w-3xl max-h-[90vh] overflow-y-auto`}>
         <div className="flex justify-between items-center mb-4">
           <h1 className="text-2xl font-bold">Book {service.title}</h1>
           <button 
@@ -46,12 +117,14 @@ export default function BookingForm({ service, provider, onClose, currentUser })
           <div className="grid grid-cols-3 gap-2">
             <button
               type="button"
+              onClick={() => handlePriceChange('basic')}
             className={`p-2 border rounded-lg ${priceTier === 'basic' ? 'bg-blue-100 border-blue-500' : 'bg-gray-50'}`}
             >
               Basic<br/>${service.basic_price}
             </button>
             <button
               type="button"
+              onClick={() => handlePriceChange('standard')}
             className={`p-2 border rounded-lg ${priceTier === 'standard' ? 'bg-blue-100 border-blue-500' : 'bg-gray-50'}`}
             >
               Standard<br/>${service.standard_price}
@@ -110,7 +183,7 @@ export default function BookingForm({ service, provider, onClose, currentUser })
         </div>
 
         <div className="mb-4">
-          <label className="block mb-1 font-medium">Village/Neighborhood*</label>
+          <label className="block mb-1 font-medium">Village*</label>
           <select
             className="w-full p-2 border rounded-lg"
             value={village}
