@@ -7,6 +7,7 @@ import supabase from '../lib/supabase';
 import toast from 'react-hot-toast';
 import { MessagesList } from './MessagesList';
 import BookingsTable from './BookingsTable';
+import ProviderDashboardOverview from './ProviderDasboardOverview';
 export const ServiceDetailsModal = ({ service, onClose, theme }) => {
   if (!service) return null
   console.log(service.service_image_url)
@@ -139,6 +140,50 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
     const [messages, setMessages] = useState([])
    const [messagesLoading, setMessagesLoading] = useState(false)
    const [replyContent, setReplyContent] = useState('')
+   const [bookings, setBookings] = useState([])
+   const [loading, setLoading] = useState(false)
+
+   const fetchDashboardData = async () => {
+    try {
+      setLoading(true)
+      const { data: { user } } = await supabase.auth.getUser()
+      
+      if (user) {
+         const { data: servicesData } = await supabase
+          .from('services')
+          .select('*')
+          .eq('provider_id', user.id)
+        setServices(servicesData || [])
+
+        // Fetch bookings
+        const { data: bookingsData } = await supabase
+          .from('bookings')
+          .select(`
+            *,
+            services:service_id(title),
+            customers:customer_id(username)
+          `)
+          .eq('provider_id', user.id)
+          .order('created_at', { ascending: false })
+        setBookings(bookingsData || [])
+
+         const { data: messagesData } = await supabase
+          .from('messages')
+          .select('*')
+          .eq('receiver_id', user.id)
+        setMessages(messagesData || [])
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+   useEffect(() => {
+    fetchDashboardData()
+  }, [])
+
 
    const handleDeleteMessage = async (messageId) => {
     if (!window.confirm('Are you sure you want to delete this message?')) return;
@@ -518,43 +563,13 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
     default:
       return (
         <div>
-          <h2 className={`text-2xl font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Dashboard Overview</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-              <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
-                <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Active Services</h3>
-                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
-                  {services.filter(s => s.status === 'approved').length}
-                </p>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
-                <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Bookings This Month</h3>
-                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>12</p>
-              </div>
-              
-              <div className={`p-4 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'}`}>
-                <h3 className={`text-md font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>New Messages</h3>
-                <p className={`text-2xl font-bold ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>3</p>
-              </div>
-            </div>
-
-            <div className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-50'} mb-8`}>
-              <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Latest Booking</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <p className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Client</p>
-                  <p className={`${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Ahmed Qasim</p>
-                </div>
-                <div>
-                  <p className={` font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Service</p>
-                  <p className={`${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>House Cleaning</p>
-                </div>
-                <div>
-                  <p className={` font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>Date</p>
-                  <p className={`${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>April 22, 2025</p>
-                </div>
-              </div>
-            </div>
+        <ProviderDashboardOverview
+          services={services}
+          bookings={bookings}
+          messages={messages}
+          loading={loading}
+          onRefresh={fetchDashboardData}
+        />
         </div>
       )
   }
