@@ -475,6 +475,16 @@ const [loadingStats, setLoadingStats] = useState(false);
           return (
             <div>
               <h3 className={`text-lg font-medium mb-4 ${theme === 'dark'? 'text-white': 'text-indigo-900'}`}>Recent Support Tickets</h3>
+              <div className={`flex flex-col items-center justify-center p-8 rounded-lg ${theme === 'dark' ? 'bg-indigo-800' : 'bg-gray-50'}`}>
+          <FiCheckCircle className={`w-12 h-12 mb-4 ${theme === 'dark' ? 'text-green-300' : 'text-green-500'}`} />
+          <h4 className={`text-xl font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+            No Complaints Found
+          </h4>
+          <p className={`text-center ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+            There are currently no support tickets or complaints from users.
+          </p>
+        </div>
+
              </div>
           )
           default:
