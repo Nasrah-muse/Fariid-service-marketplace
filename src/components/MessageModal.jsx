@@ -49,7 +49,9 @@ const handleSendMessage = async () => {
         attachmentUrls.push(publicUrl)
       }
 
-       const { error } = await supabase.from('messages').insert([{
+      const { data, error } = await supabase
+      .from('messages')
+      .insert([{
         sender_id: currentUser.id,
         receiver_id: provider.id,
         service_id: service.id, 
@@ -57,19 +59,33 @@ const handleSendMessage = async () => {
         attachments: attachmentUrls,
         created_at: new Date().toISOString()
       }])
+      .select()
 
-      if (error) throw error
-      
-      toast.success('Message sent successfully!')
-      onClose();
-      setMessage("")
-      setAttachments([])
-    } catch (error) {
-      console.error('Error sending message:', error)
-      toast.error('Failed to send message')
-    } finally {
-      setIsSending(false)
-    }
+    if (error) throw error;
+
+     const messageWithSender = {
+      ...data[0],
+      senders: {
+        username: currentUser.username || 'You'
+      },
+      services: {
+        title: service.title || 'Unknown Service'
+      }
+    };
+
+    toast.success('Message sent successfully!');
+    onClose();
+    setMessage("");
+    setAttachments([]);
+    
+     return messageWithSender
+    
+  } catch (error) {
+    console.error('Error sending message:', error)
+    toast.error('Failed to send message')
+  } finally {
+    setIsSending(false);
+  }
   }
 
   const handleFileUpload = (e) => {
