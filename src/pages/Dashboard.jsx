@@ -1,7 +1,7 @@
  import AdminDashboard from "../components/AdminDashboard"
 import { useAuth } from "../contexts/AuthContext"
  import ProviderDashboard from "../components/ProviderDashboard";
-import CustomerDashboard from "./CustomerDashboard";
+import CustomerDashboard from "../components/CustomerDashboard";
 
  
 const Dashboard = () => {
