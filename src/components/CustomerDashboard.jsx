@@ -1,12 +1,86 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useTheme } from "../contexts/ThemeContext"
 import { FiBarChart2, FiCalendar, FiMail, FiMenu, FiX } from "react-icons/fi"
+import supabase from "../lib/supabase"
+import { MessagesList } from "./MessagesList"
+import toast from "react-hot-toast"
+import { useAuth } from "../contexts/AuthContext"
 
     
 const CustomerDashboard = () => {
   const { theme } = useTheme()
+  const { user } = useAuth()
      const [sidebarOpen, setSidebarOpen] = useState(false)
      const [activeTab, setActiveTab] = useState('dashboard')
+     const [messages, setMessages] = useState([]);
+      const [messagesLoading, setMessagesLoading] = useState(false)
+
+
+
+     const fetchMessages = async () => {
+      if (!user?.id) {
+        setMessagesLoading(false);
+        return
+      }
+  
+      try {
+        setMessagesLoading(true)
+        
+         const { data: messages, error } = await supabase
+          .from('messages')
+          .select('*')
+          .or(`sender_id.eq.${user.id},receiver_id.eq.${user.id}`)
+          .order('created_at', { ascending: false })
+  
+        if (error) throw error;
+        if (!messages?.length) {
+          setMessages([]);
+          return;
+        }
+      
+         const userIds = [...new Set([
+          ...messages.map(m => m.sender_id),
+          ...messages.map(m => m.receiver_id)
+        ])]
+        
+        const serviceIds = messages
+          .map(m => m.service_id)
+          .filter(Boolean);
+  
+         const [
+          { data: users },
+          { data: services }
+        ] = await Promise.all([
+          supabase.from('users').select('id, username, avatar_url').in('id', userIds),
+          serviceIds.length ? supabase.from('services').select('id, title').in('id', serviceIds) : { data: [] }
+        ])
+  
+         const enrichedMessages = messages.map(message => ({
+          ...message,
+          sender: users?.find(u => u.id === message.sender_id),
+          receiver: users?.find(u => u.id === message.receiver_id),
+          service: services?.find(s => s.id === message.service_id),
+           isCustomerMessage: message.sender_id === user.id
+        }))
+  
+        setMessages(enrichedMessages);
+      } catch (error) {
+        console.error('Error fetching messages:', error)
+        toast.error('Failed to load messages');
+        setMessages([])
+      } finally {
+        setMessagesLoading(false);
+      }
+    }
+    useEffect(() => {
+      
+    
+      if (activeTab === 'messages') {
+        fetchMessages();
+      }
+    }, [activeTab, user?.id])
+    
+  
 
      const renderContent = () => {
       switch (activeTab) {
@@ -19,7 +93,30 @@ const CustomerDashboard = () => {
           case 'messages':
             return (
               <div>
-               No messages yet
+               
+              <h3 className={`text-lg font-medium mb-4 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                Messages {!messagesLoading && `(${messages.length})`}
+              </h3>
+              
+              {messagesLoading ? (
+                <div className="flex justify-center items-center h-32">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-500"></div>
+                </div>
+              ) : messages.length === 0 ? (
+                <div className={`p-6 rounded-lg text-center ${theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-100'}`}>
+                  <p className={theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}>
+                    No messages found
+                  </p>
+                </div>
+              ) : (
+                <MessagesList
+                  theme={theme}
+                  messages={messages}
+                  loading={messagesLoading}
+                   
+                />
+              )}
+
               </div>
             )
         default:
