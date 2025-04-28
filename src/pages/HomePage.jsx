@@ -29,7 +29,10 @@ const HomePage = () => {
    const [searchQuery, setSearchQuery] = useState('')
   const [searchedServices, setSearchedServices] = useState([])
   const [isSearching, setIsSearching] = useState(false)
-
+  const popularKeywords = ['Plumber', 'Electrician', 'Tutor', 'Cleaner']
+  const handlePopularKeywordClick = (keyword) => {
+    setSearchQuery(keyword)
+  }
   const handleSearch = async () => {
   if (!searchQuery.trim()) {
     toast.error('Please enter a search term')
@@ -380,12 +383,23 @@ useEffect(() => {
           
           <div className={`flex flex-wrap items-center justify-center gap-2 ${theme === 'dark' ? 'text-sky-200' : 'text-gray-600'}`}>
             <span>Popular search: </span>
-            <button className={`px-3 py-1 ${theme === 'dark' ? 'bg-indigo-700 hover:bg-indigo-600' : 'bg-gray-100 hover:bg-gray-200'} rounded-full transition duration-200`}>
-              Plumber
-            </button>
-            <button className={`px-3 py-1 ${theme === 'dark' ? 'bg-indigo-700 hover:bg-indigo-600' : 'bg-gray-100 hover:bg-gray-200'} rounded-full transition duration-200`}>
-              Electrician
-            </button>
+            {popularKeywords.map((keyword) => (
+              <button 
+                key={keyword}
+                onClick={() => handlePopularKeywordClick(keyword)}
+                className={`px-3 py-1 rounded-full transition duration-200 ${
+                  theme === 'dark' 
+                    ? searchQuery === keyword 
+                      ? 'bg-orange-500 text-white' 
+                      : 'bg-indigo-700 hover:bg-indigo-600'
+                    : searchQuery === keyword 
+                      ? 'bg-blue-500 text-white' 
+                      : 'bg-gray-100 hover:bg-gray-200'
+                }`}
+              >
+                {keyword}
+              </button>
+            ))}
           </div>
         </div>
        
