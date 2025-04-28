@@ -10,6 +10,8 @@ import author1 from '../assets/author1.jpg'
 import author2 from '../assets/author2.jpg'
 import author3 from '../assets/author3.jpg'
 import { FaChevronDown } from 'react-icons/fa';
+import supabase from '../lib/supabase';
+import toast from 'react-hot-toast';
 
 const HomePage = () => {
   const { theme } = useTheme()
@@ -18,6 +20,47 @@ const HomePage = () => {
    const [currentTestimonial, setCurrentTestimonial] = useState(1)
    const [animate, setAnimate] = useState(false)
    const [activeIndex, setActiveIndex] = useState(null);
+   const [popularCategories, setPopularCategories] = useState([])
+   const [loadingCategories, setLoadingCategories] = useState(false)
+
+const fetchPopularCategories = async () => {
+  try {
+    setLoadingCategories(true)
+    
+     const { data: services, error: servicesError } = await supabase
+      .from('services')
+      .select('id, category_id, categories(name), status')
+      .eq('status','approved' )
+    
+    if (servicesError) throw servicesError
+
+     const categoryCounts = services.reduce((acc, service) => {
+      const catId = service.category_id
+      acc[catId] = {
+        count: (acc[catId]?.count || 0) + 1,
+        name: service.categories?.name || 'Uncategorized'
+      }
+      return acc
+    }, {})
+
+    
+    const sortedCategories = Object.entries(categoryCounts)
+      .map(([id, {name, count}]) => ({ id, name, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 4)
+
+    setPopularCategories(sortedCategories)
+    
+  } catch (error) {
+    console.error('Error fetching categories:', error)
+    toast.error('Failed to load popular categories')
+  } finally {
+    setLoadingCategories(false)
+  }
+}
+useEffect(() => {
+  fetchPopularCategories()
+}, [])
 
    const backgrounds = [bg1, bg2, bg3, bg4, bg5];
 
@@ -136,6 +179,51 @@ const HomePage = () => {
 
 
     </div>
+    {/* popilar categories */}
+ <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
+  <div className="max-w-7xl mx-auto">
+    <h2 className={`text-4xl font-extrabold text-center mb-12 ${theme === 'dark' ? 'text-white' : 'text-indigo-950'}`}>
+     <span className='text-orange-500'>Popluar</span> Categories
+    </h2>
+    
+    {loadingCategories ? (
+      <div className="flex justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+      </div>
+    ) : popularCategories.length > 0 ? (
+      <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        {popularCategories.map((category) => (
+          <div key={category.id} className={`p-6 rounded-lg shadow-lg text-center ${
+            theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-white text-indigo-900'
+          }`}>
+            <h3 className='text-2xl font-bold' >
+              {category.name}
+            </h3>
+            <p className='mt-2 text-md font-semibold'>
+              {category.count || 0} services
+            </p>
+          </div>
+        ))}
+      </div>
+    ) : (
+      <div className={`text-center p-8 rounded-lg ${
+        theme === 'dark' ? 'bg-indigo-700 text-indigo-100' : 'bg-gray-100 text-gray-600'
+      }`}>
+        <p>No categories found</p>
+        <button 
+          onClick={fetchPopularCategories}
+          className={`mt-4 px-4 py-2 rounded-md ${
+            theme === 'dark' 
+              ? 'bg-indigo-600 hover:bg-indigo-500 text-white' 
+              : 'bg-indigo-100 hover:bg-indigo-200 text-indigo-800'
+          }`}
+        >
+          Retry
+        </button>
+      </div>
+    )}
+  </div>
+</div>
     <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-gray-800' : 'bg-sky-200'}`}>
         <div className="max-w-7xl mx-auto">
           <h2 className={`text-4xl font-bold text-center mb-12 ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
