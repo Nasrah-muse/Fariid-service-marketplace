@@ -9,12 +9,14 @@ import bg5 from '../assets/bg5.jpg'
 import author1 from '../assets/author1.jpg'
 import author2 from '../assets/author2.jpg'
 import author3 from '../assets/author3.jpg'
-import { FaChevronDown } from 'react-icons/fa';
+import { FaChevronDown, FaStar } from 'react-icons/fa';
 import supabase from '../lib/supabase';
 import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router';
 
 const HomePage = () => {
   const { theme } = useTheme()
+  const navigate = useNavigate()
 
    const [currentBgIndex, setCurrentBgIndex] = useState(0);
    const [currentTestimonial, setCurrentTestimonial] = useState(1)
@@ -358,6 +360,104 @@ useEffect(() => {
     )}
   </div>
 </div>
+{/* popular servces */}
+<div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
+  {loading ? (
+    <div className="flex justify-center items-center h-64">
+      <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+    </div>
+  ) : (
+    <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
+      <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-12">
+          <h2 className={`text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+            Most <span className='text-orange-500'>Popular</span> Services
+          </h2>
+          <p className={`mt-4 text-lg ${theme === 'dark' ? 'text-gray-300' : 'text-indigo-800'}`}>
+            Browse our most popular service categories and connect with skilled professionals for your needs
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {popularServices.map((service) => {
+             const displayImage = service.firstImageUrl || 'https://placehold.co/600x400?text=Service+Image'
+            
+            return (
+              <div 
+                key={service.id}
+                onClick={() => navigate(`/service/${service.id}`)}
+                className={`rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 ${
+                  theme === 'dark' ? 'bg-indigo-800' : 'bg-white'
+                }`}
+              >
+                <div className="h-48 bg-gray-200 relative">
+                  <img
+                    src={displayImage}
+                    alt={service.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.src = 'https://placehold.co/600x400?text=Image+Not+Found'
+                    }}
+                  />
+                </div>
+                <div className="p-6">
+                  <div className="flex justify-between items-start">
+                    <h3 className={`text-xl font-bold ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                      {service.title}
+                    </h3>
+                    <div className="flex items-center">
+                      <FaStar className="text-orange-500 mr-1" />
+                      <span className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                        {service.rating}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-4 flex items-center">
+                      {service.provider_avatar && (
+                        <img
+                          src={service.provider_avatar}
+                          alt={service.provider_name}
+                          className={`w-15 h-15 rounded-full mr-3 border-2 ${theme === 'light'? 'border-indigo-600': 'border-orange-500'}`}
+                          onError={(e) => {
+                            e.target.src = 'https://placehold.co/40x40?text=No+Image';
+                          }}
+                        />
+                      )}
+                      <p className={`font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-indigo-700'}`}>
+                        {service.provider_name}
+                      </p>
+                    </div>
+                                      
+                  <div className="mt-4 flex justify-between items-center">
+                    <p className={`text-lg font-bold px-2 py-1 rounded-lg  text-white ${theme === 'dark' ? 'bg-orange-600' : 'bg-indigo-900'}`}>
+                      From ${service.basic_price || '20'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )
+          })}
+        </div>
+
+        <div className="text-center mt-12">
+          <button
+            onClick={() => navigate('/services')}
+            className={`px-6 py-3 rounded-lg font-medium ${
+              theme === 'dark' 
+                ? 'bg-orange-600 text-white hover:bg-orange-700' 
+                : 'bg-indigo-900 text-white hover:bg-indigo-800'
+            }`}
+          >
+            Browse All Services
+          </button>
+        </div>
+      </div>
+    </div>
+
+  )}
+</div>
+
     <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-gray-800' : 'bg-sky-200'}`}>
         <div className="max-w-7xl mx-auto">
           <h2 className={`text-4xl font-bold text-center mb-12 ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
