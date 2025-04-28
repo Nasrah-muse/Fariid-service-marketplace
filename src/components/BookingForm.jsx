@@ -69,7 +69,7 @@ export default function BookingForm({ service, provider, onClose, currentUser })
   if (submitted) {
     return (
       <div className={`fixed inset-0  ${theme === 'dark'? 'bg-indigo-600 text-white': 'bg-gray-200 text-indigo-900'} bg-opacity-50 flex items-center justify-center z-50`}>
-        <div className="bg-white p-8 rounded-2xl shadow-lg text-center max-w-md w-full">
+        <div className={`${theme === 'dark'? 'bg-indigo-500 text-white': 'bg-gray-200 text-indigo-900'} p-8 rounded-2xl shadow-lg text-center max-w-md w-full`}>
           <div className="text-4xl mb-4">🎉</div>
           <h2 className="text-2xl font-bold mb-2">Booking Successful!</h2>
           <p className="mb-6">Thank you for booking {service.title}. We will contact you shortly.</p>
@@ -185,7 +185,7 @@ export default function BookingForm({ service, provider, onClose, currentUser })
         <div className="mb-4">
           <label className="block mb-1 font-medium">Village*</label>
           <select
-            className="w-full p-2 border rounded-lg"
+            className={`w-full p-2 border rounded-lg ${theme === 'dark'? 'bg-indigo-800': 'bg-white' }`}
             value={village}
             onChange={(e) => setVillage(e.target.value)}
             required
@@ -215,7 +215,7 @@ export default function BookingForm({ service, provider, onClose, currentUser })
           <div>
             <label className="block mb-1 font-medium">Preferred Time*</label>
             <select
-              className="w-full p-2 border rounded-lg"
+            className={`w-full p-2 border rounded-lg ${theme === 'dark'? 'bg-indigo-800': 'bg-white' }`}
               value={time}
               onChange={(e) => setTime(e.target.value)}
               required
