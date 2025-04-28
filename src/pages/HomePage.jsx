@@ -22,7 +22,141 @@ const HomePage = () => {
    const [activeIndex, setActiveIndex] = useState(null);
    const [popularCategories, setPopularCategories] = useState([])
    const [loadingCategories, setLoadingCategories] = useState(false)
+   const [popularServices, setPopularServices] = useState([])
+   const [loading, setLoading] = useState(true)
+   const parseServiceImages = (imageData) => {
+    try {
+      if (!imageData) return []
+  
+      if (Array.isArray(imageData)) {
+        return imageData.map(url => typeof url === 'string' ? url.replace(/\\/g, '') : url)
+      }
+  
+      if (typeof imageData === 'string') {
+        let cleanString = imageData
+          .replace(/^\{/, '')
+          .replace(/\}$/, '')
+          .replace(/\\"/g, '"')
+          .trim()
+  
+        try {
+          if (cleanString.startsWith('[') && cleanString.endsWith(']')) {
+            const parsed = JSON.parse(cleanString)
+            return Array.isArray(parsed) 
+              ? parsed.map(url => typeof url === 'string' ? url.replace(/\\/g, '') : url)
+              : [parsed]
+          }
+  
+          const parsed = JSON.parse(cleanString)
+          if (typeof parsed === 'string') {
+            try {
+              const innerParsed = JSON.parse(parsed)
+              return Array.isArray(innerParsed) ? innerParsed : [innerParsed]
+            } catch {
+              return [parsed]
+            }
+          }
+  
+          return Array.isArray(parsed) ? parsed : [parsed]
+        } catch (e) {
+          return [cleanString.replace(/^"+|"+$/g, '')]
+        }
+      }
+  
+      return []
+    } catch (err) {
+      console.error("Failed to parse service_image_url:", imageData, err)
+      return []
+    }
+  }
 
+  const getAvatarUrl = (avatarPath) => {
+    if (!avatarPath) return null
+    if (avatarPath.startsWith('http')) return avatarPath
+    const { data: { publicUrl } } = supabase.storage.from('avatars').getPublicUrl(avatarPath)
+    return publicUrl
+  }
+
+  const generateRandomRating = () => {
+    return (Math.random() * 2 + 3).toFixed(1)
+  }
+
+  useEffect(() => {
+    const fetchPopularServices = async () => {
+      try {
+        setLoading(true)
+  
+         
+        const { data: servicesData, error: servicesError } = await supabase
+          .from('services')
+          .select('*')
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false })
+          .limit(3)
+  
+        if (servicesError) throw servicesError
+  
+        
+        const processedServices = servicesData.map(service => {
+          const imageUrls = parseServiceImages(service.service_image_url)
+          let firstImageUrl = null
+          
+          if (imageUrls.length > 0) {
+            firstImageUrl = imageUrls[0]
+            if (typeof firstImageUrl === 'string') {
+              firstImageUrl = firstImageUrl.replace(/\\/g, '').replace(/^"+|"+$/g, '')
+              if (firstImageUrl.startsWith('[') || firstImageUrl.startsWith('{')) {
+                const cleaned = parseServiceImages(firstImageUrl)
+                firstImageUrl = cleaned[0] || null
+              }
+            }
+          }
+  
+          return {
+            ...service,
+            firstImageUrl,
+            rating: Number(service.rating) || generateRandomRating()
+          }
+        })
+  
+         
+        const providerIds = [...new Set(processedServices.map(service => service.provider_id))]
+  
+          
+        const { data: providersData, error: providersError } = await supabase
+          .from('users')
+          .select('id, username, avatar_url')
+          .in('id', providerIds)
+  
+        if (providersError) throw providersError
+  
+        
+        const providersMap = {}
+        providersData.forEach(provider => {
+          providersMap[provider.id] = {
+            name: provider.username || provider.name,  
+            avatar: getAvatarUrl(provider.avatar_url)
+          }
+        })
+  
+         
+        const servicesWithProviders = processedServices.map(service => ({
+          ...service,
+          provider_name: providersMap[service.provider_id]?.name || 'Unknown Provider',
+          provider_avatar: providersMap[service.provider_id]?.avatar || null
+        }))
+  
+        setPopularServices(servicesWithProviders)
+      } catch (error) {
+        console.error('Error fetching popular services:', error)
+        toast.error('Failed to load popular services')
+      } finally {
+        setLoading(false)
+      }
+    }
+  
+    fetchPopularServices()
+  }, [])
 const fetchPopularCategories = async () => {
   try {
     setLoadingCategories(true)
