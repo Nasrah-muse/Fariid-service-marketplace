@@ -23,7 +23,7 @@ export const StarRating = ({ rating = 0, theme }) => {
         ))}
         {hasHalfStar && (
           <div className="relative w-4 h-4">
-            <FiStar className={`w-4 h-4 ${theme === 'dark' ? 'text-indigo-400' : 'text-sky-300'}`} />
+            <FiStar className={`w-4 h-4 ${theme === 'dark' ? 'text-gray-400' : 'text-indigo-300'}`} />
             <div className="absolute left-0 top-0 w-1/2 overflow-hidden">
               <FiStar className={`w-4 h-4 ${theme === 'dark' ? 'text-orange-500' : 'text-yellow-500'}`} />
             </div>
@@ -36,7 +36,7 @@ export const StarRating = ({ rating = 0, theme }) => {
           />
         ))}
       </div>
-      <span className={`ml-1 text-xs ${theme === 'dark' ? 'text-indigo-900' : 'text-sky-200'}`}>
+      <span className={`ml-1 text-xs ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
         ({validatedRating.toFixed(1)})
       </span>
     </div>
@@ -234,7 +234,7 @@ const ServicesPage = () => {
 
 
   return (
-    <div  className={`min-h-screen p-6 mt-20 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
+    <div  className={`min-h-screen p-6 mt-20 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-200'}`}>
        
       <div className="flex justify-center mb-8">
         <div className="relative w-full max-w-2xl">
@@ -322,8 +322,8 @@ const ServicesPage = () => {
             return (
               <div 
                 key={service.id} 
-                className={`rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow ${
-                  theme === 'dark' ? 'bg-sky-200' : 'bg-indigo-900'
+                className={`rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow cursor-pointer ${
+                  theme === 'dark' ? 'bg-indigo-800' : 'bg-white'
                 }`}
                 onClick={() => handleServiceSelect(service.id)}
               >
@@ -351,12 +351,12 @@ const ServicesPage = () => {
                 </div>
               )}
                </div>
-                  <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-indigo-900' : 'text-sky-200'}`}>
+                  <h3 className={`text-lg font-semibold ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                   {service.title}
                   <StarRating rating={service.rating} theme={theme} />
                  </h3>
 
-                 <div className={`my-3 h-px ${theme === 'dark' ? 'bg-orange-500' : 'bg-gray-200'}`} />
+                 <div className={`my-3 h-px ${theme === 'dark' ? 'bg-orange-500' : 'bg-indigo-400'}`} />
 
                  <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -364,17 +364,17 @@ const ServicesPage = () => {
                       <img
                         src={provider.formattedAvatarUrl}
                         alt={provider.username}
-                        className={`w-8 h-8 rounded-full object-cover border  ${theme === 'dark'? 'border-indigo-900': 'border-orange-500'}`}
+                        className={`w-12 h-12 rounded-full object-cover border-2  ${theme === 'dark'? 'border-orange-600': 'border-indigo-500'}`}
                         onError={(e) => {
                           e.target.src = 'https://placehold.co/40x40?text=No+Image';
                         }}
                       />
                     )}
-                    <p className={`text-md font-bold ${theme === 'dark' ? 'text-indigo-900' : 'text-orange-500'}`}>
+                    <p className={`text-md font-bold ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                       {provider?.username || 'Unknown Provider'}
                     </p>
                   </div>
-                  <p className={`text-md font-semibold px-2 py-1 rounded ${theme === 'dark' ? 'bg-indigo-900 text-white' : 'bg-orange-500 text-white'}`}>
+                  <p className={`text-md font-semibold px-2 py-1 rounded text-white ${theme === 'dark' ? 'bg-orange-600 ' : 'bg-indigo-900'}`}>
                     From ${price}
                   </p>
                 </div>
