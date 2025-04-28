@@ -178,18 +178,26 @@ const [loadingStats, setLoadingStats] = useState(false);
   }
   // delete
   const handleDeleteCategory = async (id) => {
-    if (!window.confirm('Are you sure you want to delete this category?')) return;
-  
+    if (!window.confirm('Are you sure you want to delete this category and ALL its services?')) return;
+    
     try {
-      const { error } = await supabase
+       const { error: servicesError } = await supabase
+        .from('services')
+        .delete()
+        .eq('category_id', id)
+      
+      if (servicesError) throw servicesError
+      
+      
+      const { error: categoryError } = await supabase
         .from('categories')
         .delete()
         .eq('id', id);
-  
-      if (error) throw error
-  
-      toast.success('Category deleted successfully!')
-      fetchCategories()
+      
+      if (categoryError) throw categoryError;
+      
+      toast.success('Category and all its services deleted successfully!')
+      fetchCategories();
     } catch (err) {
       toast.error('Failed to delete category')
       console.error('Error deleting category:', err)
