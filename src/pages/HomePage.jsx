@@ -234,41 +234,59 @@ const HomePage = () => {
   
     fetchPopularServices()
   }, [])
-const fetchPopularCategories = async () => {
-  try {
-    setLoadingCategories(true)
-    
-     const { data: services, error: servicesError } = await supabase
-      .from('services')
-      .select('id, category_id, categories(name), status')
-      .eq('status','approved' )
-    
-    if (servicesError) throw servicesError
-
-     const categoryCounts = services.reduce((acc, service) => {
-      const catId = service.category_id
-      acc[catId] = {
-        count: (acc[catId]?.count || 0) + 1,
-        name: service.categories?.name || 'Uncategorized'
-      }
-      return acc
-    }, {})
-
-    
-    const sortedCategories = Object.entries(categoryCounts)
-      .map(([id, {name, count}]) => ({ id, name, count }))
-      .sort((a, b) => b.count - a.count)
-      .slice(0, 4)
-
-    setPopularCategories(sortedCategories)
-    
-  } catch (error) {
-    console.error('Error fetching categories:', error)
-    toast.error('Failed to load popular categories')
-  } finally {
-    setLoadingCategories(false)
+  const fetchPopularCategories = async () => {
+    try {
+      setLoadingCategories(true)
+      
+       const { data: allCategories, error: categoriesError } = await supabase
+        .from('categories')
+        .select('id, name')
+      
+      if (categoriesError) throw categoriesError
+      
+       
+      const { data: services, error: servicesError } = await supabase
+        .from('services')
+        .select('id, category_id, categories(name), status')
+        .eq('status', 'approved')
+      
+      if (servicesError) throw servicesError
+  
+      
+      const categoryCounts = allCategories.reduce((acc, category) => {
+        acc[category.id] = {
+          count: 0,
+          name: category.name
+        }
+        return acc
+      }, {})
+  
+       services.forEach(service => {
+        const catId = service.category_id
+        if (categoryCounts[catId]) {
+          categoryCounts[catId].count += 1
+        } else {
+           categoryCounts[catId] = {
+            count: 1,
+            name: service.categories?.name || 'Uncategorized'
+          }
+        }
+      })
+  
+       const sortedCategories = Object.entries(categoryCounts)
+        .map(([id, {name, count}]) => ({ id, name, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 4)
+  
+      setPopularCategories(sortedCategories)
+      
+    } catch (error) {
+      console.error('Error fetching categories:', error)
+      toast.error('Failed to load popular categories')
+    } finally {
+      setLoadingCategories(false)
+    }
   }
-}
 useEffect(() => {
   fetchPopularCategories()
 }, [])
