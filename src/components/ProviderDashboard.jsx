@@ -346,21 +346,29 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
   }
 
   const handleDeleteService = async (serviceId) => {
-    if (!window.confirm('Are you sure you want to delete this service?')) return;
-    
+    if (!window.confirm('Are you sure you want to delete this service?')) return
+  
     try {
-      const { error } = await supabase
+       const { error: bookingsError } = await supabase
+        .from('bookings')
+        .delete()
+        .eq('service_id', serviceId)
+  
+      if (bookingsError) throw bookingsError;
+  
+       
+      const { error: serviceError } = await supabase
         .from('services')
         .delete()
         .eq('id', serviceId)
-      
-      if (error) throw error
-      
-      setServices(services.filter(service => service.id !== serviceId));
+  
+      if (serviceError) throw serviceError
+  
+      setServices(services.filter(service => service.id !== serviceId))
     } catch (error) {
       console.error('Error deleting service:', error)
     }
-  };
+  }
 
   const handleEditService = (service) => {
     setEditingService(service)
