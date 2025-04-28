@@ -260,7 +260,7 @@ const CustomerDashboard = () => {
             ) : (
               <div className="overflow-x-auto">
                 <table className="min-w-full divide-y divide-gray-200">
-                  <thead className={theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-100'}>
+                  <thead className={theme === 'dark' ? 'bg-indigo-700 text-white' : 'bg-gray-100 text-indigo-900'}>
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
                         Service
@@ -283,10 +283,10 @@ const CustomerDashboard = () => {
                     {bookings.map(booking => (
                       <tr key={booking.id} className={theme === 'dark' ? 'hover:bg-indigo-800' : 'hover:bg-gray-50'}>
                         <td className="px-4 py-4">
-                          <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                          <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                             {booking.service_id?.title || 'Unknown Service'}
                           </div>
-                          <div className="text-sm text-gray-500">
+                          <div className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                             {booking.service_id?.description}
                           </div>
                         </td>
@@ -303,17 +303,17 @@ const CustomerDashboard = () => {
                               />
                             </div>
                             <div className="ml-3">
-                              <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                              <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                                 {booking.provider_id?.username || 'Unknown'}
                               </p>
                             </div>
                           </div>
                         </td>
                         <td className="px-4 py-4 whitespace-nowrap">
-                          <p className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                          <p className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                             {new Date(booking.service_date).toLocaleDateString()}
                           </p>
-                          <p className="text-xs text-gray-500">
+                          <p className={`text-xs ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                             {booking.service_time}
                           </p>
                         </td>
@@ -328,7 +328,7 @@ const CustomerDashboard = () => {
                             {booking.status.charAt(0).toUpperCase() + booking.status.slice(1)}
                           </span>
                         </td>
-                        <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                        <td className={`px-4 py-4 whitespace-nowrap text-sm ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                           ${booking.price || '0'}
                         </td>
                       </tr>
@@ -465,7 +465,7 @@ const CustomerDashboard = () => {
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
-                <thead className={theme === 'dark' ? 'bg-indigo-700' : 'bg-gray-100'}>
+                <thead className={theme === 'dark' ? 'bg-indigo-700 text-white' : 'bg-gray-100 text-indigo-900'}>
                   <tr>
                     <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
                       Service
@@ -482,12 +482,12 @@ const CustomerDashboard = () => {
                   {bookings.slice(0, 5).map(booking => (
                     <tr key={booking.id} className={theme === 'dark' ? 'hover:bg-indigo-800' : 'hover:bg-gray-50'}>
                       <td className="px-4 py-4">
-                        <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                        <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                           {booking.service_id?.title || 'Unknown Service'}
                         </div>
                       </td>
                       <td className="px-4 py-4 whitespace-nowrap">
-                        <p className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                        <p className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                           {new Date(booking.service_date).toLocaleDateString()}
                         </p>
                       </td>

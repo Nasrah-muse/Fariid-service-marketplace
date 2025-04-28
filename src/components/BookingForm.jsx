@@ -118,21 +118,21 @@ export default function BookingForm({ service, provider, onClose, currentUser })
             <button
               type="button"
               onClick={() => handlePriceChange('basic')}
-            className={`p-2 border rounded-lg ${priceTier === 'basic' ? 'bg-blue-100 border-blue-500' : 'bg-gray-50'}`}
+            className={`p-2 border rounded-lg ${theme === 'dark' ? 'bg-indigo-900 border-blue-500 hover:bg-indigo-700 ' : 'bg-gray-50'}`}
             >
               Basic<br/>${service.basic_price}
             </button>
             <button
               type="button"
               onClick={() => handlePriceChange('standard')}
-            className={`p-2 border rounded-lg ${priceTier === 'standard' ? 'bg-blue-100 border-blue-500' : 'bg-gray-50'}`}
+            className={`p-2 border rounded-lg ${theme === 'dark' ? 'bg-indigo-900 border-blue-500 hover:bg-indigo-700' : 'bg-gray-50'}`}
             >
               Standard<br/>${service.standard_price}
             </button>
             <button
               type="button"
               onClick={() => handlePriceChange('premium')}
-              className={`p-2 border rounded-lg ${priceTier === 'premium' ? 'bg-blue-100 border-blue-500' : 'bg-gray-50'}`}
+              className={`p-2 border rounded-lg ${theme === 'dark' ? 'bg-indigo-900 border-blue-500 hover:bg-indigo-700' : 'bg-gray-50'}`}
             >
               Premium<br/>${service.premium_price}
             </button>
@@ -145,7 +145,7 @@ export default function BookingForm({ service, provider, onClose, currentUser })
             type="text" 
             value={price ? `$${price}` : ''} 
             readOnly 
-            className="w-full p-2 border rounded-lg bg-gray-100" 
+            className={`w-full p-2 border rounded-lg {theme === 'dark' ? 'bg-indigo-800  hover:bg-indigo-700' : 'bg-gray-50'}`}
           />
         </div>
 
