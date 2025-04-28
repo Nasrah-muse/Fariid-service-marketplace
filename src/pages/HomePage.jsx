@@ -311,7 +311,7 @@ useEffect(() => {
     },
     {
       question: "How do I make a payment?",
-      answer: "Pay securely through DhaqsoPay. We support mobile money and cards. Payment is only released after you confirm the service is complete."
+      answer: "This website is currently for testing purposes only. We will integrate a secure payment system in the near future."
     }
   ]
 
@@ -349,7 +349,7 @@ useEffect(() => {
     <>
      <div  className="relative py-12 px-4 sm:px-6 lg:px-8 text-center min-h-screen flex items-center justify-center"
     style={{
-      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${backgrounds[currentBgIndex]})`,
+      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.8)), url(${backgrounds[currentBgIndex]})`,
       backgroundSize: 'cover',
       backgroundPosition: 'center',
       backgroundRepeat: 'no-repeat',
@@ -428,8 +428,8 @@ useEffect(() => {
             <div 
               key={service.id}
               onClick={() => navigate(`/service/${service.id}`)}
-              className={`rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 ${
-                theme === 'dark' ? 'bg-indigo-800' : 'bg-white'
+              className={`rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 border ${
+                theme === 'dark' ? 'bg-indigo-800 border-orange-500' : 'bg-white border-indigo-500 '
               }`}
             >
               <div className="h-48 bg-gray-200 relative">
@@ -492,7 +492,7 @@ useEffect(() => {
   </div>
 )}
     {/* popilar categories */}
- <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
+ <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-indigo-800' : 'bg-gray-300'}`}>
   <div className="max-w-7xl mx-auto">
     <h2 className={`text-4xl font-extrabold text-center mb-12 ${theme === 'dark' ? 'text-white' : 'text-indigo-950'}`}>
      <span className='text-orange-500'>Popluar</span> Categories
@@ -506,7 +506,7 @@ useEffect(() => {
       <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
         {popularCategories.map((category) => (
           <div key={category.id} className={`p-6 rounded-lg shadow-lg text-center ${
-            theme === 'dark' ? 'bg-indigo-800 text-white' : 'bg-white text-indigo-900'
+            theme === 'dark' ? 'bg-indigo-900 text-white' : 'bg-white text-indigo-900'
           }`}>
             <h3 className='text-2xl font-bold' >
               {category.name}
@@ -537,13 +537,13 @@ useEffect(() => {
   </div>
 </div>
 {/* popular servces */}
-<div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
+<div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-200'}`}>
   {loading ? (
     <div className="flex justify-center items-center h-64">
       <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
     </div>
   ) : (
-    <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-indigo-900' : 'bg-gray-50'}`}>
+    <div className={`py-16 px-4 sm:px-6 lg:px-8  `}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h2 className={`text-4xl font-bold ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
@@ -562,8 +562,8 @@ useEffect(() => {
               <div 
                 key={service.id}
                 onClick={() => navigate(`/service/${service.id}`)}
-                className={`rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105 ${
-                  theme === 'dark' ? 'bg-indigo-800' : 'bg-white'
+                className={`rounded-lg overflow-hidden shadow-lg cursor-pointer transition-transform hover:scale-105  border ${
+                  theme === 'dark' ? 'bg-indigo-800 border-orange-500' : 'bg-white border-indigo-500'
                 }`}
               >
                 <div className="h-48 bg-gray-200 relative">
@@ -634,9 +634,9 @@ useEffect(() => {
   )}
 </div>
 
-    <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-gray-800' : 'bg-sky-200'}`}>
+    <div className={`py-16 px-4 sm:px-6 lg:px-8 ${theme === 'dark' ? 'bg-indigo-600' : 'bg-sky-200'}`}>
         <div className="max-w-7xl mx-auto">
-          <h2 className={`text-4xl font-bold text-center mb-12 ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>
+          <h2 className={`text-4xl font-bold text-center mb-12 ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
             See What <span className='text-orange-500'>Our Happy Customers</span> Have to Say
           </h2>
           <div className={`grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto transition-all duration-500`}>
@@ -683,8 +683,8 @@ useEffect(() => {
                       ? 'bg-orange-400'
                       : 'bg-orange-600'
                     : theme === 'dark'
-                    ? 'bg-gray-500'
-                    : 'bg-indigo-00'
+                    ? 'bg-sky-200'
+                    : 'bg-indigo-900'
                 }`}
                />
             ))}
