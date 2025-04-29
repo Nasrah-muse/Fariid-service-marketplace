@@ -14,7 +14,7 @@ Fariid Service Marketplace is a local service platform designed to connect custo
 
 ## Technologies Used
 
-
+- ReactJs
 - TailwindCSS
 
 - React Router DOM
@@ -184,5 +184,13 @@ npm run dev
 Fariid Service Marketplace is a complete local service platform that empowers users to book trusted services easily and enables providers to manage their offerings effectively. It is built with modern technologies following best practices in design, structure, and functionality.
 
 ---
+
+## Explore Fariid Service Marketplace
+
+You can explore the live version of the Fariid Service Marketplace here:
+
+[Fariid Servive Marketplace - Live Demo](https://fariid-service-marketplace-61bx.vercel.app/) 
+
+Thank you for exploring Fariid! We hope this documentation provides a thorough understanding of the project.
 
  
