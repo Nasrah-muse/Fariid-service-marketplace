@@ -255,21 +255,6 @@ console.log("User profile", profile)
             >
               Services
             </NavLink>
-            
-            <NavLink
-              to="/categories"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={({ isActive }) => 
-                `block pl-3 pr-4 py-2 border-l-4 text-base font-medium ${
-                  isActive 
-                    ? 'border-orange-500 text-orange-500 bg-orange-50' 
-                    : 'border-transparent text-indigo-900 hover:text-orange-500 hover:bg-orange-50'
-                }`
-              }
-            >
-              Categories
-            </NavLink>
-            
             <NavLink
               to="/contact"
               onClick={() => setIsMobileMenuOpen(false)}
