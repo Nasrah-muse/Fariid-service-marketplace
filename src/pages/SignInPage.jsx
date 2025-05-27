@@ -96,7 +96,7 @@ console.log(userInfo)
             className={`w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white ${theme === 'dark'
               ? 'bg-orange-600 hover:bg-orange-700 focus:ring-orange-500': 'bg-indigo-900 hover:bg-indigo-700 focus:ring-indigo-500'} focus:outline-none focus:ring-2 focus:ring-offset-2 ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
           >
-            {isLoading ? 'Creating account...' : 'Create Account'}
+            {isLoading ? 'Signing in...' : 'Sign In'}
           </button>
         </form>
         <div className={`mt-4 text-center text-sm ${theme === 'dark' ? 'text-indigo-300' : 'text-indigo-900'}`}>

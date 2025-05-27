@@ -258,7 +258,7 @@ const CustomerDashboard = () => {
                 </p>
               </div>
             ) : (
-              <div className="overflow-x-auto">
+              <div className="overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">
                   <thead className={theme === 'dark' ? 'bg-indigo-700 text-white' : 'bg-gray-100 text-indigo-900'}>
                     <tr>
@@ -286,9 +286,9 @@ const CustomerDashboard = () => {
                           <div className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                             {booking.service_id?.title || 'Unknown Service'}
                           </div>
-                          <div className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
+                          {/* <div className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-indigo-900'}`}>
                             {booking.service_id?.description}
-                          </div>
+                          </div> */}
                         </td>
                         <td className="px-4 py-4">
                           <div className="flex items-center">
