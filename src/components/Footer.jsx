@@ -2,6 +2,7 @@
  import logoDark from '../assets/dark-logo.png'
  import logoLight from '../assets/light-logo.png'
 import { useTheme } from '../contexts/ThemeContext'
+import { Link } from 'react-router'
  const Footer = () => {
 
   const {theme} = useTheme()
@@ -20,19 +21,19 @@ import { useTheme } from '../contexts/ThemeContext'
           </p>
           
           {/* Social Icons */}
-          <div className="flex gap-3 mt-4">
-            <a href="#" className="bg-gray-100 p-2 rounded-full hover:bg-orange-100 transition-colors">
-              <FaFacebook className="text-indigo-900  hover:text-orange-500" />
-            </a>
-            <a href="#" className="bg-gray-100 p-2 rounded-full hover:bg-orange-100 transition-colors">
+           <div className="flex gap-3 mt-4">
+            <Link to="/" className="bg-gray-100 p-2 rounded-full hover:bg-orange-100 transition-colors">
+              <FaFacebook className="text-indigo-900 hover:text-orange-500" />
+            </Link>
+            <Link to="/" className="bg-gray-100 p-2 rounded-full hover:bg-orange-100 transition-colors">
               <FaTwitter className="text-indigo-900 hover:text-orange-500" />
-            </a>
-            <a href="#" className="bg-gray-100 p-2 rounded-full hover:bg-orange-100 transition-colors">
+            </Link>
+            <Link to="/" className="bg-gray-100 p-2 rounded-full hover:bg-orange-100 transition-colors">
               <FaInstagram className="text-indigo-900 hover:text-orange-500" />
-            </a>
-            <a href="#" className="bg-gray-100 p-2 rounded-full hover:bg-orange-100 transition-colors">
+            </Link>
+            <Link to="/" className="bg-gray-100 p-2 rounded-full hover:bg-orange-100 transition-colors">
               <FaLinkedin className="text-indigo-900 hover:text-orange-500" />
-            </a>
+            </Link>
           </div>
         </div>
         
@@ -42,40 +43,40 @@ import { useTheme } from '../contexts/ThemeContext'
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-8">
           {/* Quick Links */}
           <div className="text-center sm:text-left">
-            <h3 className={`text-lg font-bold mb-4 ${theme === 'dark'? 'text-sky-200': ' text-indigo-900'} `}>Quick Links</h3>
+            <h3 className={`text-lg font-bold mb-4 ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>Quick Links</h3>
             <ul className="space-y-2">
-              <li><a href="/" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Home</a></li>
-              <li><a href="/services" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Services</a></li>
-              <li><a href="/employers" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Employers</a></li>
-              <li><a href="/about" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>About us</a></li>
-              <li><a href="/testimonials" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Testimonials</a></li>
+              <li><Link to="/" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Home</Link></li>
+              <li><Link to="/services" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Services</Link></li>
+              <li><Link to="/employers" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Employers</Link></li>
+              <li><Link to="/about" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>About us</Link></li>
+              <li><Link to="/testimonials" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Testimonials</Link></li>
             </ul>
           </div>
 
           {/* Resources */}
           <div className="text-center sm:text-left">
-            <h3 className={`text-lg font-bold mb-4 ${theme === 'dark'? 'text-sky-200': ' text-indigo-900'}`}>Resources</h3>
+            <h3 className={`text-lg font-bold mb-4 ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>Resources</h3>
             <ul className="space-y-2">
-              <li><a href="/faq" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>FAQ</a></li>
-              <li><a href="/pricing" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Pricing</a></li>
-              <li><a href="/payment" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Payment method</a></li>
-              <li><a href="/careers" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Careers</a></li>
-              <li><a href="/contact" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Contact Us</a></li>
+              <li><Link to="/faq" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>FAQ</Link></li>
+              <li><Link to="/pricing" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Pricing</Link></li>
+              <li><Link to="/payment" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Payment method</Link></li>
+              <li><Link to="/careers" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Careers</Link></li>
+              <li><Link to="/contact" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Contact Us</Link></li>
             </ul>
           </div>
 
           {/* Legal */}
           <div className="text-center sm:text-left">
-            <h3 className={`text-lg font-bold mb-4 ${theme === 'dark'? 'text-sky-200': ' text-indigo-900'}`}>Legal</h3>
+            <h3 className={`text-lg font-bold mb-4 ${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'}`}>Legal</h3>
             <ul className="space-y-2">
-              <li><a href="/terms" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Terms of service</a></li>
-              <li><a href="/privacy" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Privacy policy</a></li>
-              <li><a href="/copyright" className={` ${theme === 'dark'? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Copy Right Policy</a></li>
+              <li><Link to="/terms" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Terms of service</Link></li>
+              <li><Link to="/privacy" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Privacy policy</Link></li>
+              <li><Link to="/copyright" className={`${theme === 'dark' ? 'text-sky-200' : 'text-indigo-900'} hover:text-orange-500`}>Copy Right Policy</Link></li>
             </ul>
           </div>
         </div>
 
-         <div className="border-t border-orange-400 my-6"></div>
+        <div className="border-t border-orange-400 my-6"></div>
 
         {/* Copyright */}
         <div className="text-center text-sm text-indigo-900">
