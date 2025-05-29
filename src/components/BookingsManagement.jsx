@@ -46,8 +46,7 @@ const BookingManagement = ({ theme }) => {
 
    const filteredBookings = bookings.filter(booking => {
     const matchesFilter = filter === 'all' || booking.status === filter
-    console.log(`Booking ${booking.id} - Status: ${booking.status} - Matches ${filter}: ${matchesFilter}`) // Debug log
-    return matchesFilter
+     return matchesFilter
   })
 
    const updateBookingStatus = async (bookingId, newStatus) => {
@@ -90,10 +89,7 @@ const BookingManagement = ({ theme }) => {
         {['all', 'pending', 'completed', 'cancelled'].map((status) => {
           const count = status === 'all' 
             ? bookings.length 
-            : bookings.filter(b => b.status === status).length
-          
-          console.log(`Rendering ${status} tab with count ${count}`) // Debug log
-          
+            : bookings.filter(b => b.status === status).length          
           return (
             <button
               key={status}
@@ -207,7 +203,7 @@ const BookingManagement = ({ theme }) => {
                   <td className="px-4 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                     <button
                       onClick={() => setSelectedBooking(booking)}
-                      className={`${theme === 'dark' ? 'text-blue-300 hover:text-blue-200' : 'text-blue-600 hover:text-blue-900'}`}
+                      className={`cursor-pointer ${theme === 'dark' ? 'text-blue-300 hover:text-blue-200' : 'text-blue-600 hover:text-blue-900'}`}
                     >
                       Details
                     </button>
@@ -216,14 +212,14 @@ const BookingManagement = ({ theme }) => {
                         <button
                           onClick={() => updateBookingStatus(booking.id, 'completed')}
                           disabled={isUpdating}
-                          className="text-green-600 hover:text-green-900 disabled:opacity-50"
+                          className="text-green-600 hover:text-green-900 disabled:opacity-50 cursor-pointer"
                         >
                           Complete
                         </button>
                         <button
                           onClick={() => updateBookingStatus(booking.id, 'cancelled')}
                           disabled={isUpdating}
-                          className="text-red-600 hover:text-red-900 disabled:opacity-50"
+                          className="text-red-600 hover:text-red-900 disabled:opacity-50 cursor-pointer"
                         >
                           Cancel
                         </button>
@@ -355,7 +351,7 @@ const BookingManagement = ({ theme }) => {
                         setSelectedBooking(null)
                       }}
                       disabled={isUpdating}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50"
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-50 cursor-pointer"
                     >
                       Mark as Completed
                     </button>
@@ -365,7 +361,7 @@ const BookingManagement = ({ theme }) => {
                         setSelectedBooking(null)
                       }}
                       disabled={isUpdating}
-                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50"
+                      className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 disabled:opacity-50 cursor-pointer"
                     >
                       Cancel Booking
                     </button>
@@ -373,7 +369,7 @@ const BookingManagement = ({ theme }) => {
                 )}
                 <button
                   onClick={() => setSelectedBooking(null)}
-                  className={`px-4 py-2 ${
+                  className={`px-4 py-2  cursor-pointer ${
                     theme === 'dark' 
                       ? 'bg-indigo-600 hover:bg-indigo-700 text-white' 
                       : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
