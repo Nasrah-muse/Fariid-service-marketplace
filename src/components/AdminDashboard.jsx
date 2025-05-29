@@ -393,7 +393,7 @@ const [loadingStats, setLoadingStats] = useState(false);
                 </div>
                 <div className="overflow-x-auto">
                   <table className="min-w-full divide-y divide-gray-200">
-                    <thead className={theme === 'dark' ? 'bg-indigo-600' : 'bg-gray-100'}>
+                    <thead className={theme === 'dark' ? 'bg-indigo-600 text-white' : 'bg-gray-100 text-indigo-900'}>
                       <tr>
                         <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                           Category Name
@@ -418,13 +418,13 @@ const [loadingStats, setLoadingStats] = useState(false);
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                             <button 
                                onClick={() => handleEditCategory(category)}
-                               className={`mr-2 ${theme === 'dark' ? 'text-blue-300 hover:text-blue-200' : 'text-blue-600 hover:text-blue-900'}`}
+                               className={`mr-2 cursor-pointer ${theme === 'dark' ? 'text-sky-200 hover:text-blue-200' : 'text-blue-600 hover:text-blue-900'}`}
                             >
                               Edit
                             </button>
                             <button 
                              onClick={() => handleDeleteCategory(category.id)}
-                               className={`${theme === 'dark' ? 'text-red-300 hover:text-red-200' : 'text-red-600 hover:text-red-900'}`}
+                               className={` cursor-pointer ${theme === 'dark' ? 'text-red-300 hover:text-red-200' : 'text-red-600 hover:text-red-900'}`}
                             >
                               Delete
                             </button>
