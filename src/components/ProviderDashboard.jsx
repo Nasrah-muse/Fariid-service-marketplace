@@ -474,21 +474,21 @@ export const ServiceDetailsModal = ({ service, onClose, theme }) => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                             <button
                               onClick={() => setSelectedService(service)}
-                              className={`${theme === 'dark' ? 'text-sky-300 hover:text-sky-200' : 'text-indigo-600 hover:text-indigo-900'}`}
+                              className={`${theme === 'dark' ? 'text-sky-300 hover:text-sky-200' : 'text-indigo-600 hover:text-indigo-900'} cursor-pointer`}
                               title="Details"
                             >
                               <FiInfo />
                             </button>
                             <button
                               onClick={() => handleEditService(service)}
-                              className={`${theme === 'dark' ? 'text-yellow-400 hover:text-yellow-200' : 'text-yellow-600 hover:text-yellow-900'}`}
+                              className={`${theme === 'dark' ? 'text-yellow-400 hover:text-yellow-200' : 'text-yellow-600 hover:text-yellow-900'} cursor-pointer`}
                               title="Edit"
                             >
                               <FiEdit />
                             </button>
                             <button
                               onClick={() => handleDeleteService(service.id)}
-                              className={`${theme === 'dark' ? 'text-red-300 hover:text-red-200' : 'text-red-600 hover:text-red-900'}`}
+                              className={`${theme === 'dark' ? 'text-red-300 hover:text-red-200' : 'text-red-600 hover:text-red-900'} cursor-pointer`}
                               title="Delete"
                             >
                               <FiTrash />
