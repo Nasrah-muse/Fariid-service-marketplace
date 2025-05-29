@@ -77,7 +77,7 @@ console.log("User profile", profile)
             </NavLink>
 
             <div className="flex space-x-4 ml-4">
-            <ThemeToggle/>
+            <ThemeToggle className="mr-8"/>
             {isLoggedIn ? (
                  <div className="relative">
                 
