@@ -116,6 +116,12 @@ const [loadingStats, setLoadingStats] = useState(false);
 
   const handleVerifyUser = async (userId) => {
     try {
+       const user = users.find(u => u.id === userId)
+    if (user?.status === 'verified') {
+      toast.error('User is already verified')
+      return
+    }
+
       const { error } = await supabase
         .from('users')
         .update({ status: 'verified' })
@@ -136,6 +142,11 @@ const [loadingStats, setLoadingStats] = useState(false);
   const handleToggleBlockUser = async (userId, currentStatus) => {
     const newStatus = currentStatus === 'blocked' ? 'verified' : 'blocked';
     try {
+         const user = users.find(u => u.id === userId)
+    if (user?.status === 'blocked') {
+      toast.error('User is already blocked')
+      return
+    }
       const { error } = await supabase
         .from('users')
         .update({ status: newStatus })
@@ -342,24 +353,25 @@ const [loadingStats, setLoadingStats] = useState(false);
                     {!user.blocked && !user.verified && (
                       <button
                       onClick={() => handleVerifyUser(user.id)}
-                         className={`mr-2 ${theme === 'dark' ? 'text-green-300 hover:text-green-200' : 'text-green-600 hover:text-green-900'}`}
+                         className={`mr-2 cursor-pointer ${theme === 'dark' ? 'text-green-300 hover:text-green-200' : 'text-green-600 hover:text-green-900'}`}
                       >
                         Verify
                       </button>
                     )}
-                    <button
+                  <button
                     onClick={() => handleToggleBlockUser(user.id, user.blocked)}
-                       className={user.blocked 
+                    className={`cursor-pointer ${
+                      user.blocked 
                         ? theme === 'dark' 
                           ? 'text-green-300 hover:text-green-200' 
                           : 'text-green-600 hover:text-green-900'
                         : theme === 'dark' 
                           ? 'text-red-300 hover:text-red-200' 
                           : 'text-red-600 hover:text-red-900'
-                      }
-                    >
-                      {user.blocked ? 'Unblock' : 'Block'}
-                    </button>
+                    }`}
+                  >
+                    {user.blocked ? 'Unblock' : 'Block'}
+                  </button>
                   </td>
                 </tr>
               ))}
