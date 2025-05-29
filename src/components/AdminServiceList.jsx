@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTheme } from "../contexts/ThemeContext"
 import supabase from "../lib/supabase";
 import { ServiceDetailsModal } from "./ProviderDashboard";
+import toast from "react-hot-toast";
 
  
 export default function AdminServiceList() {
@@ -26,15 +27,45 @@ export default function AdminServiceList() {
     fetchServices()
   }, [])
 
-  const updateStatus = async (id, status) => {
-    const { error } = await supabase
+  const updateStatus = async (id, newStatus) => {
+  try {
+     const { data: service, error: fetchError } = await supabase
       .from("services")
-      .update({ status })
+      .select("status")
       .eq("id", id)
+      .single()
 
-    if (error) console.error("Error updating status:", error);
-    else setServices(prev => prev.map(s => s.id === id ? { ...s, status } : s))
+    if (fetchError) throw fetchError;
+    if (!service) throw new Error("Service not found")
+
+    const currentStatus = service.status?.toLowerCase()?.trim()
+    const normalizedNewStatus = newStatus.toLowerCase()
+
+     if (currentStatus === normalizedNewStatus) {
+      toast.error(`Service is already ${currentStatus}`)
+       setServices(prev => prev.map(s => 
+        s.id === id ? { ...s, status: currentStatus } : s
+      ))
+      return
+    }
+
+     const { error } = await supabase
+      .from("services")
+      .update({ status: newStatus })
+      .eq("id", id);
+
+    if (error) throw error;
+
+     setServices(prev => prev.map(s => 
+      s.id === id ? { ...s, status: newStatus } : s
+    ))
+    
+    toast.success(`Service ${newStatus.toLowerCase()} successfully`);
+  } catch (err) {
+    console.error("Error updating status:", err)
+    toast.error(err.message || `Failed to update status`)
   }
+}
   
   const handleServiceClick = (service) => {
     setSelectedService(service)
@@ -75,13 +106,13 @@ export default function AdminServiceList() {
                 </td>
                 <td className={`border p-2 ${theme === 'dark'? 'border-gray-100 text-sky-200': 'border-indigo-600 text-indigo-900'}`}>
                   <button
-                    className="bg-green-500 text-white px-3 py-1 mr-2 rounded"
+                    className="bg-green-500 text-white px-3 py-1 mr-2 rounded cursor-pointer"
                     onClick={() => updateStatus(service.id, "approved")}
                    >
                     Approve
                   </button>
                   <button
-                    className="bg-red-500 text-white px-3 py-1 rounded"
+                    className="bg-red-500 text-white px-3 py-1 rounded cursor-pointer"
                     onClick={() => updateStatus(service.id, "rejected")}
                    >
                     Reject
