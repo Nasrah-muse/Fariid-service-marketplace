@@ -189,7 +189,7 @@ Fariid Service Marketplace is a complete local service platform that empowers us
 
 You can explore the live version of the Fariid Service Marketplace here:
 
-[Fariid Servive Marketplace - Live Demo](https://fariid-service-marketplace-61bx.vercel.app/) 
+[Fariid Servive Marketplace - Live Demo](https://fariiid.netlify.app/) 
 
 Thank you for exploring Fariid! We hope this documentation provides a thorough understanding of the project.
 
