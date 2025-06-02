@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import supabase from '../lib/supabase'
 import { toast } from 'react-hot-toast'
+import { FiUser } from 'react-icons/fi'
 
 const BookingManagement = ({ theme }) => {
   const [bookings, setBookings] = useState([])
@@ -18,7 +19,7 @@ const BookingManagement = ({ theme }) => {
           *,
           service_id(title, description),
           customer_id(username, avatar_url),
-          provider_id(username)
+          provider_id(username, avatar_url)
         `)
         .order('created_at', { ascending: false })
       
@@ -28,7 +29,11 @@ const BookingManagement = ({ theme }) => {
         ...booking,
         customer_id: {
           ...booking.customer_id,
-          avatar_url: booking.customer_id?.avatar_url || '/default-avatar.png'
+          avatar_url: booking.customer_id?.avatar_url || null
+        },
+        provider_id: {
+          ...booking.provider_id,
+          avatar_url: booking.provider_id?.avatar_url || null
         }
       }))
       
@@ -44,12 +49,12 @@ const BookingManagement = ({ theme }) => {
     fetchBookings()
   }, [])
 
-   const filteredBookings = bookings.filter(booking => {
+  const filteredBookings = bookings.filter(booking => {
     const matchesFilter = filter === 'all' || booking.status === filter
-     return matchesFilter
+    return matchesFilter
   })
 
-   const updateBookingStatus = async (bookingId, newStatus) => {
+  const updateBookingStatus = async (bookingId, newStatus) => {
     try {
       setIsUpdating(true)
       console.log(`Updating booking ${bookingId} to ${newStatus}`)
@@ -74,6 +79,33 @@ const BookingManagement = ({ theme }) => {
     }
   }
 
+  const Avatar = ({ url, username, size = 10 }) => {
+    if (url) {
+      return (
+        <img
+          className={`h-${size} w-${size} rounded-full`}
+          src={url}
+          alt={username}
+          onError={(e) => {
+            e.target.src = ''
+            e.target.onerror = null
+            e.target.parentNode.innerHTML = (
+              <div className={`flex items-center justify-center h-${size} w-${size} rounded-full bg-gray-300`}>
+                <FiUser className="text-gray-600" />
+              </div>
+            )
+          }}
+          loading="lazy"
+        />
+      )
+    }
+    return (
+      <div className={`flex items-center justify-center h-${size} w-${size} rounded-full bg-gray-300`}>
+        <FiUser className="text-gray-600" />
+      </div>
+    )
+  }
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
@@ -82,10 +114,9 @@ const BookingManagement = ({ theme }) => {
     )
   }
 
-
   return (
     <div className="space-y-4">
-     <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4">
         {['all', 'pending', 'completed', 'cancelled'].map((status) => {
           const count = status === 'all' 
             ? bookings.length 
@@ -121,6 +152,9 @@ const BookingManagement = ({ theme }) => {
                 Service
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
+                Provider
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
                 Date/Time
               </th>
               <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider">
@@ -135,7 +169,7 @@ const BookingManagement = ({ theme }) => {
             {filteredBookings.length === 0 ? (
               <tr>
                 <td 
-                  colSpan="5" 
+                  colSpan="6" 
                   className={`px-4 py-6 text-center ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}
                 >
                   No bookings found
@@ -150,36 +184,37 @@ const BookingManagement = ({ theme }) => {
                   <td className="px-4 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <div className="flex-shrink-0 h-10 w-10">
-                      <img
-                        className="h-10 w-10 rounded-full"
-                        src={booking.customer_id?.avatar_url || '/default-avatar.png'}
-                        alt={booking.customer_id?.username}
-                        onError={(e) => {
-                          if (e.target.src !== '/default-avatar.png') {
-                            e.target.src = '/default-avatar.png'
-                          }
-                        }}
-                        loading="lazy"
-                      />
-
+                        <Avatar url={booking.customer_id?.avatar_url} username={booking.customer_id?.username} />
                       </div>
                       <div className="ml-3">
                         <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                          {booking.customer_name || booking.customers?.username}
+                          {booking.customer_name || booking.customer_id?.username}
                         </p>
                         <p className="text-sm text-gray-500">
-                          {booking.customers?.email || booking.customer_phone}
+                          {booking.customer_email || booking.customer_phone}
                         </p>
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-4">
                     <p className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                       {booking.service_id?.title}
+                      {booking.service_id?.title}
                     </p>
                     <p className="text-xs text-gray-500">
                       ${booking.price} ({booking.price_tier})
                     </p>
+                  </td>
+                  <td className="px-4 py-4 whitespace-nowrap">
+                    <div className="flex items-center">
+                      <div className="flex-shrink-0 h-10 w-10">
+                        <Avatar url={booking.provider_id?.avatar_url} username={booking.provider_id?.username} />
+                      </div>
+                      <div className="ml-3">
+                        <p className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                          {booking.provider_id?.username || 'Unknown Provider'}
+                        </p>
+                      </div>
+                    </div>
                   </td>
                   <td className="px-4 py-4 whitespace-nowrap">
                     <p className={`text-sm ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
@@ -233,7 +268,7 @@ const BookingManagement = ({ theme }) => {
         </table>
       </div>
 
-       {selectedBooking && (
+      {selectedBooking && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className={`rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 ${
             theme === 'dark' ? 'bg-indigo-900' : 'bg-white'
@@ -257,20 +292,13 @@ const BookingManagement = ({ theme }) => {
                   Customer Information
                 </h4>
                 <div className="flex items-center mb-4">
-                  <img
-                    className="w-12 h-12 rounded-full mr-3"
-                    src={selectedBooking.customers?.avatar_url || '/default-avatar.png'}
-                    alt={selectedBooking.customer_name}
-                    onError={(e) => {
-                      e.target.src = '/default-avatar.png'
-                    }}
-                  />
-                  <div>
+                  <Avatar url={selectedBooking.customer_id?.avatar_url} username={selectedBooking.customer_id?.username} size={12} />
+                  <div className="ml-3">
                     <p className={`font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                      {selectedBooking.customer_name || selectedBooking.customers?.username}
+                      {selectedBooking.customer_name || selectedBooking.customer_id?.username}
                     </p>
                     <p className="text-sm text-gray-500">
-                      {selectedBooking.customers?.email}
+                      {selectedBooking.customer_email}
                     </p>
                     <p className="text-sm text-gray-500">
                       {selectedBooking.customer_phone}
@@ -292,6 +320,9 @@ const BookingManagement = ({ theme }) => {
                 <div className="space-y-2">
                   <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
                     <span className="font-medium">Service:</span> {selectedBooking.service_id?.title}
+                  </p>
+                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                    <span className="font-medium">Provider:</span> {selectedBooking.provider_id?.username || 'Unknown Provider'}
                   </p>
                   <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
                     <span className="font-medium">Package:</span> {selectedBooking.price_tier} (${selectedBooking.price})
