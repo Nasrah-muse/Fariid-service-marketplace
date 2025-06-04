@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { useNavigate } from "react-router";
 import { useTheme } from "../contexts/ThemeContext";
 import { useAuth } from "../contexts/AuthContext";
 import { signIn } from "../lib/auth";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
  
 const SignInPage = () => {
@@ -21,7 +22,7 @@ console.log(userInfo)
   const [error, setError] = useState(null)
   // const [success, setSuccess] = useState(false);
 
-
+  const [showPassword, setShowPassword] = useState(false);
   
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -74,12 +75,13 @@ console.log(userInfo)
             />
           </div>
 
-          <div>
+         <div className="relative">
             <label htmlFor="password" className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-sky-200' : 'text-gray-700'}`}>
               Password
             </label>
+              <div className="relative">
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -89,6 +91,18 @@ console.log(userInfo)
     : 'bg-white border-gray-300 text-indigo-900 placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500'}`}
               required
             />
+            <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+    >
+      {showPassword ? (
+        <FiEyeOff className={`h-5 w-5 ${theme === 'dark' ? 'text-indigo-300' : 'text-gray-500'}`} />
+      ) : (
+        <FiEye className={`h-5 w-5 ${theme === 'dark' ? 'text-indigo-300' : 'text-gray-500'}`} />
+      )}
+    </button>
+            </div>
           </div>
           <button
             type="submit"
