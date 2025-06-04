@@ -19,6 +19,7 @@ const SignUpPage = () => {
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
   const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -143,12 +144,13 @@ const SignUpPage = () => {
           </div>
           </div>
 
-          <div>
+          <div className="relative">
             <label htmlFor="confirmPassword" className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-sky-200' : 'text-gray-700'}`}>
               Confirm Password
             </label>
+             <div className="relative">
             <input
-              type="password"
+              type={showConfirmPassword ? "text" : "password"}
               id="confirmPassword"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
@@ -158,6 +160,18 @@ const SignUpPage = () => {
     : 'bg-white border-gray-300 text-indigo-900 placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500'}`}
               required
             />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+            >
+              {showConfirmPassword ? (
+                <FiEyeOff className={`h-5 w-5 ${theme === 'dark' ? 'text-indigo-300' : 'text-gray-500'}`} />
+              ) : (
+                <FiEye className={`h-5 w-5 ${theme === 'dark' ? 'text-indigo-300' : 'text-gray-500'}`} />
+              )}
+    </button>
+            </div>
           </div>
 
           <div>
