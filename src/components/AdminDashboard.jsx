@@ -281,6 +281,8 @@ const [loadingStats, setLoadingStats] = useState(false);
         .select()
   
       if (insertError) throw insertError;
+
+      setCategories(prevCategories => [data[0], ...prevCategories])
   
       toast.success('Category added successfully!')
       setShowCategoryModal(false)
