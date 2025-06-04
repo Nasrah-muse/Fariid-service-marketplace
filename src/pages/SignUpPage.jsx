@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { useNavigate } from "react-router";
 import { signUp } from "../lib/auth";
+import { FiEye, FiEyeOff } from "react-icons/fi";
 
  
 const SignUpPage = () => {
@@ -17,7 +18,7 @@ const SignUpPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [success, setSuccess] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false)
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -64,7 +65,7 @@ const SignUpPage = () => {
 
 
   return (
-    <div className={`min-h-screen flex items-center justify-center p-4 ${theme === 'dark' 
+    <div className={`min-h-screen flex items-center justify-center p-4 mt-20 ${theme === 'dark' 
       ? 'bg-indigo-200 text-sky-200': 'bg-gray-200 text-indigo-900'}`}>
               <div className={`max-w-md w-full p-6 rounded-lg ${theme === 'dark' ? 'bg-indigo-800 shadow-lg': 'bg-white shadow-md'
 }`}>
@@ -112,12 +113,13 @@ const SignUpPage = () => {
             />
           </div>
 
-          <div>
+          <div className="relative">
             <label htmlFor="password" className={`block text-sm font-medium mb-1 ${theme === 'dark' ? 'text-sky-200' : 'text-gray-700'}`}>
               Password
             </label>
+              <div className="relative">
             <input
-              type="password"
+               type={showPassword ? "text" : "password"}
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -127,6 +129,18 @@ const SignUpPage = () => {
     : 'bg-white border-gray-300 text-indigo-900 placeholder-gray-400 focus:ring-indigo-500 focus:border-indigo-500'}`}
               required
             />
+                <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm leading-5"
+    >
+      {showPassword ? (
+        <FiEyeOff className={`h-5 w-5 ${theme === 'dark' ? 'text-indigo-300' : 'text-gray-500'}`} />
+      ) : (
+        <FiEye className={`h-5 w-5 ${theme === 'dark' ? 'text-indigo-300' : 'text-gray-500'}`} />
+      )}
+    </button>
+          </div>
           </div>
 
           <div>
