@@ -1,8 +1,17 @@
 # Fariid Service Marketplace
 
+![Fariid Servive Marketplace](./src/assets/fariid%20logo%20.png)
+
+
 Fariid Service Marketplace is a local service platform designed to connect customers with trusted service providers in Galkayo. The platform supports role-based dashboards for Admins, Service Providers, and Customers. It features a clean, responsive UI with light and dark modes, secure authentication, and fully functional CRUD operations, built with ReactJS, TailwindCSS, Supabase, and React Router.
 
 ---
+### 🧩 UX/UI Design
+
+Explore the Figma design for Fariid Service Marketplace:
+
+🔗 [View Figma Design](https://www.figma.com/design/tJHF8NteJsI2Pv4NgEzlOM/Fariid-service-marketplace?node-id=0-1&p=f&t=lX4xcB1kRbqPtSSw-0)
+
 
 ## Preview Images
 
